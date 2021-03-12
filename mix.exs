@@ -59,7 +59,8 @@ defmodule Hierbautberlin.MixProject do
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:dialyxir, ">= 0.0.0", only: [:dev, :text], runtime: false},
       {:mix_test_watch, "~> 1.0"},
-      {:ecto_psql_extras, "~> 0.2"}
+      {:ecto_psql_extras, "~> 0.2"},
+      {:geo_postgis, "~> 3.1"}
     ]
   end
 

@@ -10,7 +10,8 @@ config :hierbautberlin, Hierbautberlin.Repo,
   password: "postgres",
   database: "hierbautberlin_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  types: Hierbautberlin.PostgresTypes
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
