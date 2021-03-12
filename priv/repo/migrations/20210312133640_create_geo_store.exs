@@ -22,6 +22,7 @@ defmodule Hierbautberlin.Repo.Migrations.CreateGeoStore do
 
       timestamps(type: :timestamptz)
     end
+
     execute("SELECT AddGeometryColumn('geo_items', 'geo_point', 3857, 'POINT', 2);")
     execute("SELECT AddGeometryColumn('geo_items', 'geo_polygon', 3857, 'POLYGON', 2);")
   end
