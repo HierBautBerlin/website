@@ -37,7 +37,10 @@ defmodule HierbautberlinWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: HierbautberlinWeb.Telemetry
+
+      live_dashboard "/dashboard",
+        metrics: HierbautberlinWeb.Telemetry,
+        ecto_repos: [Hierbautberlin.Repo]
     end
   end
 end
