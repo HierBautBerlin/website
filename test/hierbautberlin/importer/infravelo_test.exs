@@ -6,6 +6,5 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
 
   test "basic import of infravelo data" do
     Infravelo.import(ImportMock)
-    |> IO.inspect()
   end
 end

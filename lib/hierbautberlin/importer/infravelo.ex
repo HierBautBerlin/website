@@ -5,11 +5,12 @@ defmodule Hierbautberlin.Importer.Infravelo do
     items = fetch_data(http_connection, "https://www.infravelo.de/api/v1/projects/")
 
     Enum.map(items, fn item ->
-      to_geo_item(item)
-    end)
-    |> Enum.each(fn item ->
-      IO.inspect(item)
-      Hierbautberlin.GeoData.create_geo_item(item)
+      {:ok, geo_item} =
+        item
+        |> to_geo_item()
+        |> Hierbautberlin.GeoData.create_geo_item()
+
+      geo_item
     end)
   end
 
