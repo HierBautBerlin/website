@@ -60,7 +60,9 @@ defmodule Hierbautberlin.MixProject do
       {:dialyxir, ">= 0.0.0", only: [:dev, :text], runtime: false},
       {:mix_test_watch, "~> 1.0"},
       {:ecto_psql_extras, "~> 0.2"},
-      {:geo_postgis, "~> 3.1"}
+      {:geo_postgis, "~> 3.1"},
+      {:httpoison, "~> 1.8"},
+      {:exkml, "~> 0.3.2"}
     ]
   end
 

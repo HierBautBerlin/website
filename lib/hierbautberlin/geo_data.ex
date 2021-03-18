@@ -12,4 +12,12 @@ defmodule Hierbautberlin.GeoData do
   def get_geo_item(id) do
     Repo.get!(GeoItem, id)
   end
+
+  def create_geo_item(attrs \\ %{}) do
+    %GeoItem{}
+    |> GeoItem.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def change_geo_item(%GeoItem{} = geo_item), do: GeoItem.changeset(geo_item, %{})
 end

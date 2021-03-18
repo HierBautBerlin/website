@@ -10,6 +10,8 @@ use Mix.Config
 config :hierbautberlin,
   ecto_repos: [Hierbautberlin.Repo]
 
+config :hierbautberlin, Hierbautberlin.Repo, types: Hierbautberlin.PostgresTypes
+
 # Configures the endpoint
 config :hierbautberlin, HierbautberlinWeb.Endpoint,
   url: [host: "localhost"],
