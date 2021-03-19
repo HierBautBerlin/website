@@ -20,4 +20,22 @@ defmodule Hierbautberlin.GeoData do
   end
 
   def change_geo_item(%GeoItem{} = geo_item), do: GeoItem.changeset(geo_item, %{})
+
+  def upsert_geo_item(attrs \\ %{}) do
+    %GeoItem{}
+    |> GeoItem.changeset(attrs)
+    |> Repo.insert(
+      on_conflict: :replace_all,
+      conflict_target: [:source_id, :external_id]
+    )
+  end
+
+  def upsert_source(attrs \\ %{}) do
+    %Source{}
+    |> Source.changeset(attrs)
+    |> Repo.insert(
+      on_conflict: [set: [name: attrs[:name], url: attrs[:url], copyright: attrs[:copyright]]],
+      conflict_target: :short_name
+    )
+  end
 end

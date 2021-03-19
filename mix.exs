@@ -62,7 +62,8 @@ defmodule Hierbautberlin.MixProject do
       {:ecto_psql_extras, "~> 0.2"},
       {:geo_postgis, "~> 3.1"},
       {:httpoison, "~> 1.8"},
-      {:exkml, "~> 0.3.2"}
+      {:exkml, "~> 0.3.2"},
+      {:timex, "~> 3.7.2"}
     ]
   end
 
