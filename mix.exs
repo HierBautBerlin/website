@@ -63,7 +63,8 @@ defmodule Hierbautberlin.MixProject do
       {:geo_postgis, "~> 3.1"},
       {:httpoison, "~> 1.8"},
       {:exkml, "~> 0.3.2"},
-      {:timex, "~> 3.7.2"}
+      {:timex, "~> 3.7.2"},
+      {:ex_machina, "~> 2.7.0", only: :test}
     ]
   end
 

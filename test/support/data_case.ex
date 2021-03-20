@@ -23,6 +23,7 @@ defmodule Hierbautberlin.DataCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Hierbautberlin.Factory
       import Hierbautberlin.DataCase
     end
   end

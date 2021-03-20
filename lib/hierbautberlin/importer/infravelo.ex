@@ -104,18 +104,18 @@ defmodule Hierbautberlin.Importer.Infravelo do
     end
   end
 
-  defp parse_quarter(quarterStr) do
-    if quarterStr == nil || String.length(quarterStr) == 0 do
-      nil
-    else
-      case Regex.named_captures(~r/(?<quarter>\d*). Quartal (?<year>\d*)/, quarterStr) do
-        %{"year" => year, "quarter" => quarter} ->
-          {year, _} = Integer.parse(year)
-          {year, quarter}
+  defp parse_quarter(nil) do
+    nil
+  end
 
-        _ ->
-          nil
-      end
+  defp parse_quarter(quarterStr) do
+    case Regex.named_captures(~r/(?<quarter>\d*). Quartal (?<year>\d*)/, quarterStr) do
+      %{"year" => year, "quarter" => quarter} ->
+        {year, _} = Integer.parse(year)
+        {year, quarter}
+
+      _ ->
+        nil
     end
   end
 end
