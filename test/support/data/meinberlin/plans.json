@@ -1,0 +1,5703 @@
+[
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Alt-Friedrichsfelde 60, Berlin-Lichtenberg",
+    "url": "/vorhaben/2021-00196/",
+    "organisation": "Senatsverwaltung für Stadtentwicklung und Wohnen",
+    "point": "",
+    "point_label": "Alt-Friedrichsfelde 60",
+    "cost": null,
+    "district": "Lichtenberg",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-24 22:07:51.537040+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neubau Stadtteilbibliothek Friedrichshagen",
+    "url": "/vorhaben/2021-00195/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "Als Ersatzstandort wird ein Grundstück in der Albert-Schweitzer-Straße 51, 12587 Berlin, geprüft.",
+    "cost": "noch nicht beziffert",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "EDU",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-24 13:55:35.640949+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Partizipativen Austellung - Eröffnung der Zentralen Anlaufstelle für Bürgerbeteiligung",
+    "url": "/vorhaben/2021-00194/",
+    "organisation": "Senatsverwaltung für Stadtentwicklung und Wohnen",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.391104297016916,
+          52.527730785665604
+        ]
+      },
+      "properties": {
+        "strname": "Torstraße",
+        "hsnr": "208",
+        "plz": "10115",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Zentrale Anlaufstelle für Bürgerbeteiligung",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-22 15:07:46.094015+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Inhaltliche Neuausrichtung des KIEZKLUB KES",
+    "url": "/vorhaben/2021-00193/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "Standorte: Plönzeile 4 I Büro I Campus Schule Veranstaltungssaal Haus C und Kursräume Haus D",
+    "cost": "wird nachgereicht",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-15 14:24:18.557007+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neubau KIEZKLUB Treptow-Kolleg",
+    "url": "/vorhaben/2021-00192/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "Schöntaler Str. 12437 Berlin",
+    "cost": "2.600.028",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-15 14:22:35.795478+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Eröffnung KIEZKLUB Allendeviertel",
+    "url": "/vorhaben/2021-00191/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "Salvador-Allende-Str. 89-91, 12555 Berlin",
+    "cost": "keine Angabe, da LAF und SenSW Bauträger des MUF",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-15 14:27:31.688111+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Pilotprojekt Bürgerhaus Alt-Treptow",
+    "url": "/vorhaben/2021-00190/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.476544031510263,
+          52.48588219847651
+        ]
+      },
+      "properties": {
+        "strname": "Alt-Treptow",
+        "hsnr": "",
+        "plz": "12435",
+        "bezirk_name": "Treptow-Köpenick"
+      }
+    },
+    "point_label": "Bouchéstraße 75, 12435 Berlin Alt-Treptow",
+    "cost": "8.000.000",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-15 14:37:39.574548+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kiezkassen Treptow-Köpenick 2021",
+    "url": "/vorhaben/2021-00189/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "",
+    "cost": "100.000",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CHI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 20,
+    "created_or_modified": "2021-03-04 12:46:22.205900+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neubau Musikschule Mörikestraße",
+    "url": "/vorhaben/2021-00188/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "OT Baumschulenweg, Mörikestraße 15, 12437 Baumschulenweg",
+    "cost": "4.500.000",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-01 15:01:09.888498+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Niederschlagswassermanagement im Fritz-Schloß-Park, 2.BA",
+    "url": "/vorhaben/2021-00187/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.356285,
+          52.528963
+        ]
+      }
+    },
+    "point_label": "Fritz-Schloß-Park",
+    "cost": "710.000 € (beantragt über Förderprogramm Nachhaltige Erneuerung)",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 2,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-02-25 13:39:06.651122+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung des Spielplatzes Grüntaler Straße/ Bellermannstraße",
+    "url": "/vorhaben/2021-00186/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.387613,
+          52.553019
+        ]
+      }
+    },
+    "point_label": "Berlin Wedding",
+    "cost": "120.000 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-02-03 16:21:41.383378+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Spielplatz Elberfelder Straße/Essener Straße",
+    "url": "/vorhaben/2021-00185/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.336426113979549,
+          52.52326091150874
+        ]
+      },
+      "properties": {
+        "strname": "Essener Straße",
+        "hsnr": "17",
+        "plz": "10555",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Berlin Moabit",
+    "cost": "200.000 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-02-03 16:21:04.577498+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Teilsanierung Spielplatz Engelhardtstraße",
+    "url": "/vorhaben/2021-00184/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "point": "",
+    "point_label": "Spielplatz Engelhardtstraße",
+    "cost": "125.000",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-01 14:45:51.432156+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kiezspaziergang mit Bezirksstadtrat Ephraim Gothe",
+    "url": "/vorhaben/2021-00183/",
+    "organisation": "Stadtteilkoordination Alexanderplatz",
+    "point": "",
+    "point_label": "",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-05 09:39:05.820392+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Runder Tisch Senior*innenarbeit Alexanderplatz",
+    "url": "/vorhaben/2021-00182/",
+    "organisation": "Stadtteilkoordination Alexanderplatz",
+    "point": "",
+    "point_label": "KREATIVHAUS",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "HEA",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-03-05 09:24:20.525366+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Klimaangepasste Gestaltung der Grünanlage Bremer Straße 37",
+    "url": "/vorhaben/2021-00181/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.339207,
+          52.53237
+        ]
+      }
+    },
+    "point_label": "Grünanlage Bremer Straße 37",
+    "cost": "398.500 € (beantragt über Förderprogramm Nachhaltige Erneuerung)",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-01-21 10:19:01.011099+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aktionsfonds Brunnenstraße",
+    "url": "/vorhaben/2021-00179/",
+    "organisation": "Quartiersmanagement Brunnenstraße",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.394222,
+          52.547914
+        ]
+      }
+    },
+    "point_label": "Aktionsfonds für das QM-Gebiet Brunnenstraße",
+    "cost": "10.000",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-01-26 09:35:47.104956+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Plus",
+    "url": "/vorhaben/2021-00178/",
+    "organisation": "Stadtteilkoordination Brunnenstraße Nord",
+    "point": "",
+    "point_label": "Demminer Straße 28",
+    "cost": "30.000 Euro",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-01-14 11:15:17.539462+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Brunnenstraße",
+    "url": "/vorhaben/2021-00177/",
+    "organisation": "Quartiersmanagement Brunnenstraße",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.394512,
+          52.547516
+        ]
+      }
+    },
+    "point_label": "Quartiersmanagement Brunnenstraße",
+    "cost": "Mittel für Aktionsfonds: 10.000,00 EUR/Jahr, Mittel für Projektfonds: 320.000,00 EUR/Jahr, Mittel für Baufonds (Bauvorhaben): maßnahmenabhängig >>> Bund-Länder-Städtebauförderungsprogramm „Sozialer Zusammenhalt“",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-01-18 20:13:29.710275+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Uferhallen",
+    "url": "/vorhaben/2020-00176/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.374510598994485,
+          52.55200187111759
+        ]
+      },
+      "properties": {
+        "strname": "Uferstraße",
+        "hsnr": "8",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Uferstraße 8",
+    "cost": "Bisher noch nicht ermittelt",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:25:42.002724+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Monbijoutheater",
+    "url": "/vorhaben/2020-00175/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.394813149207403,
+          52.52325102976018
+        ]
+      },
+      "properties": {
+        "strname": "Monbijoustraße",
+        "hsnr": "2B",
+        "plz": "10117",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Monbijoustraße 2b – 3b",
+    "cost": "Bisher noch nicht ermittelt",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:23:10.002782+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Errichtung eines Hochhauses am S-Bahnhof Jannowitzbrücke",
+    "url": "/vorhaben/2020-00174/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.419183223023836,
+          52.51473774062693
+        ]
+      },
+      "properties": {
+        "strname": "Holzmarktstraße",
+        "hsnr": "3",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Holzmarktstraße 3",
+    "cost": "Die Kosten werden vom Investor übernommen.",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:20:42.382292+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Verkleinerung des Einkaufszentrums „Moa-Bogen“ und Erweiterung des Hotels",
+    "url": "/vorhaben/2020-00173/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.344607937019182,
+          52.53163375711169
+        ]
+      },
+      "properties": {
+        "strname": "Birkenstraße",
+        "hsnr": "22",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Birkenstraße 22-23, Stephanstraße 41-43",
+    "cost": "Kosten werden vom Investor übernommen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:17:48.904569+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-105  für das Gelände des ehemaligen Hauses der Statistik",
+    "url": "/vorhaben/2020-00172/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.41917658074031,
+          52.52186599907251
+        ]
+      },
+      "properties": {
+        "strname": "Karl-Marx-Allee",
+        "hsnr": "5",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Teilfläche des Geländes zwischen Mollstraße, Berolinastraße, Karl-Marx-Allee und Otto-Braun-Straße und eine Teilfläche des Grundstücks Karl-Marx-Allee 5",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:14:16.251208+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-83e  für den Bereich Schillingstraße Südost im Wohngebiet Karl-Marx-Allee",
+    "url": "/vorhaben/2020-00171/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.421634346967632,
+          52.51697228958347
+        ]
+      },
+      "properties": {
+        "strname": "Singerstraße",
+        "hsnr": "",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Teilflächen des Geländes zwischen Singerstraße, Ifflandstraße, der nördlichen Grenze des Grundstücks Holzmarktstraße 69 und der Schillingstraße",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:11:06.697130+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-83d  für den Bereich Schillingstraße West im Wohngebiet Karl-Marx-Allee II",
+    "url": "/vorhaben/2020-00170/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.419272421449843,
+          52.518287475890375
+        ]
+      },
+      "properties": {
+        "strname": "Magazinstraße",
+        "hsnr": "",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gelände zwischen Magazinstraße, Schillingstraße und Alexanderstraße sowie für Abschnitte der Magazinstraße und Schillingstraße",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:08:35.443164+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-83c  für den Bereich Neue Blumenstraße im Wohngebiet Karl-Marx-Allee II",
+    "url": "/vorhaben/2020-00169/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.421634346967632,
+          52.51697228958347
+        ]
+      },
+      "properties": {
+        "strname": "Singerstraße",
+        "hsnr": "",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gelände zwischen Singerstraße, Neue Blumenstraße und Bezirksgrenze sowie einen Abschnitt der Neue Blumenstraße",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:05:53.274490+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-83b für den Bereich Schillingstraße Nordost im Wohngebiet Karl-Marx-Allee",
+    "url": "/vorhaben/2020-00168/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Gelände zwischen Schillingstraße, Neue Blumenstraße und Singerstraße sowie einen Abschnitt der Neue Blumenstraße",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 22:02:35.921991+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-82e für den Bereich Karl-Marx-Allee West im Wohngebiet Karl-Marx-Allee II",
+    "url": "/vorhaben/2020-00167/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.417287846959747,
+          52.521095852833454
+        ]
+      },
+      "properties": {
+        "strname": "Karl-Marx-Allee",
+        "hsnr": "4",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Karl-Marx-Allee 4/20, 24/32, 5/11, 19/25 sowie für einen Abschnitt der Berolinastraße",
+    "cost": "Müssen noch ermittelt werden, Haushaltsmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:59:38.848750+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufstellungsverfahren für den Bebauungsplan 1-105  für den Bereich Mollstraße 4",
+    "url": "/vorhaben/2020-00166/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.424344095791184,
+          52.520844414453926
+        ]
+      },
+      "properties": {
+        "strname": "Berolinastraße",
+        "hsnr": "",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Nördliche Teilfläche des Geländes zwischen Mollstraße, Berolinastraße, Karl-Marx-Allee und Otto-Braun-Straße",
+    "cost": "Müssen noch ermittelt werden",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:55:37.293239+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan I-32aa (Holzufer) - Uferweg",
+    "url": "/vorhaben/2020-00165/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Holzufer/Uferweg",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:49:17.360905+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-189",
+    "url": "/vorhaben/2020-00164/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.336996629558993,
+          52.533539741790804
+        ]
+      },
+      "properties": {
+        "strname": "Siemensstraße",
+        "hsnr": "27",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Siemensstraße 27",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:45:00.952457+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-187",
+    "url": "/vorhaben/2020-00163/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.344849788678774,
+          52.534690378577764
+        ]
+      },
+      "properties": {
+        "strname": "Quitzowstraße",
+        "hsnr": "59",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quitzowstraße 59, 61, 68, 69, 70, 72, 74 und 82",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:42:02.049588+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-186",
+    "url": "/vorhaben/2020-00162/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Quitzowstraße 51, 52 und 54 - 56",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-09 12:14:44.081018+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-185",
+    "url": "/vorhaben/2020-00161/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.34983721444062,
+          52.53525079752105
+        ]
+      },
+      "properties": {
+        "strname": "Quitzowstraße",
+        "hsnr": "36",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quitzowstraße 36, 38, 40, 45 - 47 und 50",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:36:50.233004+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan 1-61",
+    "url": "/vorhaben/2020-00160/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.371781988065136,
+          52.53941349702544
+        ]
+      },
+      "properties": {
+        "strname": "Müllerstraße",
+        "hsnr": "",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Block 220 zwischen Müllerstraße, Fennstraße, Tegeler Straße und Ringbahntrasse",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:32:36.318658+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Vorhabenbezogenes Bebauungsplanverfahren II-7b-1VE „Strom-/Turmstr.“",
+    "url": "/vorhaben/2020-00159/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.342745968940864,
+          52.526477667692156
+        ]
+      },
+      "properties": {
+        "strname": "Turmstraße",
+        "hsnr": "28",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Grundstücke Turmstraße 28-29 und Stromstraße 60-62 sowie eine Teilfläche der Stromstraße",
+    "cost": "privat",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:27:50.163042+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Vorhabenbezogenes Bebauungsplanverfahren II-83-1VE „Schill-/Kurfürstenstr.“",
+    "url": "/vorhaben/2020-00158/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.34963561766023,
+          52.503534299352594
+        ]
+      },
+      "properties": {
+        "strname": "Kurfürstenstraße",
+        "hsnr": "72",
+        "plz": "10787",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Grundstücke Kurfürstenstraße 72-74 / Schillstraße 11-12",
+    "cost": "privat",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:24:38.001676+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplanverfahren II-91-1 „Rathenower Str. 16“",
+    "url": "/vorhaben/2020-00157/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3542679834094,
+          52.52864213860805
+        ]
+      },
+      "properties": {
+        "strname": "Rathenower Straße",
+        "hsnr": "15",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Teilfläche des Grundstücks Rathenower Straße 15-17",
+    "cost": "Landesmittel ev. EU gefördert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:21:30.933442+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplanverfahren 1-107 „Berliner Stadtmission“",
+    "url": "/vorhaben/2020-00156/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361939635494602,
+          52.52711600260194
+        ]
+      },
+      "properties": {
+        "strname": "Seydlitzstraße",
+        "hsnr": "20",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Grundstücke Seydlitzstraße 20-22 und Lehrter Straße 67-69A",
+    "cost": "Landesmittel ev. EU gefördert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:18:31.369478+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Weiterentwicklung des Schulstandortes Heinrich-von-Stephan Gemeinschaftsschule",
+    "url": "/vorhaben/2020-00155/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.319203924772424,
+          52.52562576354947
+        ]
+      },
+      "properties": {
+        "strname": "Kaiserin-Augusta-Allee",
+        "hsnr": "100",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Kaiserin-Augusta-Allee 100 / Neues Ufer 2, 6-8",
+    "cost": "27.035.000,00 EUR, Bezirksmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:13:40.746996+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-188",
+    "url": "/vorhaben/2020-00154/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.338169550113571,
+          52.534617314508814
+        ]
+      },
+      "properties": {
+        "strname": "Erna-Samuel-Straße",
+        "hsnr": "5",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Erna-Samuel-Straße 5, Ellen-Epstein-Straße ohne Hausnummer (Flurstücke 350, 351), Quitzowstraße 83-91, Siemensstraße 21-26A",
+    "cost": "keine",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:08:53.037526+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bebauungsplan II-184",
+    "url": "/vorhaben/2020-00153/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.35287597448921,
+          52.535803788492146
+        ]
+      },
+      "properties": {
+        "strname": "Quitzowstraße",
+        "hsnr": "23",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quitzowstraße 23-33",
+    "cost": "keine",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:05:30.717798+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Vorhabenbezogener Bebauungsplan II-26-1VE",
+    "url": "/vorhaben/2020-00152/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.35232386434404,
+          52.529614061050374
+        ]
+      },
+      "properties": {
+        "strname": "Birkenstraße",
+        "hsnr": "1",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Birkenstraße 1, Rathenower Straße 63/64",
+    "cost": "privat",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-02 21:01:14.667171+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "KlimaKiez Badstraße",
+    "url": "/vorhaben/2020-00151/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.387991606337431,
+          52.55256475827778
+        ]
+      },
+      "properties": {
+        "strname": "Bellermannstraße",
+        "hsnr": "81",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Badstraße",
+    "cost": "125.000,00 EUR, Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:26:47.246905+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "VIKI-Bewegungstreff im Vikihaus",
+    "url": "/vorhaben/2020-00150/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.391470074085857,
+          52.539674051114915
+        ]
+      },
+      "properties": {
+        "strname": "Wattstraße",
+        "hsnr": "5",
+        "plz": "13355",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Wattstraße 5",
+    "cost": "150.000,00 EUR, Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "HEA",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:28:06.734251+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Nutzungsoptimierung und Aufwertung „teeny Musik treff“",
+    "url": "/vorhaben/2020-00149/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.389666957426218,
+          52.54450893276511
+        ]
+      },
+      "properties": {
+        "strname": "Gustav-Meyer-Allee",
+        "hsnr": "2",
+        "plz": "13355",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gustav-Meyer-Allee 2",
+    "cost": "520.000,00 EUR",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:30:47.483485+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aktionsraum Waschküche",
+    "url": "/vorhaben/2020-00148/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.38556249988222,
+          52.53805768849422
+        ]
+      },
+      "properties": {
+        "strname": "Feldstraße",
+        "hsnr": "10",
+        "plz": "13355",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Feldstraße 10",
+    "cost": "35.000,00 EUR",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:29:15.678795+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Wir in Moabit - Gemeinsam gesund Älterwerden",
+    "url": "/vorhaben/2020-00145/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.350172674008347,
+          52.53137907525232
+        ]
+      },
+      "properties": {
+        "strname": "Wilsnacker Straße",
+        "hsnr": "34",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit Ost",
+    "cost": "60.000,00 EUR,  Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:33:57.409050+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neue Perspektiven Moabit-Ost",
+    "url": "/vorhaben/2020-00144/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.350172674008347,
+          52.53137907525232
+        ]
+      },
+      "properties": {
+        "strname": "Wilsnacker Straße",
+        "hsnr": "34",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit Ost",
+    "cost": "64.000,00 EUR, Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:34:17.881361+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Moabit hürdenfrei",
+    "url": "/vorhaben/2020-00143/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.326454514303245,
+          52.5306771185229
+        ]
+      },
+      "properties": {
+        "strname": "Rostocker Straße",
+        "hsnr": "35",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit West / Beusselstraße",
+    "cost": "67.410,00 EUR, Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "ANT",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:34:46.621557+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Jugend – Macht Platz",
+    "url": "/vorhaben/2020-00142/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.326454514303245,
+          52.5306771185229
+        ]
+      },
+      "properties": {
+        "strname": "Rostocker Straße",
+        "hsnr": "35",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit West / Beusselstraße",
+    "cost": "150.235,24 EUR,  Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:35:09.941165+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erweiterung des Zentrums für Kunst und Urbanistik",
+    "url": "/vorhaben/2020-00141/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.336996629558993,
+          52.533539741790804
+        ]
+      },
+      "properties": {
+        "strname": "Siemensstraße",
+        "hsnr": "27",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Siemensstraße 27",
+    "cost": "3.300.000 €, Städtebaufördermittel Programm Soziale Stadt",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:35:35.699034+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Klima im Quartier Pankstraße: Sensibilisierung für nachhaltiges Verhalten im Alltag",
+    "url": "/vorhaben/2020-00140/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.366392803867232,
+          52.54694685964021
+        ]
+      },
+      "properties": {
+        "strname": "Prinz-Eugen-Straße",
+        "hsnr": "1",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Reinickendorfer Straße / Pankstraße",
+    "cost": "95.000,00 Euro, Städtebaufördermittel Programm Soziale Stadt -Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:36:47.492583+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Badstraße",
+    "url": "/vorhaben/2020-00139/",
+    "organisation": "Quartiersmanagement Badstraße",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.387991606337431,
+          52.55256475827778
+        ]
+      },
+      "properties": {
+        "strname": "Bellermannstraße",
+        "hsnr": "81",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "QM-Gebiet \"Badstraße\" zwischen Panke im Westen, Osloer Straße im Norden sowie Gleise der S1 und Ringbahn im Osten und Süden",
+    "cost": "Mittel für Aktionsfonds: 15.000 €/Jahr Mittel für Projektfonds: rd. 300.000 €/Jahr Mittel für Baufonds (Bauvorhaben): maßnahmenabhängig ab 50.000€/Maßnahme",
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-30 15:16:50.898049+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Klima im Quartier Pankstraße: „Kool im Kiez“",
+    "url": "/vorhaben/2020-00138/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.366392803867232,
+          52.54694685964021
+        ]
+      },
+      "properties": {
+        "strname": "Prinz-Eugen-Straße",
+        "hsnr": "1",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Reinickendorfer Straße / Pankstraße",
+    "cost": "153.000,00 Euro, Städtebaufördermittel Programm Soziale Stadt - Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:37:43.288473+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Baumaßnahmen in der Kita Paradiesvögel Kita „Die Buntspechte“ Plantagenstraße 9",
+    "url": "/vorhaben/2020-00137/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.367192008538748,
+          52.546665579026964
+        ]
+      },
+      "properties": {
+        "strname": "Plantagenstraße",
+        "hsnr": "9",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Plantagenstraße 9",
+    "cost": "115.500,00 €, Städtebaufördermittel Programm Soziale Stadt",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:39:27.660766+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Baumaßnahme in der Kita Gottschedstraße 28",
+    "url": "/vorhaben/2020-00136/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.371516847305738,
+          52.55284155626633
+        ]
+      },
+      "properties": {
+        "strname": "Gottschedstraße",
+        "hsnr": "28",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gottschedstraße 28",
+    "cost": "272.500,00 EUR, Städtebaufördermittel Programm Soziale Stadt",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:40:15.558396+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Real Labor „Temporäre Spielstraße“",
+    "url": "/vorhaben/2020-00135/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.378796753071203,
+          52.558785280907564
+        ]
+      },
+      "properties": {
+        "strname": "Koloniestraße",
+        "hsnr": "129",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Soldiner Straße / Wollankstrasse",
+    "cost": "60.000,00 EUR, Städtebaufördermittel Programm Soziale Stadt -Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:41:31.560269+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Open Up: Kreativ im Kiez",
+    "url": "/vorhaben/2020-00134/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.378796753071203,
+          52.558785280907564
+        ]
+      },
+      "properties": {
+        "strname": "Koloniestraße",
+        "hsnr": "129",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Soldiner Straße / Wollankstrasse",
+    "cost": "70.000,00 EUR, Städtebaufördermittel Programm Soziale Stadt -Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:42:14.969205+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Müll-Museum",
+    "url": "/vorhaben/2020-00133/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.386820650557707,
+          52.55880150316289
+        ]
+      },
+      "properties": {
+        "strname": "Prinzenallee",
+        "hsnr": "39",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Soldiner Straße / Wollankstrasse",
+    "cost": "63.000,00 €, Städtebaufördermittel Programm Soziale Stadt -Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:42:54.510419+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Grüntaler Leben",
+    "url": "/vorhaben/2020-00132/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.378796753071203,
+          52.558785280907564
+        ]
+      },
+      "properties": {
+        "strname": "Koloniestraße",
+        "hsnr": "129",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Soldiner Straße / Wollankstrasse",
+    "cost": "105.000,00 EUR, Städtebaufördermittel Programm Soziale Stadt Projektfonds PJ 2020",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:43:42.171015+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Moabit West / Beusselstraße",
+    "url": "/vorhaben/2020-00131/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.326454514303245,
+          52.5306771185229
+        ]
+      },
+      "properties": {
+        "strname": "Rostocker Straße",
+        "hsnr": "35",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit West / Beusselstraße",
+    "cost": "Mittel für Aktionsfonds: 10.000,00 EUR/Jahr, Mittel für Projektfonds: 320.000,00 EUR/Jahr, Mittel für Baufonds (Bauvorhaben): maßnahmenabhängig >>> Bund-Länder-Städtebauförderungsprogramm „Sozialer Zusammenhalt“",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:44:57.545464+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Moabit Ost",
+    "url": "/vorhaben/2020-00130/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.350172674008347,
+          52.53137907525232
+        ]
+      },
+      "properties": {
+        "strname": "Wilsnacker Straße",
+        "hsnr": "34",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Moabit Ost",
+    "cost": "Mittel für Aktionsfonds: 10.000,00 EUR/Jahr, Mittel für Projektfonds: 190.000,00 EUR/Jahr, Mittel für Baufonds (Bauvorhaben): maßnahmenabhängig >>> Bund-Länder-Städtebauförderungsprogramm „Sozialer Zusammenhalt“",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:45:48.380802+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Badstraße",
+    "url": "/vorhaben/2020-00128/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Quartiersmanagement-Gebiet Badstraße",
+    "cost": "Mittel für Aktionsfonds: 15.000,00 EUR/Jahr, Mittel für Projektfonds: 300.000,00 EUR/Jahr, Mittel für Baufonds (Bauvorhaben): maßnahmenabhängig ab 50.000€/Maßnahme >>> Bund-Länder-Städtebauförderungsprogramm „Sozialer Zusammenhalt“",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:47:19.920435+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Netzwerk Kiezbildung im QM-Gebiet Badstraße",
+    "url": "/vorhaben/2020-00127/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.387991606337431,
+          52.55256475827778
+        ]
+      },
+      "properties": {
+        "strname": "Bellermannstraße",
+        "hsnr": "81",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Quartiersmanagement-Gebiet Badstraße",
+    "cost": "160.000,00 EUR, Bund-Länder-Städtebauförderungsprogramm „Soziale Stadt“",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:48:28.985294+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Wohnungsbauvorhaben am Haus der Statistik",
+    "url": "/vorhaben/2020-00126/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.424344095791184,
+          52.520844414453926
+        ]
+      },
+      "properties": {
+        "strname": "Berolinastraße",
+        "hsnr": "",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Berolinastraße",
+    "cost": "Noch nicht bestimmt, Investitionsmittel der WBM / des Landes Berlin",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-12-01 11:49:23.621215+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Rathaus der Zukunft",
+    "url": "/vorhaben/2020-00125/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.418083960151472,
+          52.522200483908534
+        ]
+      },
+      "properties": {
+        "strname": "Karl-Marx-Allee",
+        "hsnr": "1",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Karl-Marx-Allee 1 / Otto-Braun-Str. 70-72",
+    "cost": "Noch nicht bestimmt, Investitionsmittel des Landes Berlin",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-01-08 15:24:35.394609+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Pioniernutzung im Haus der Statistik",
+    "url": "/vorhaben/2020-00124/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.418083960151472,
+          52.522200483908534
+        ]
+      },
+      "properties": {
+        "strname": "Karl-Marx-Allee",
+        "hsnr": "1",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Karl-Marx-Allee 1 / Otto-Braun-Str. 70-72",
+    "cost": "Noch nicht bestimmt, Landesmittel",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-30 08:05:25.846226+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Alexanderplatzviertel“",
+    "url": "/vorhaben/2020-00123/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.408205334642545,
+          52.52691823439844
+        ]
+      },
+      "properties": {
+        "strname": "Alte Schönhauser Straße",
+        "hsnr": "50",
+        "plz": "10119",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Alexanderplatzviertel“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 17:06:04.622070+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Leopoldplatz“",
+    "url": "/vorhaben/2020-00122/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362793021919279,
+          52.55016517697822
+        ]
+      },
+      "properties": {
+        "strname": "Nazarethkirchstraße",
+        "hsnr": "36",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Leopoldplatz“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:57:03.097965+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Sparrplatz“",
+    "url": "/vorhaben/2020-00121/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.356618171837717,
+          52.54197805448755
+        ]
+      },
+      "properties": {
+        "strname": "Sprengelstraße",
+        "hsnr": "41",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Sparrplatz“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:51:22.717756+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Seestraße“",
+    "url": "/vorhaben/2020-00120/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.348527964163535,
+          52.54816096946992
+        ]
+      },
+      "properties": {
+        "strname": "Seestraße",
+        "hsnr": "32",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Seestraße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:41:12.655837+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Thomasiusstraße“",
+    "url": "/vorhaben/2020-00119/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.352944043800697,
+          52.521840173755365
+        ]
+      },
+      "properties": {
+        "strname": "Spenerstraße",
+        "hsnr": "11",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Thomasiusstraße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:34:46.731284+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Birkenstraße“",
+    "url": "/vorhaben/2020-00118/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.346749254015702,
+          52.53107519576396
+        ]
+      },
+      "properties": {
+        "strname": "Birkenstraße",
+        "hsnr": "17",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Birkenstraße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:25:48.343910+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Soldiner Straße“",
+    "url": "/vorhaben/2020-00117/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.385499849300238,
+          52.55806271198101
+        ]
+      },
+      "properties": {
+        "strname": "Prinzenallee",
+        "hsnr": "57",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Soldiner Straße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:17:14.538346+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Reinickendorfer Straße“",
+    "url": "/vorhaben/2020-00116/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.375146055873175,
+          52.55267963822433
+        ]
+      },
+      "properties": {
+        "strname": "Uferstraße",
+        "hsnr": "7",
+        "plz": "13357",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Reinickendorfer Straße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:10:20.547722+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Kattegatstraße“",
+    "url": "/vorhaben/2020-00115/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.391858907892868,
+          52.56410265966704
+        ]
+      },
+      "properties": {
+        "strname": "Kattegatstraße",
+        "hsnr": "2",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Kattegatstraße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 15:35:16.860662+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Humboldthain Nord-West“",
+    "url": "/vorhaben/2020-00114/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.372838136032673,
+          52.542901623552325
+        ]
+      },
+      "properties": {
+        "strname": "Ravenéstraße",
+        "hsnr": "10",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Humboldthain Nord-West“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 15:36:05.902046+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Tiergarten-Süd“",
+    "url": "/vorhaben/2020-00113/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361625352824996,
+          52.50311027906154
+        ]
+      },
+      "properties": {
+        "strname": "Kluckstraße",
+        "hsnr": "25",
+        "plz": "10785",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Tiergarten-Süd“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 15:19:08.928761+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Milieuschutzgebiet „Waldstraße“",
+    "url": "/vorhaben/2020-00112/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.332678599560927,
+          52.5289696259327
+        ]
+      },
+      "properties": {
+        "strname": "Waldenserstraße",
+        "hsnr": "14",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Soziales Erhaltungsgebiet „Waldstraße“ (Milieuschutzgebiet)",
+    "cost": "kostenloses Beratungsangebot für Mietparteien, Genehmigungsvorbehalt der Bezirksverwaltung gegenüber Bauherr*innen",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-29 16:28:14.934705+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umgestaltung der Grünflächen und des Spielplatzes Neue Blumenstraße 24",
+    "url": "/vorhaben/2020-00111/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.425846,
+          52.518072
+        ]
+      }
+    },
+    "point_label": "Spielplatz Neue Blumenstraße 244",
+    "cost": "400.000 Euro",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:49:03.125368+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Charlotte-Pfeffer-Schule - Erhalt des Bauteils E",
+    "url": "/vorhaben/2020-00110/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.424832,
+          52.521816
+        ]
+      }
+    },
+    "point_label": "Charlotte-Pfeffer-Schule",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:49:48.601748+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sechs neue Pavillons entlang der Karl-Marx-Allee",
+    "url": "/vorhaben/2020-00109/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.420508,
+          52.521196
+        ]
+      }
+    },
+    "point_label": "Pavillons Karl-Marx-Allee",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "CUL",
+      "URB"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:50:20.656245+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Wasserspielplatz Weydemeyerstraße",
+    "url": "/vorhaben/2020-00108/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.427417,
+          52.520987
+        ]
+      }
+    },
+    "point_label": "Wasserspielplatz Weydemeyerstraße",
+    "cost": "1.210.000 €",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:50:31.151195+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Plansche Singerstraße",
+    "url": "/vorhaben/2020-00107/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.42334,
+          52.516959
+        ]
+      }
+    },
+    "point_label": "Plansche Singerstraße",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:50:40.381367+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Campus Singerstraße",
+    "url": "/vorhaben/2020-00106/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.423727,
+          52.515986
+        ]
+      }
+    },
+    "point_label": "Campus Singerstraße",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "URB"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-26 08:50:48.692121+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Eingangsbereich Poststadion bis zum Stadionwall",
+    "url": "/vorhaben/2020-00105/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361166625834827,
+          52.53125785771964
+        ]
+      },
+      "properties": {
+        "strname": "Lehrter Straße",
+        "hsnr": "59",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Poststadion",
+    "cost": "873.409 € (Fördermittel über Investionspakt zur Förderung von Sportstätten)",
+    "district": "Mitte",
+    "topics": [
+      "HEA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-17 10:25:57.894674+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Urbanes Zentrum Neu-Hohenschönhausen",
+    "url": "/vorhaben/2020-00104/",
+    "organisation": "Bezirksamt Lichtenberg",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.507635103361391,
+          52.56619405722265
+        ]
+      },
+      "properties": {
+        "strname": "Wustrower Straße",
+        "hsnr": "18",
+        "plz": "13051",
+        "bezirk_name": "Lichtenberg"
+      }
+    },
+    "point_label": "",
+    "cost": null,
+    "district": "Lichtenberg",
+    "topics": [
+      "CUL",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 4,
+    "created_or_modified": "2020-11-12 15:21:01.341980+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radverkehrsversuch Tempelhofer Damm",
+    "url": "/vorhaben/2020-00102/",
+    "organisation": "Bezirksamt Tempelhof-Schöneberg",
+    "point": "",
+    "point_label": "",
+    "cost": null,
+    "district": "Tempelhof-Schöneberg",
+    "topics": [
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-10-30 13:42:06.212981+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bewerbungsphase für den Beteiligungsbeirat im Bezirk Mitte von Berlin",
+    "url": "/vorhaben/2020-00101/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Bezirk Mitte von Berlin",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-09-23 06:46:37.671891+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Denkmalgerechte Erneuerung der Grünanlage Am Köllnischen Park",
+    "url": "/vorhaben/2020-00097/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.415478632695718,
+          52.51188108111513
+        ]
+      },
+      "properties": {
+        "strname": "Am Köllnischen Park",
+        "hsnr": "",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Am Köllnischen Park",
+    "cost": "1.664.000,00 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:15:22.886899+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Städtebauliche Ausgleichsmaßnahme Fischerinsel – Aufwertung der nördlichen Freianlagen",
+    "url": "/vorhaben/2020-00095/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.407576219177656,
+          52.514148974809906
+        ]
+      },
+      "properties": {
+        "strname": "Fischerinsel",
+        "hsnr": "",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Fischerinsel",
+    "cost": "2.380.000 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-04 14:15:38.595079+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umgestaltung Spielplatz Berolinastraße",
+    "url": "/vorhaben/2020-00094/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "",
+    "cost": "426.240 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-24 08:15:48.414332+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umgestaltung Spielplatz Monbijoupark",
+    "url": "/vorhaben/2020-00093/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.396475,
+          52.523089
+        ]
+      }
+    },
+    "point_label": "",
+    "cost": "357.500 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-18 15:08:22.245462+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erneuerung Spielplatz Mollstr. 15-18, östlich",
+    "url": "/vorhaben/2020-00092/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.424208733774782,
+          52.523272026667755
+        ]
+      },
+      "properties": {
+        "strname": "Mollstraße",
+        "hsnr": "15",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Mollstr. 15-18",
+    "cost": "571.250 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-04 14:16:35.349377+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Kinderspielplatz Magdeburger Platz",
+    "url": "/vorhaben/2020-00091/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361336771071517,
+          52.50403222559103
+        ]
+      },
+      "properties": {
+        "strname": "Lützowstraße",
+        "hsnr": "31",
+        "plz": "10785",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Berlin Tiergarten",
+    "cost": "203.000 €",
+    "district": "Mitte",
+    "topics": [
+      "ENV"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-18 15:51:27.765380+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erneuerung Sickingenstraße/ Neues Ufer",
+    "url": "/vorhaben/2020-00089/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.327668529869324,
+          52.532969218236055
+        ]
+      },
+      "properties": {
+        "strname": "Sickingenstraße",
+        "hsnr": "",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Berlin Moabit",
+    "cost": "ca. 5.000.000 €",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:17:24.721233+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Mitte – Tegel – Spandau\"",
+    "url": "/vorhaben/2020-00088/",
+    "organisation": "infraVelo",
+    "point": "",
+    "point_label": "Mitte/Tegel/Spandau",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-09-18 10:58:53.261533+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Reinickendorf-Route\"",
+    "url": "/vorhaben/2020-00087/",
+    "organisation": "infraVelo",
+    "point": "",
+    "point_label": "Reinickendorf/Heiligensee",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-09-18 10:57:57.336912+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sportforum Berlin",
+    "url": "/vorhaben/2020-00084/",
+    "organisation": "Senatsverwaltung für Stadtentwicklung und Wohnen",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.476233,
+          52.54082
+        ]
+      }
+    },
+    "point_label": "Sportforum Berlin",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "HEA",
+      "URB"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 7,
+    "created_or_modified": "2021-03-24 10:53:30.531226+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement (QM) Brunnenviertel-Ackerstraße",
+    "url": "/vorhaben/2020-00083/",
+    "organisation": "Quartiersmanagement Ackerstraße (beendet)",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.388055133884006,
+          52.53926396377181
+        ]
+      },
+      "properties": {
+        "strname": "Jasmunder Straße",
+        "hsnr": "16",
+        "plz": "13355",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Brunnenviertel-Ackerstraße",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-03-27 14:54:22.213711+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Lebendiges Zentrum und Sanierungsgebiet Neukölln – Karl-Marx-Straße/Sonnenallee",
+    "url": "/vorhaben/2020-00082/",
+    "organisation": "Bezirksamt Neukölln",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.435346,
+          52.481225
+        ]
+      }
+    },
+    "point_label": "Berlin Neukölln",
+    "cost": null,
+    "district": "Neukölln",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-03-19 09:46:34.803826+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bürgerbeteiligung zur Neugestaltung des Preußenparks in Charlottenburg-Wilmersdorf",
+    "url": "/vorhaben/2020-00081/",
+    "organisation": "Bezirksamt Charlottenburg-Wilmersdorf",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.312383,
+          52.492946
+        ]
+      }
+    },
+    "point_label": "Preußenpark",
+    "cost": null,
+    "district": "Charlottenburg-Wilmersdorf",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2020-11-06 08:48:33.331101+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Quartiersmanagement Soldiner Straße/Wollankstraße",
+    "url": "/vorhaben/2020-00080/",
+    "organisation": "Quartiersmanagement Soldiner Straße/Wollankstraße",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.378796753071203,
+          52.558785280907564
+        ]
+      },
+      "properties": {
+        "strname": "Koloniestraße",
+        "hsnr": "129",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-24 14:55:50.555349+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Mitte im Dialog – Interkulturelle Vernetzung und Wissensvermittlung im Bezirk Mitte von Berlin",
+    "url": "/vorhaben/2020-00079/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Aktionsraum plus Wedding/Moabit; Prognoseräume Wedding, Moabit, Gesundbrunnen",
+    "cost": "371.000 €",
+    "district": "Mitte",
+    "topics": [
+      "INT",
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:17:37.107610+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Modularer Grundschulneubau in der Adalbertstraße",
+    "url": "/vorhaben/2020-00077/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.423561654757943,
+          52.5077457835813
+        ]
+      },
+      "properties": {
+        "strname": "Adalbertstraße",
+        "hsnr": "53",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Adalbertstraße 53, 10179 Mitte",
+    "cost": "30.000.000 €",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "EDU"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-21 11:29:21.219040+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Haus der Statistik",
+    "url": "/vorhaben/2020-00076/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.418083960151472,
+          52.522200483908534
+        ]
+      },
+      "properties": {
+        "strname": "Karl-Marx-Allee",
+        "hsnr": "1",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Karl-Marx-Allee 1, 10178 Mitte",
+    "cost": "Voraussichtlicher Anteil des Bezirksamts Mitte: 170.000 €",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-09-23 11:39:32.966841+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neugestaltung Weddingplatz",
+    "url": "/vorhaben/2020-00075/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.369588,
+          52.540971
+        ]
+      }
+    },
+    "point_label": "Weddingplatz",
+    "cost": "Noch nicht beziffert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:17:51.679645+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Modularer Grundschulneubau in der Reinickendorfer Straße",
+    "url": "/vorhaben/2020-00074/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.365172171824927,
+          52.55616750697744
+        ]
+      },
+      "properties": {
+        "strname": "Reinickendorfer Straße",
+        "hsnr": "60",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Reinickendorfer Straße 60/61, 13347 Berlin",
+    "cost": "30.000.000 €",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "EDU"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-21 11:09:36.108417+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "St.-Paulus-Grundschule",
+    "url": "/vorhaben/2020-00073/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.334799857333904,
+          52.5284057290912
+        ]
+      },
+      "properties": {
+        "strname": "Waldenserstraße",
+        "hsnr": "27",
+        "plz": "10551",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Waldenserstraße 27, 10551 Berlin",
+    "cost": "500.000 € (50 % ige Förderung im Programm Aktive Zentren in Höhe von  250.000 €)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "EDU"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-21 10:48:18.792589+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Niederschlagswassermanagement in urbanen Räumen –  Anpassung Wegenetz im Fritz-Schloß-Park, 1.BA",
+    "url": "/vorhaben/2020-00072/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3568,
+          52.528337
+        ]
+      }
+    },
+    "point_label": "Fritz-Schloß-Park",
+    "cost": "754.000 € (Städtebaufördermittel aus dem Förderprogramm Stadtumbau bzw. ab 2020 „Wachstum und Nachhaltige Erneuerung“)",
+    "district": "Mitte",
+    "topics": [
+      "ENV",
+      "TRA"
+    ],
+    "status": 1,
+    "participation": 1,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2021-01-22 09:40:26.573255+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Döbritzer Verbrindung – südlich des Hallenbades",
+    "url": "/vorhaben/2020-00071/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.358831262857011,
+          52.527279172411276
+        ]
+      },
+      "properties": {
+        "strname": "Seydlitzstraße",
+        "hsnr": "11",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Seydlitzstraße 11, 10557 Mitte",
+    "cost": "rd. 750.000 € (inkl. Baukoordinierung) - Städtebaufördermittel aus dem Förderprogramm Stadtumbau bzw. ab 2020 „Wachstum und nachhaltige Erneuerung“",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:33:57.330683+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bedarfsanalyse der Modewirtschaft in Mitte und Pankow",
+    "url": "/vorhaben/2020-00070/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Bezirk Mitte und Bezirk Pankow",
+    "cost": "246.658 € (Programm „Wirtschaftsdienliche Maßnahmen“ und Saubere Stadt)",
+    "district": "Mitte",
+    "topics": [
+      "WOR"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:26:54.446464+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Mehrweg statt Einweg ein - Projekt zur Müllreduzierung",
+    "url": "/vorhaben/2020-00069/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "QM-Gebiete Soldiner Straße, Pankstraße, Badstraße",
+    "cost": "220.655,00 € (aus Netzwerkfonds)",
+    "district": "Mitte",
+    "topics": [
+      "WOR",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:23:20.402114+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kooperatives Standortmanagement Berlin Mitte - Verlängerung",
+    "url": "/vorhaben/2020-00068/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Bezirksregion Alexanderplatz Bezirksregion Regierungsviertel Planungsraum Heidestraße – Europacity Bereich Kulturforum",
+    "cost": "300.000 € (Gemeinschaftsaufgabe “Verbesserung der Regionalen Wirtschaftsstruktur“ - Regionalbudget)",
+    "district": "Mitte",
+    "topics": [
+      "WOR"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:20:03.096723+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Musikfestival Panke Parcours",
+    "url": "/vorhaben/2020-00067/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.379889,
+          52.560438
+        ]
+      }
+    },
+    "point_label": "QM-Gebiete Soldiner Straße, Pankstraße, Badstraße",
+    "cost": "220.655,00 € (Zukunftsinitiative Stadtteil II (ZIS II), Förderung aus dem Programm Soziale Stadt, Netzwerkfonds)",
+    "district": "Mitte",
+    "topics": [
+      "WOR",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:20:39.058776+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kitaneubau Wallstr.",
+    "url": "/vorhaben/2020-00066/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.410524480881767,
+          52.51211916045291
+        ]
+      },
+      "properties": {
+        "strname": "Wallstraße",
+        "hsnr": "32",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Wallstr. 32, 10179 Mitte",
+    "cost": "Noch nicht beziffert (aus Fördermitteln der Senatsverwaltung für Stadtentwicklung und Wohnen, der Senatsverwaltung für Jugend und Eigenmittel des Trägers)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:11:15.266380+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kitaneubau Seydlitzstr.",
+    "url": "/vorhaben/2020-00065/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.358831262857011,
+          52.527279172411276
+        ]
+      },
+      "properties": {
+        "strname": "Seydlitzstraße",
+        "hsnr": "11",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Seydlitzstr. 11, 10557 Berlin",
+    "cost": "Noch nicht beziffert (aus Fördermitteln der Senatsverwaltung für Stadtentwicklung und Wohnen, der Senatsverwaltung für Jugend und Eigenmittel des Trägers)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:09:14.565973+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Kita Rheinsberger Str.",
+    "url": "/vorhaben/2020-00064/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.404150180106683,
+          52.538832355067754
+        ]
+      },
+      "properties": {
+        "strname": "Rheinsberger Straße",
+        "hsnr": "34",
+        "plz": "10435",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Rheinsberger Str. 34/35, 10435 Berlin",
+    "cost": "Noch nicht beziffert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:07:44.757872+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Abenteuerspielplatz Humboldthain",
+    "url": "/vorhaben/2020-00063/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.388810896004841,
+          52.5446057413449
+        ]
+      },
+      "properties": {
+        "strname": "Gustav-Meyer-Allee",
+        "hsnr": "4",
+        "plz": "13355",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gustav-Meyer-Allee 4, 13355 Berlin",
+    "cost": "1.860.000 € (Investitionsmittel)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:06:20.540385+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Zille Club",
+    "url": "/vorhaben/2020-00062/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.353469158435653,
+          52.52960834227688
+        ]
+      },
+      "properties": {
+        "strname": "Rathenower Straße",
+        "hsnr": "17",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Rathenower Str. 17, 10559 Berlin",
+    "cost": "4.630.000 € (Städtebaufördermittel, Programm Soziale Stadt, Baufonds (QM), PJ 2015)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:04:46.288587+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Spielhaus Moabiter Kinderhof",
+    "url": "/vorhaben/2020-00061/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.359034535056338,
+          52.526625200006855
+        ]
+      },
+      "properties": {
+        "strname": "Seydlitzstraße",
+        "hsnr": "12",
+        "plz": "10557",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Seydlitzstr. 12, 10557 Mitte",
+    "cost": "1.325.000 € (Fördermittel der Senatsverwaltung für Stadtentwicklung und Wohnen Baufonds)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:03:06.957500+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kulturhaus Weinmeisterhaus",
+    "url": "/vorhaben/2020-00060/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405505639659122,
+          52.52548291722363
+        ]
+      },
+      "properties": {
+        "strname": "Weinmeisterstraße",
+        "hsnr": "12",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Weinmeisterstr. 12",
+    "cost": "1.800.000 € (Mittel aus Siwana IV)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 16:01:30.219108+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Kita Trauminsel",
+    "url": "/vorhaben/2020-00059/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.418763016842076,
+          52.50882090880001
+        ]
+      },
+      "properties": {
+        "strname": "Schmidstraße",
+        "hsnr": "2",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Schmidstr. 2",
+    "cost": "1.839.259 € (Fördermittel der Senatsverwaltung für Stadtentwicklung und Wohnen Städtebaulicher Denkmalschutz)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:58:14.649887+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kitaneubau Schmidstr. 4",
+    "url": "/vorhaben/2020-00058/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.418823768437864,
+          52.50940474618969
+        ]
+      },
+      "properties": {
+        "strname": "Schmidstraße",
+        "hsnr": "4",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Schmidstr. 4",
+    "cost": "Landesprogramm (über Senatsverwaltung für Stadtentwicklung)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:56:17.457480+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kitaneubau und Sanierung Mädchenwohnheim",
+    "url": "/vorhaben/2020-00057/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.416932035521452,
+          52.509334872807734
+        ]
+      },
+      "properties": {
+        "strname": "Schmidstraße",
+        "hsnr": "10",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Schmidstr. 10",
+    "cost": "4.225.000 € (Fördermittel der Senatsverwaltung für Stadtentwicklung und Wohnen Investitionspakt)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:54:31.721028+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kinder- und Jugendfreizeiteinrichtung Edinburger Straße",
+    "url": "/vorhaben/2020-00056/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.345647129841879,
+          52.5572501790865
+        ]
+      },
+      "properties": {
+        "strname": "Edinburger Straße",
+        "hsnr": "55",
+        "plz": "13349",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Edinburger Str. 55",
+    "cost": "3.700.000 € (Mittel aus Siwana IV)",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:52:49.390744+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Abenteuerspielplatz Telux",
+    "url": "/vorhaben/2020-00055/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.35580437287429,
+          52.5438282252298
+        ]
+      },
+      "properties": {
+        "strname": "Tegeler Straße",
+        "hsnr": "28A",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Tegeler Str. 28a",
+    "cost": "1.400.000 €",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:50:11.372553+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung Gebäudekomplex Nauener Platz",
+    "url": "/vorhaben/2020-00054/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.367658,
+          52.552422
+        ]
+      }
+    },
+    "point_label": "Reinickendorfer Str. 55/Schulstr. 101.",
+    "cost": "10.095.000,00 €",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 15:47:46.153357+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kitaneubau Triftstraße",
+    "url": "/vorhaben/2020-00053/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.359815,
+          52.544175
+        ]
+      }
+    },
+    "point_label": "Triftstraße",
+    "cost": "Noch nicht beziffert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 12:06:29.889345+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Multifunktionsgebäude auf dem Kinderbunten Bauernhof",
+    "url": "/vorhaben/2020-00052/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.356097437408025,
+          52.5443501125577
+        ]
+      },
+      "properties": {
+        "strname": "Luxemburger Straße",
+        "hsnr": "25",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Luxemburger Straße 25, 13353 Berlin-Mitte",
+    "cost": "790.000 €",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 12:02:51.326579+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erweiterung der Parkraumbewirtschaftung im Bezirk Mitte",
+    "url": "/vorhaben/2020-00051/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Ortsteile Moabit, Hansaviertel, Wedding und Gesundbrunnen. Zuschnitt der Parkzonen in den Abgrenzungen der Anlagen I und II",
+    "cost": "7.085.000 € Investitionskosten für neue Parkscheinautomaten und Parkzonenbeschilderung.",
+    "district": "Mitte",
+    "topics": [
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-02-16 12:51:11.322092+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erneuerung Kinderspielplatz Schumannstr. / Reinhardtstr.",
+    "url": "/vorhaben/2020-00050/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.382877,
+          52.523441
+        ]
+      }
+    },
+    "point_label": "Kinderspielplatz Schumannstr. / Reinhardtstr.",
+    "cost": "200.000 €",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-04 14:18:42.431170+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Leopoldplatz Passierscheinstelle",
+    "url": "/vorhaben/2020-00049/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.36018,
+          52.547581
+        ]
+      }
+    },
+    "point_label": "Leopoldplatz",
+    "cost": "1.100.000 Euro (Berliner Programm für Nachhaltige Entwicklung (BENE))",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-20 10:07:48.293449+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neugestaltung der Ohmstraße",
+    "url": "/vorhaben/2020-00048/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.417772,
+          52.511193
+        ]
+      }
+    },
+    "point_label": "Ohmstraße , 10179 Mitte",
+    "cost": "375.000 €",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:19:15.700172+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umfeld, Wegeverbindung und Erweiterung des Spielplatzes Neues Ufer",
+    "url": "/vorhaben/2020-00047/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.319203924772424,
+          52.52562576354947
+        ]
+      },
+      "properties": {
+        "strname": "Kaiserin-Augusta-Allee",
+        "hsnr": "100",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Kaiserin-Augusta-Allee 100, 10553 Mitte",
+    "cost": "1.303.000 € (Fördermittel aus dem Förderprogramm Nachhaltige Erneuerung)",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-17 10:03:44.021273+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umgestaltung der Müllerstraße zwischen Seestraße und U-Bahnhof Wedding",
+    "url": "/vorhaben/2020-00046/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361435,
+          52.545147
+        ]
+      }
+    },
+    "point_label": "Müllerstraße",
+    "cost": "ca. 7 Mio. €",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:19:45.075318+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Umgestaltung Kinderspielplatz Mollstraße 8 – 11 (südlich)",
+    "url": "/vorhaben/2020-00045/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.422540921442122,
+          52.52377530488082
+        ]
+      },
+      "properties": {
+        "strname": "Mollstraße",
+        "hsnr": "10",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Mollstraße 8 – 11",
+    "cost": "577.000 Euro",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-10 13:21:32.062512+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erneuerung Kinderspielplatz Invalidenpark",
+    "url": "/vorhaben/2020-00044/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.375812,
+          52.529694
+        ]
+      }
+    },
+    "point_label": "Invalidenpark",
+    "cost": "335.000",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-04 14:20:21.212152+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Erneuerung Kinderspielplatz Holzmarktstraße/Ifflandstraße",
+    "url": "/vorhaben/2020-00043/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.42016236299549,
+          52.51593230517579
+        ]
+      },
+      "properties": {
+        "strname": "Holzmarktstraße",
+        "hsnr": "69",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Holzmarktstraße 69, 10179 Mitte",
+    "cost": "619.200 €",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:20:34.995386+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Neugestaltung des Hegelplatzes",
+    "url": "/vorhaben/2020-00041/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.393278,
+          52.51959
+        ]
+      }
+    },
+    "point_label": "Hegelplatz",
+    "cost": "892.500 € (245.000 € (Bezirkshaushalt) + 647.500 € (Plätzeprogramm))",
+    "district": "Mitte",
+    "topics": [
+      "CHI",
+      "ENV"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-04 14:20:56.185948+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Verkehrsberuhigung und Neugestaltung der Lübecker Straße",
+    "url": "/vorhaben/2020-00039/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.345573338897275,
+          52.52657867588942
+        ]
+      },
+      "properties": {
+        "strname": "Lübecker Straße",
+        "hsnr": "",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Aktives Zentrum und Sanierungsgebiet Turmstraße/ Lübecker Str.",
+    "cost": "Baukosten derzeit geschätzt 3.920.000,00 €",
+    "district": "Mitte",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-11-04 14:21:34.235307+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Aufwertung des Bildungs- und Kulturstandorts Turmstraße 75",
+    "url": "/vorhaben/2020-00038/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.339162,
+          52.525465
+        ]
+      }
+    },
+    "point_label": "Aktives Zentrum und Sanierungsgebiet Turmstraße",
+    "cost": "Noch nicht beziffert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:28:05.140170+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bärenzwinger - Standortentwicklung",
+    "url": "/vorhaben/2020-00037/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.414462,
+          52.512806
+        ]
+      }
+    },
+    "point_label": "Köllnischer Park, Berlin-Mitte",
+    "cost": "Noch nicht beziffert.",
+    "district": "Mitte",
+    "topics": [
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-10-30 10:16:28.113016+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kunst im Stadtraum / Erinnerungskultur „Letzte Wege“ (AT)",
+    "url": "/vorhaben/2020-00036/",
+    "organisation": "Bezirksamt Mitte",
+    "point": "",
+    "point_label": "Bezirk Mitte",
+    "cost": "520.000,00 Euro",
+    "district": "Mitte",
+    "topics": [
+      "ANT",
+      "EDU"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:20:10.598332+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kunst am Bau im Rahmen der Baumaßnahme „Neubau einer Grundschule mit Sporthalle / Europacity“",
+    "url": "/vorhaben/2020-00035/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.372674749779007,
+          52.538178767862426
+        ]
+      },
+      "properties": {
+        "strname": "Chausseestraße",
+        "hsnr": "82",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Bezirksregion Brunnenstraße Süd/ Chausseestr. 82/ Boyenstr.",
+    "cost": "185.050,00 Euro",
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:17:39.373772+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kunst am Bau im Rahmen der Baumaßnahme „Sanierung und Erweiterung der Fanny-Hensel-Musikschule“",
+    "url": "/vorhaben/2020-00034/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362629011013269,
+          52.54705485650119
+        ]
+      },
+      "properties": {
+        "strname": "Ruheplatzstraße",
+        "hsnr": "4",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Ruheplatzstraße 4, 13347 Berlin",
+    "cost": "29.400,00 Euro",
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:15:44.168751+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kunst am Bau im Rahmen der Baumaßnahme „Sanierung Gebäudekomplex Nauener Platz“",
+    "url": "/vorhaben/2020-00033/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.367290881823246,
+          52.55241098391086
+        ]
+      },
+      "properties": {
+        "strname": "Reinickendorfer Straße",
+        "hsnr": "55",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Reinickendorfer Str. 55/ Schulstr. 101, 13357 Berlin",
+    "cost": "63.200,00 Euro",
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:13:46.585451+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kunst am Bau im Rahmen der Baumaßnahme „Umbau Schulstandort Berolinastraße – USB“",
+    "url": "/vorhaben/2020-00032/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.424166144175198,
+          52.522246705951964
+        ]
+      },
+      "properties": {
+        "strname": "Berolinastraße",
+        "hsnr": "8",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Charlotte-Pfeffer-Schule, Berolinastraße 8, 10178 Berlin",
+    "cost": "96.200,00 Euro",
+    "district": "Mitte",
+    "topics": [
+      "EDU",
+      "CHI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:12:01.786670+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Sanierung und Neubau Zweigstelle Wedding der Musikschule Fanny Hensel",
+    "url": "/vorhaben/2020-00031/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.361703695704678,
+          52.54755795999635
+        ]
+      },
+      "properties": {
+        "strname": "Ruheplatzstraße",
+        "hsnr": "",
+        "plz": "13347",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Ruheplatzstraße",
+    "cost": "5.411.000,00",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "CUL"
+    ],
+    "status": 0,
+    "participation": 1,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:12:29.409827+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Errichtung einer Mittelpunktbibliothek für Moabit",
+    "url": "/vorhaben/2020-00030/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.347150688233024,
+          52.52641292050815
+        ]
+      },
+      "properties": {
+        "strname": "Turmstraße",
+        "hsnr": "22",
+        "plz": "10559",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Turmstraße 22, 10559 Berlin (Moabit)",
+    "cost": "Noch nicht beziffert",
+    "district": "Mitte",
+    "topics": [
+      "BUI",
+      "EDU"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-07 10:13:19.728184+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Vorbereitende Untersuchungen nach § 141 Baugesetzbuch für das Gebiet Langhansstraße",
+    "url": "/vorhaben/2020-00029/",
+    "organisation": "Senatsverwaltung für Stadtentwicklung und Wohnen",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.450470023837612,
+          52.54876345967368
+        ]
+      },
+      "properties": {
+        "strname": "Langhansstraße",
+        "hsnr": "",
+        "plz": "13086",
+        "bezirk_name": "Pankow"
+      }
+    },
+    "point_label": "Untersuchungsgebiet Langhansstraße",
+    "cost": null,
+    "district": "Pankow",
+    "topics": [
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-02-22 12:09:47.804465+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Wedding Zentrum",
+    "url": "/vorhaben/2020-00028/",
+    "organisation": "Stadtteilkoordination Wedding Zentrum",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.354831416374768,
+          52.5418849617721
+        ]
+      },
+      "properties": {
+        "strname": "Sprengelstraße",
+        "hsnr": "15",
+        "plz": "13353",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Treffpunkt Sprengelhaus, Sprengelstr. 15, 13353 Berlin",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2021-01-14 16:36:15.777490+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Tiergarten Süd",
+    "url": "/vorhaben/2020-00027/",
+    "organisation": "Stadtteilkoordination Tiergarten Süd",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.362818328951926,
+          52.50386257417529
+        ]
+      },
+      "properties": {
+        "strname": "Lützowstraße",
+        "hsnr": "28",
+        "plz": "10785",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Kiez Zentrum Villa Lützow, Lützowstraße 28, 10785 Berlin",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2021-01-20 12:57:23.386629+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Regierungsviertel",
+    "url": "/vorhaben/2020-00026/",
+    "organisation": "Stadtteilkoordination Regierungsviertel",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.409391100008797,
+          52.51345454109226
+        ]
+      },
+      "properties": {
+        "strname": "Fischerinsel",
+        "hsnr": "3",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "KREATIVHAUS, Fischerinsel 3, 10179 Berlin",
+    "cost": "35.900 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-02-19 15:37:52.947253+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Parkviertel",
+    "url": "/vorhaben/2020-00025/",
+    "organisation": "Stadtteilkoordination Parkviertel",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.346624,
+          52.553824
+        ]
+      }
+    },
+    "point_label": "Stadtteil- und Familienzentrum Paul Gerhardt Stift Soziales gGmbH",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 3,
+    "created_or_modified": "2021-03-15 06:52:53.367766+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Osloer Straße",
+    "url": "/vorhaben/2020-00024/",
+    "organisation": "Stadtteilkoordination Osloer Straße",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.385988331757911,
+          52.55607873178895
+        ]
+      },
+      "properties": {
+        "strname": "Osloer Straße",
+        "hsnr": "12",
+        "plz": "13359",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Fabrik Osloer - NachbarschaftsEtage, Osloer Str. 12, 13359 Berlin",
+    "cost": "23.100 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-02-19 15:32:50.052181+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Moabit West",
+    "url": "/vorhaben/2020-00023/",
+    "organisation": "Stadtteilkoordination Moabit West",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.326403831126477,
+          52.53192818407127
+        ]
+      },
+      "properties": {
+        "strname": "Rostocker Straße",
+        "hsnr": "32",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Stadtschloss Moabit Nachbarschaftshaus, Rostocker Str. 32, 10553 Berlin",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-02-19 15:40:12.795538+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Moabit Ost",
+    "url": "/vorhaben/2020-00022/",
+    "organisation": "Stadtteilkoordination Moabit Ost",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.326403831126477,
+          52.53192818407127
+        ]
+      },
+      "properties": {
+        "strname": "Rostocker Straße",
+        "hsnr": "32",
+        "plz": "10553",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Stadtschloss Moabit Nachbarschaftshaus, Rostocker Str. 32, 10553 Berlin",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-02-19 15:38:48.243379+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Brunnenstraße Süd",
+    "url": "/vorhaben/2020-00021/",
+    "organisation": "Stadtteilkoordination Brunnenstraße Süd",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.392806,
+          52.528069
+        ]
+      }
+    },
+    "point_label": "Begegnungsstätte \"Mehr Mitte\", Torstr. 190, 10115 Berlin",
+    "cost": "38.400 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2020-02-19 15:39:47.561673+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Brunnenstraße Nord",
+    "url": "/vorhaben/2020-00020/",
+    "organisation": "Stadtteilkoordination Brunnenstraße Nord",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.396132,
+          52.541963
+        ]
+      }
+    },
+    "point_label": "Olaf-Palme-Zentrum, Demminer Str. 28",
+    "cost": "29.967 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2021-01-14 11:11:11.424762+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Stadtteilkoordination Alexanderplatz",
+    "url": "/vorhaben/2020-00019/",
+    "organisation": "Stadtteilkoordination Alexanderplatz",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.409391100008797,
+          52.51345454109226
+        ]
+      },
+      "properties": {
+        "strname": "Fischerinsel",
+        "hsnr": "3",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "KREATIVHAUS, Fischerinsel 3, 10179 Berlin",
+    "cost": "40.900 EUR",
+    "district": "Mitte",
+    "topics": [
+      "NEI"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-02-19 15:41:21.707802+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Ost-Route\"",
+    "url": "/vorhaben/2019-00018/",
+    "organisation": "infraVelo",
+    "point": "",
+    "point_label": "Tiergarten – Lands­berger Allee – Marzahn-Hellersdorf",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2020-03-31 09:11:20.241294+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Bürgerbeteiligung 2.0: Bürger_innenräte in Tempelhof-Schöneberg",
+    "url": "/vorhaben/2019-00017/",
+    "organisation": "Bezirksamt Tempelhof-Schöneberg",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.344097,
+          52.484976
+        ]
+      }
+    },
+    "point_label": "Tempelhof-Schöneberg",
+    "cost": null,
+    "district": "Tempelhof-Schöneberg",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 8,
+    "created_or_modified": "2019-11-05 11:25:26.541458+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Handlungsbedarfe in den Bezirksregionen Schöneberg Nord und Schöneberg Süd",
+    "url": "/vorhaben/2019-00016/",
+    "organisation": "Bezirksamt Tempelhof-Schöneberg",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.353882,
+          52.481996
+        ]
+      }
+    },
+    "point_label": "Bezirksregionen Schöneberg Nord und Schöneberg Süd",
+    "cost": null,
+    "district": "Tempelhof-Schöneberg",
+    "topics": [
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 2,
+    "created_or_modified": "2019-10-02 08:12:39.961284+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Kulturelle Angebote im Bezirk",
+    "url": "/vorhaben/2019-00013/",
+    "organisation": "Bezirksamt Friedrichshain-Kreuzberg",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.446236,
+          52.509338
+        ]
+      }
+    },
+    "point_label": "Berlin Friedrichshain-Kreuzberg",
+    "cost": null,
+    "district": "Friedrichshain-Kreuzberg",
+    "topics": [
+      "CUL"
+    ],
+    "status": 1,
+    "participation": 2,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-05-28 12:27:08.579820+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Teltowkanalroute\"",
+    "url": "/vorhaben/2019-00012/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.355598,
+          52.461867
+        ]
+      }
+    },
+    "point_label": "Steglitz-Zehlendorf - Tempelhof-Schöneberg",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 0,
+    "created_or_modified": "2020-09-22 14:26:03.480579+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung „Nonnendammallee – Falkenseer Chaussee\" und „Spandauer Damm – Freiheit“",
+    "url": "/vorhaben/2019-00011/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.21842,
+          52.537354
+        ]
+      }
+    },
+    "point_label": "Charlottenburg-Wilmersdorf - Spandau",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-27 12:18:23.339274+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"West-Route\"",
+    "url": "/vorhaben/2019-00010/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.310065,
+          52.516503
+        ]
+      }
+    },
+    "point_label": "Charlottenburg-Wilmersdorf - Spandau",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-27 12:14:58.984542+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Die Zukunft des Nikolaiviertels mitgestalten!",
+    "url": "/vorhaben/2019-00009/",
+    "organisation": "Bezirksamt Mitte",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.407292318419795,
+          52.51640011703373
+        ]
+      },
+      "properties": {
+        "strname": "Nikolaikirchplatz",
+        "hsnr": "",
+        "plz": "10178",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Berlin Nikolaiviertel",
+    "cost": null,
+    "district": "Mitte",
+    "topics": [
+      "NEI",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2019-09-25 09:28:35.882189+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "KiezRadar-Workshop mit Bürger*innen am 28. November 2019",
+    "url": "/vorhaben/2019-00007/",
+    "organisation": "Senatskanzlei",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.386939588246147,
+          52.485264126411295
+        ]
+      },
+      "properties": {
+        "strname": "Platz der Luftbrücke",
+        "hsnr": "",
+        "plz": "12101",
+        "bezirk_name": "Tempelhof-Schöneberg"
+      }
+    },
+    "point_label": "CityLAB",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "NEI"
+    ],
+    "status": 1,
+    "participation": 0,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "published_projects_count": 0,
+    "created_or_modified": "2019-12-16 15:35:54.821227+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Integrierte Sportentwicklungsplanung in Berlin",
+    "url": "/vorhaben/2019-00005/",
+    "organisation": "Senatsverwaltung für Inneres und Sport",
+    "point": {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.412186773193877,
+          52.51654678561554
+        ]
+      },
+      "properties": {
+        "strname": "Klosterstraße",
+        "hsnr": "47",
+        "plz": "10179",
+        "bezirk_name": "Mitte"
+      }
+    },
+    "point_label": "Gesamtberlin",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "HEA",
+      "URB"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 7,
+    "created_or_modified": "2021-03-18 09:06:11.239205+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Panke-Trail\"",
+    "url": "/vorhaben/2019-00004/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.410122,
+          52.566032
+        ]
+      }
+    },
+    "point_label": "Pankow - Mitte",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-11-27 12:14:30.910076+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Königsweg-Kronprinzessinnenweg\"",
+    "url": "/vorhaben/2019-00003/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.213806,
+          52.450779
+        ]
+      }
+    },
+    "point_label": "Wannsee – Grunewald – Messe Berlin – Halensee/ Kurfürstendamm",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-09-22 14:24:28.594490+00:00"
+  },
+  {
+    "type": "plan",
+    "subtype": "plan",
+    "title": "Radschnellverbindung \"Y-Trasse\"",
+    "url": "/vorhaben/2019-00002/",
+    "organisation": "infraVelo",
+    "point": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.452748,
+          52.46358
+        ]
+      }
+    },
+    "point_label": "Adlershof – Neukölln – Kreuzberg – Treptow",
+    "cost": null,
+    "district": "Gesamtstädtisch",
+    "topics": [
+      "URB",
+      "TRA"
+    ],
+    "status": 0,
+    "participation": 0,
+    "participation_string": "laufend",
+    "participation_active": true,
+    "published_projects_count": 1,
+    "created_or_modified": "2020-09-22 14:27:38.145992+00:00"
+  }
+]

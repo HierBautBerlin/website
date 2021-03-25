@@ -2,6 +2,7 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
   use Hierbautberlin.DataCase
 
   alias Hierbautberlin.Importer.Infravelo
+  alias Hierbautberlin.GeoData
   alias Hierbautberlin.Repo
 
   defmodule ImportMock do
@@ -40,15 +41,15 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
 
       assert first.geo_geometry == %Geo.LineString{
                coordinates: [
-                 {52.4709511995, 13.4463152997},
-                 {52.4711337807, 13.4478924972}
+                 {13.4463152997, 52.4709511995},
+                 {13.4478924972, 52.4711337807}
                ],
                properties: %{},
                srid: 3857
              }
 
       assert first.geo_point == %Geo.Point{
-               coordinates: {52.4710424927, 13.4471038968},
+               coordinates: {13.4471038968, 52.4710424927},
                properties: %{},
                srid: 3857
              }
@@ -69,6 +70,7 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
       assert first.title == "Braunschweiger Straße (Bauabschnitt 3)"
 
       second = ImportUpdateMock |> Infravelo.import() |> List.first()
+      second = GeoData.get_geo_item!(second.id)
 
       assert first.id == second.id
       assert second.external_id == "9080026"

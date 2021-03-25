@@ -24,8 +24,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
     Enum.map(items, fn item ->
       attrs = to_geo_item(item)
 
-      {:ok, geo_item} =
-        Hierbautberlin.GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
+      {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
 
       geo_item
     end)
