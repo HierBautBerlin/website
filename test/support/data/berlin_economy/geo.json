@@ -1,0 +1,465 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "title": "berlin.de: Bauprojekte",
+    "description": "Bürogebäude, Gewerbe, Wohnkomplexe und neue Quartiere: Interessante Bauprojekte in Berlin."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3681,
+          52.5295
+        ]
+      },
+      "properties": {
+        "title": "Mix it like Berlin in der Heidestraße",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html",
+        "description": "Im Quartier Heidestraße entstehen neben dem bereits fertiggestellen QH Track drei weitere Gebäude für Wohnraum und Gewerbe. ",
+        "address": "Heidestraße 57, Berlin, 10557, Deutschland",
+        "image": null,
+        "modified": "2021-03-24T14:51:44+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2901,
+          52.559
+        ]
+      },
+      "properties": {
+        "title": "Schumacher Quartier",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6354799-4470362-schumacher-quartier.html",
+        "description": "Auf dem Gelände des geschlossenen Flughafen Tegel soll das weltweit größte Holzbau-Quartier mit Wohnraum für bis zu 10 000 Menschen entstehen. ",
+        "address": "Saatwinkler Damm , Berlin, 13405, Deutschland",
+        "image": null,
+        "modified": "2021-03-15T14:08:13+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.378,
+          52.5022
+        ]
+      },
+      "properties": {
+        "title": "WoHo - das Wohnhochhaus aus Holz",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6435710-4470362-woho-das-wohnhochhaus-aus-holz.html",
+        "description": "Im Stadtteil Schöneberg soll ein 98 Meter hohes Holzhybrid-Hochhaus mit Wohn- und Gewerbeflächen für Menschen mit niedrigen Einkünften entstehen. ",
+        "address": "Schöneberger Straße , Berlin, 10963, Deutschland",
+        "image": null,
+        "modified": "2021-03-15T14:07:31+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2001,
+          52.5333
+        ]
+      },
+      "properties": {
+        "title": "Spandauer Ufer",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6449607-4470362-spandauer-ufer.html",
+        "description": "Direkt an der Havel soll mit dem Spandauer Ufer ein Stadtquartier in urbaner Nachbarschaft mit allen Dingen des täglichen Bedarfs und optimaler Anbindung an die Berliner City entstehen. ",
+        "address": "Klosterstraße , Berlin, 13581, Deutschland",
+        "image": null,
+        "modified": "2021-02-22T13:21:27+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.5059,
+          52.4844
+        ]
+      },
+      "properties": {
+        "title": "Parkstadt Karlshorst",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6448077-4470362-parkstadt-karlshorst.html",
+        "description": "Mit der neuen Parkstadt soll das Prinzenviertel im Stadtteil Karlshorst weitergeführt werden. Hier entsteht ein Quartier für jede Lebenslage. ",
+        "address": "Blockdammweg 30, Berlin, 10318, Deutschland",
+        "image": null,
+        "modified": "2021-02-19T15:07:16+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2431,
+          52.5504
+        ]
+      },
+      "properties": {
+        "title": "Das neue Gartenfeld",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6428178-4470362-das-neue-gartenfeld.html",
+        "description": "Auf der Insel Gartenfeld im Bezirk Spandau, wo Siemens einst ein großes Kabelwerk betrieb, soll ein familienfreundliches und vielseitiges Smart City Quartier mit 3700 Wohnungen entstehen. ",
+        "address": "Gartenfeld , Berlin, 13599, Deutschland",
+        "image": null,
+        "modified": "2021-02-02T12:57:09+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.4563,
+          52.5268
+        ]
+      },
+      "properties": {
+        "title": "Alter Schlachthof",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6427863-4470362-alter-schlachthof.html",
+        "description": "Auf dem Gelände des Alten Schlachthofes im Bezirk Pankow soll ein integratives Quartier mit Wohnungen für Studierende, einer Kita und Büroflächen entstehen.",
+        "address": "Walter-Friedländer-Straße , Berlin, 10249, Deutschland",
+        "image": null,
+        "modified": "2021-01-28T11:39:42+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.4486,
+          52.506
+        ]
+      },
+      "properties": {
+        "title": "Edge East Side - der neue Amazon-Tower",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6404482-4470362-edge-east-side-der-neue-amazontower.html",
+        "description": "Mit dem Edge East Side Berlin entsteht ein 140 Meter hoher Tower zwischen den Bezirken Friedrichshain und Kreuzberg. Hauptmieter soll der Internethändler Amazon werden. ",
+        "address": "Warschauer Straße , Berlin, 10243, Deutschland",
+        "image": null,
+        "modified": "2021-01-13T10:20:07+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2187,
+          52.5577
+        ]
+      },
+      "properties": {
+        "title": "Wohnanlage Hakenfelde",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6390927-4470362-wohnanlage-hakenfelde.html",
+        "description": "Im Spandauer Stadtteil Hakenfelde auf der Halbinsel Havelspitze entstehen in fünf neuen Wohngebäuden 149 Mietwohnung und drei Gewerbeeinheiten. ",
+        "address": "Hugo-Cassirer-Straße , Berlin, 13587, Deutschland",
+        "image": null,
+        "modified": "2020-12-21T11:31:05+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3897,
+          52.5252
+        ]
+      },
+      "properties": {
+        "title": "Am Tacheles",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6360862-4470362-am-tacheles.html",
+        "description": "Im neuen Stadtquartier «Am Tacheles» sollen bis 2023 zahlreiche Wohneinheiten, Büro- und Gewerbeflächen, Einkaufsmöglichkeiten sowie kulturelle Einrichtungen in gehobenem Stil entstehen. ",
+        "address": "Oranienburger Straße , Berlin, 10178, Deutschland",
+        "image": null,
+        "modified": "2020-11-19T14:15:21+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.5956,
+          52.5407
+        ]
+      },
+      "properties": {
+        "title": "Gut Hellersdorf",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6351335-4470362-gut-hellersdorf.html",
+        "description": "Das Stadtgut Hellersdorf existiert bereits seit mehreren Hundert Jahren. Nun sollen in der Umgebung neue Wohn-, Kultur- und Bildungsangebote sowie Gewerbeflächen entstehen. ",
+        "address": "Neuruppiner Straße , Berlin, 12629, Deutschland",
+        "image": null,
+        "modified": "2020-11-13T09:52:56+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.435,
+          52.4147
+        ]
+      },
+      "properties": {
+        "title": "Buckower Felder",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6352787-4470362-buckower-felder.html",
+        "description": "Ab 2021 soll an der südlichen Grenze von Neukölln ein neues Stadtquartier mit rund 900 Wohnungen, einer Kindertagesstätte, Freizeiteinrichtungen und multifunktionalen Grünflächen entstehen. ",
+        "address": "Gerlinger Straße , Berlin, 12349 , Deutschland",
+        "image": null,
+        "modified": "2020-11-11T14:57:24+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3125,
+          52.4098
+        ]
+      },
+      "properties": {
+        "title": "Neulichterfelde",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6351827-4470362-neulichterfelde.html",
+        "description": "Im südlichen Lichterfelde direkt an der Grenze zu Brandenburg entsteht ab 2021 ein neues Stadtquartier mit 2500 Wohnungen, sozialen Einrichtungen und Naherholungsflächen. ",
+        "address": "Reaumurstraße , Berlin, 12207, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T12:57:40+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.36,
+          52.4777
+        ]
+      },
+      "properties": {
+        "title": "Schöneberger Linse",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6350614-4470362-schoeneberger-linse.html",
+        "description": "Zwischen den Bahnhöfen Südkreuz und Schöneberg entsteht seit 2018 ein neues Stadtquartier mit Wohn- und Gewerbeflächen, angelagerten Plätzen, Sport- und Spieleinrichtungen sowie Grünflächen. ",
+        "address": "Temelhofer Weg , Berlin, 10829, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:45:03+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.297,
+          52.5094
+        ]
+      },
+      "properties": {
+        "title": "Suarez",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6344702-4470362-suarez.html",
+        "description": "In Charlottenburg entstehen mit dem Projekt Suarez - Finest Living 26 Miet- und Eigentumswohnungen in attraktiver Stadtlage. Die Fertigstellung ist für 2021 geplant.",
+        "address": "Suarezstraße  , Berlin, 14057, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:44:12+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3295,
+          52.496
+        ]
+      },
+      "properties": {
+        "title": "Achtundeins",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6344292-4470362-achtundeins-hotel-ecke-bundesallee-paris.html",
+        "description": "In zentraler Lage an der Ecke Bundesallee/Pariser Straße im Stadtteil Wilmersdorf sollen bis zum Herbst 2022 das Büro- und Geschäftshaus Achtundeins sowie ein Hotel entstehen. ",
+        "address": "Pariser Straße 1, Berlin, 10719, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:43:35+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2602,
+          52.5381
+        ]
+      },
+      "properties": {
+        "title": "Siemensstadt 2.0",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6035142-4470362-siemensstadt-20.html",
+        "description": "Mit der Siemensstadt 2.0 entsteht ein neuer Stadtteil in Spandau, der eine Mischung aus Gebäuden und Freiflächen für Wohnen, Arbeiten und Forschung bieten soll. ",
+        "address": "Siemensstadt , Berlin, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:42:26+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.4148,
+          52.5203
+        ]
+      },
+      "properties": {
+        "title": "Alexander Berlin´s Capital Tower",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5998745-4470362-alexander-berlins-capital-tower.html",
+        "description": "In Berlin-Mitte entsteht auf dem Alexanderplatz vor dem Einkaufszentrum Alexa mit 150 Metern das höchste Hochhaus Berlins.",
+        "address": "Grunerstraße 21, Berlin, 10179, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:41:52+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.4487,
+          52.5296
+        ]
+      },
+      "properties": {
+        "title": "Pandion 4Living",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5582642-4470362-pandion-4living.html",
+        "description": "In Berlin-Prenzlauer Berg nahe Volkspark Friedrichshain wird bis 2021 ein Wohnensemble mit über 350 Eigentumswohnungen errichtet.\r\n",
+        "address": "Conrad-Blenke-Straße , Berlin, 10407, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:41:14+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.5074,
+          52.4939
+        ]
+      },
+      "properties": {
+        "title": "Dolgensee-Center",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5561863-4470362-dolgenseecenter.html",
+        "description": "In Berlin-Friedrichsfelde werden bis Mitte 2021 zwei Zehngeschosser mit rund 690 bezahlbaren Mietwohnungen gebaut.\r\n",
+        "address": "Dolgenseestraße , Berlin, 10319, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:40:38+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.2982,
+          52.479
+        ]
+      },
+      "properties": {
+        "title": "Maximilians Quartier",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5494839-4470362-maximilians-quartier.html",
+        "description": "In Berlin-Schmargendorf entsteht bis 2021 ein neues Stadtquartier mit fast 1000 gehobenen Eigentums- und Mietwohnungen.",
+        "address": "Forckenbeckstraße , Berlin, 14199, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:39:59+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.4682,
+          52.5074
+        ]
+      },
+      "properties": {
+        "title": "Schreibfederhöfe",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5553241-4470362-schreibfederhoefe.html",
+        "description": "In Friedrichshain werden zwischen Weser- und Boxhagener Straße bis 2021 über 200 Eigentums- und Mietwohnungen errichtet.",
+        "address": "Boxhagener Straße 76, Berlin, 10245, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:39:24+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3335,
+          52.5154
+        ]
+      },
+      "properties": {
+        "title": "No.1 Charlottenburg",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5263543-4470362-no-1-charlottenburg.html",
+        "description": "Auf einem der letzten freien Wasser-Grundstücke der City West entstehen 272 Eigentumswohnungen in gehobenem Ambiente.",
+        "address": "Wegelystraße  1, Berlin, 10623, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:38:44+0100",
+        "style": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.437,
+          52.5063
+        ]
+      },
+      "properties": {
+        "title": "Pier 61-63",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/5263481-4470362-pier-61-63.html",
+        "description": "Bis 2021 entstehen in Berlin-Friedrichshain direkt am Wasser insgesamt 62 Mietwohnungen und ein Hotel. ",
+        "address": "Mühlenstrasse 63, Berlin, 10243, Deutschland",
+        "image": null,
+        "modified": "2020-11-11T10:38:07+0100",
+        "style": null
+      }
+    }
+  ]
+}

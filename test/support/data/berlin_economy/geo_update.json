@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "title": "berlin.de: Bauprojekte",
+    "description": "Bürogebäude, Gewerbe, Wohnkomplexe und neue Quartiere: Interessante Bauprojekte in Berlin."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.3681,
+          52.5295
+        ]
+      },
+      "properties": {
+        "title": "Mix it like Berlin in der Heidestraße - Update",
+        "url": "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html",
+        "description": "Im Quartier Heidestraße entstehen neben dem bereits fertiggestellen QH Track drei weitere Gebäude für Wohnraum und Gewerbe. ",
+        "address": "Heidestraße 57, Berlin, 10557, Deutschland",
+        "image": null,
+        "modified": "2021-05-24T14:51:44+0100",
+        "style": null
+      }
+    }
+  ]
+}
