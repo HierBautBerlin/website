@@ -1,0 +1,1 @@
+var markers = [[51.96115,13.248999999999999,"Beregnung in der Gemarkung Schlenzer - Update","294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0","12","Negative Vorprüfungen",[{"id":"UVPG-13","name":"Wasserwirtschaftliche Vorhaben"}],[]]];
