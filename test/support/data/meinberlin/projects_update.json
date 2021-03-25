@@ -1,0 +1,32 @@
+[
+  {
+    "type": "project",
+    "subtype": "default",
+    "title": "Bürgerhaushalt Treptow-Köpenick Update",
+    "url": "/projekte/burgerhaushalt-treptow-kopenick/",
+    "organisation": "Bezirksamt Treptow-Köpenick",
+    "tile_image": "https://meinberlin-media.liqd.net/projects/backgrounds/burgerhaushalt_treptowkoepenik.jpg.500x500_q85.jpg",
+    "tile_image_copyright": "",
+    "point": "",
+    "point_label": "",
+    "cost": "",
+    "district": "Treptow-Köpenick",
+    "topics": [
+      "FIN"
+    ],
+    "access": 1,
+    "status": 1,
+    "participation_string": "abgeschlossen",
+    "participation_active": false,
+    "participation": 0,
+    "participation_display": "Ja",
+    "description": "Machen Sie Vorschläge, um Politik und Verwaltung dabei zu unterstützen, die knappen Finanzen des Bezirks bedarfsgerecht einzusetzen.",
+    "future_phase": false,
+    "active_phase": false,
+    "past_phase": "2019-05-31 21:59:00+00:00",
+    "plan_url": null,
+    "plan_title": null,
+    "published_projects_count": 0,
+    "created_or_modified": "2019-03-15 14:40:17.397420+00:00"
+  }
+]

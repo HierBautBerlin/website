@@ -9,6 +9,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     "in_preparation",
     "in_planning",
     "under_construction",
+    "active",
     "finished",
     nil
   ]
@@ -24,6 +25,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :date_end, :utc_datetime
     field :geo_point, Geo.PostGIS.Geometry
     field :geo_geometry, Geo.PostGIS.Geometry
+    field :participation_open, :boolean, default: false
 
     belongs_to :source, Source
 
@@ -43,7 +45,10 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :date_end,
       :geo_point,
       :geo_geometry,
-      :source_id
+      :source_id,
+      :participation_open,
+      :inserted_at,
+      :updated_at
     ])
     |> validate_inclusion(:state, @states)
     |> validate_required([:source_id, :external_id, :title])

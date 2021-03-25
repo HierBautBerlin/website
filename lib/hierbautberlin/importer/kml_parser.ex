@@ -44,14 +44,14 @@ defmodule Hierbautberlin.Importer.KmlParser do
   end
 
   defp kml_to_geo(%Exkml.Point{} = point) do
-    %Geo.Point{coordinates: {point.y, point.x}, srid: 3857}
+    %Geo.Point{coordinates: {point.x, point.y}, srid: 3857}
   end
 
   defp kml_to_geo(%Exkml.Line{} = line) do
     %Geo.LineString{
       coordinates:
         Enum.map(line.points, fn item ->
-          {item.y, item.x}
+          {item.x, item.y}
         end),
       srid: 3857
     }
@@ -75,7 +75,7 @@ defmodule Hierbautberlin.Importer.KmlParser do
     %Geo.Polygon{
       coordinates: [
         Enum.map(polygon.outer_boundary.points, fn item ->
-          {item.y, item.x}
+          {item.x, item.y}
         end)
       ],
       srid: 3857
