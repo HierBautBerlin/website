@@ -1,5 +1,6 @@
 defmodule Hierbautberlin.Importer.Infravelo do
   alias Hierbautberlin.Importer.KmlParser
+  alias Hierbautberlin.Importer.LiqdApi
   alias Hierbautberlin.GeoData
 
   @state_mapping %{
@@ -11,7 +12,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
   }
 
   def import(http_connection \\ HTTPoison) do
-    items = fetch_data(http_connection, "https://www.infravelo.de/api/v1/projects/")
+    items = LiqdApi.fetch_data(http_connection, "https://www.infravelo.de/api/v1/projects/")
 
     {:ok, source} =
       GeoData.upsert_source(%{
@@ -28,24 +29,6 @@ defmodule Hierbautberlin.Importer.Infravelo do
 
       geo_item
     end)
-  end
-
-  defp fetch_data(http_connection, url, prev_result \\ []) do
-    response = http_connection.get!(url)
-
-    if response.status_code != 200 do
-      prev_result
-    else
-      json = Jason.decode!(response.body)
-
-      result = prev_result ++ json["results"]
-
-      if json["next"] do
-        fetch_data(http_connection, json["next"], result)
-      else
-        result
-      end
-    end
   end
 
   defp to_geo_item(item) do

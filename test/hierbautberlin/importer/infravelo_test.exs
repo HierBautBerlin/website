@@ -6,19 +6,34 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
   alias Hierbautberlin.Repo
 
   defmodule ImportMock do
-    def get!("https://www.infravelo.de/api/v1/projects/") do
+    def get!(
+          "https://www.infravelo.de/api/v1/projects/",
+          ["User-Agent": "hierbautberlin.de"],
+          timeout: 60_000,
+          recv_timeout: 60_000
+        ) do
       {:ok, html} = File.read("./test/support/data/infravelo/first.json")
       %{body: html, headers: [], status_code: 200}
     end
 
-    def get!("https://www.infravelo.de/api/v1/projects/50/50/") do
+    def get!(
+          "https://www.infravelo.de/api/v1/projects/50/50/",
+          ["User-Agent": "hierbautberlin.de"],
+          timeout: 60_000,
+          recv_timeout: 60_000
+        ) do
       {:ok, html} = File.read("./test/support/data/infravelo/second.json")
       %{body: html, headers: [], status_code: 200}
     end
   end
 
   defmodule ImportUpdateMock do
-    def get!("https://www.infravelo.de/api/v1/projects/") do
+    def get!(
+          "https://www.infravelo.de/api/v1/projects/",
+          ["User-Agent": "hierbautberlin.de"],
+          timeout: 60_000,
+          recv_timeout: 60_000
+        ) do
       {:ok, html} = File.read("./test/support/data/infravelo/update.json")
       %{body: html, headers: [], status_code: 200}
     end

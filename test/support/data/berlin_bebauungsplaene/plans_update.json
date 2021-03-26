@@ -1,0 +1,108 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 2053554,
+      "status": "festg",
+      "status_normkontr": "",
+      "bplanID": "xii-181",
+      "planname": "XII - 181",
+      "multipolygon_25833": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                386781.7163929979,
+                5808876.436086004
+              ],
+              [
+                386777.60223299934,
+                5808874.368333002
+              ],
+              [
+                386773.8680400013,
+                5808868.920650999
+              ],
+              [
+                386775.64563600277,
+                5808864.640227004
+              ],
+              [
+                386785.18103200156,
+                5808869.684510996
+              ],
+              [
+                386791.3536390024,
+                5808857.430719003
+              ],
+              [
+                386772.42310000054,
+                5808801.490412995
+              ],
+              [
+                386815.3101009978,
+                5808787.527719001
+              ],
+              [
+                386825.3160899977,
+                5808817.341786996
+              ],
+              [
+                386856.0936000021,
+                5808831.422010004
+              ],
+              [
+                386843.9457009983,
+                5808857.442905995
+              ],
+              [
+                386896.11782100284,
+                5808879.713350002
+              ],
+              [
+                386826.39477700245,
+                5809042.689687995
+              ],
+              [
+                386726.83598799683,
+                5809001.627989998
+              ],
+              [
+                386781.7163929979,
+                5808876.436086004
+              ]
+            ]
+          ]
+        ]
+      },
+      "bereich": "Mariannenstr., Pößneckerstr., Georgenstr. - Update",
+      "bezirk_name": "Steglitz-Zehlendorf",
+      "afs_behoer": "Bezirksamt",
+      "afs_beschl": "1966-11-28",
+      "afs_l_aend": null,
+      "festg": true,
+      "festsg_von": "Senat",
+      "festsg_am": "1978-03-23",
+      "bbg_anfang": null,
+      "bbg_ende": null,
+      "aul_anfang": "1977-01-10",
+      "aul_ende": "1977-02-10",
+      "ausleg_www": null,
+      "scan_www": "http://fbinter.stadt-berlin.de/ScansBPlan/06_steg-zeh/xii-181.html",
+      "grund_www": "http://example.com/update.html",
+      "gml_id": "sach_bplan.0612181",
+      "fsg_gvbl_n": "27",
+      "fsg_gvbl_s": "953",
+      "fsg_gvbl_d": "1978-04-08",
+      "normkontr": "",
+      "bezirk": 6,
+      "download": 970,
+      "ortsteile": [
+        39
+      ]
+    }
+  ]
+}
