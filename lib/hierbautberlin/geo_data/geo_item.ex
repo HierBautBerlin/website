@@ -26,6 +26,8 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :geo_point, Geo.PostGIS.Geometry
     field :geo_geometry, Geo.PostGIS.Geometry
     field :participation_open, :boolean, default: false
+    field :additional_link, :string
+    field :additional_link_name, :string
 
     belongs_to :source, Source
 
@@ -47,6 +49,8 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :geo_geometry,
       :source_id,
       :participation_open,
+      :additional_link,
+      :additional_link_name,
       :inserted_at,
       :updated_at
     ])
