@@ -1,7 +1,7 @@
 defmodule Hierbautberlin.GeoData do
   import Ecto.Query, warn: false
-  alias Hierbautberlin.Repo
 
+  alias Hierbautberlin.Repo
   alias Hierbautberlin.GeoData.Source
   alias Hierbautberlin.GeoData.GeoItem
 
@@ -37,5 +37,27 @@ defmodule Hierbautberlin.GeoData do
       on_conflict: {:replace_all_except, [:id, :inserted_at]},
       conflict_target: [:source_id, :external_id]
     )
+  end
+
+  def get_items_near(lat, long, count \\ 10) do
+    geom = %Geo.Point{
+      coordinates: {long, lat},
+      properties: %{},
+      srid: 4326
+    }
+
+    query =
+      from item in GeoItem,
+        limit: ^count,
+        order_by:
+          fragment(
+            "case when geo_geometry is not null then ST_Distance(geo_geometry,?) else ST_Distance(geo_point, ?) end",
+            ^geom,
+            ^geom
+          )
+
+    query
+    |> Repo.all()
+    |> Repo.preload(:source)
   end
 end

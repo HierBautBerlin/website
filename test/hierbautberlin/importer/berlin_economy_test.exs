@@ -47,7 +47,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
       assert first.geo_point == %Geo.Point{
                coordinates: {13.3681, 52.5295},
                properties: %{},
-               srid: 3857
+               srid: 4326
              }
 
       assert first.inserted_at == ~U[2021-03-24 13:51:44Z]

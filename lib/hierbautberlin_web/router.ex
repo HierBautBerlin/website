@@ -19,7 +19,8 @@ defmodule HierbautberlinWeb.Router do
 
     get "/ping", HealthcheckController, :index
 
-    live "/", PageLive, :index
+    get "/", RedirectToMapController, :index
+    live "/map", MapLive, :index
   end
 
   # Other scopes may use custom stacks.

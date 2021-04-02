@@ -58,7 +58,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomy do
 
   defp parse_point(%{"type" => "Point"} = point) do
     [long, lat] = point["coordinates"]
-    %Geo.Point{coordinates: {long, lat}, srid: 3857}
+    %Geo.Point{coordinates: {long, lat}, srid: 4326}
   end
 
   defp parse_point(_) do

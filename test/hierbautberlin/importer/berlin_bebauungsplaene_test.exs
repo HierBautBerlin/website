@@ -82,7 +82,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
                  ]
                ],
                properties: %{},
-               srid: nil
+               srid: 4326
              }
 
       assert first.source.short_name == "BERLIN_BEBAUUNGSPLAENE"

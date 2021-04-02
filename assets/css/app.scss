@@ -1,10 +1,17 @@
-/* This file is for your main application css. */
-@import "./phoenix.css";
+@import 'milligram';
+@import './header';
+@import './map';
+@import './fonts/inter';
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
   display: none;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .phx-click-loading {

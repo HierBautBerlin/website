@@ -78,7 +78,7 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
       assert last.geo_point == %Geo.Point{
                coordinates: {13.452748, 52.46358},
                properties: %{},
-               srid: 3857
+               srid: 4326
              }
 
       assert last.inserted_at == ~U[2020-09-22 14:27:38Z]

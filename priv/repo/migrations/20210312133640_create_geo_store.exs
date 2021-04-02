@@ -31,7 +31,7 @@ defmodule Hierbautberlin.Repo.Migrations.CreateGeoStore do
 
     create unique_index(:geo_items, [:source_id, :external_id])
 
-    execute("SELECT AddGeometryColumn('geo_items', 'geo_point', 3857, 'POINT', 2);")
+    execute("SELECT AddGeometryColumn('geo_items', 'geo_point', 4326, 'POINT', 2);")
 
     execute("CREATE INDEX geo_items_point_idx ON geo_items USING GIST (geo_point);")
     execute("CREATE INDEX geo_items_geometry_idx ON geo_items USING GIST (geo_geometry);")

@@ -32,7 +32,7 @@ defmodule Hierbautberlin.Importer.UVP do
       external_id: uuid,
       title: title,
       url: "https://www.uvp-verbund.de/trefferanzeige?docuuid=" <> uuid,
-      geo_point: %Geo.Point{coordinates: {long, lat}, srid: 3857}
+      geo_point: %Geo.Point{coordinates: {long, lat}, srid: 4326}
     }
   end
 
