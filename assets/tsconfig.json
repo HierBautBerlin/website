@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "allowJs": true,
+    "jsx": "react",
+    "outDir": "./dist/",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "js/**/*.ts",
+    "js/**/*.js",
+  ],
+  "exclude": [
+    "/node_modules/**/*",
+  ]
+} 

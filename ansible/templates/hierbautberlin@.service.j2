@@ -1,0 +1,15 @@
+[Unit]
+Description=hierbautberlin
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=deploy
+SyslogIdentifier=hierbautberlin
+
+EnvironmentFile=/home/deploy/hierbautberlin/env_vars
+ExecStart=/bin/bash -c '/home/deploy/hierbautberlin/hierbautberlin-${LATEST_RELEASE}/bin/hierbautberlin start'
+ExecStop=/bin/bash -c '/home/deploy/hierbautberlin/hierbautberlin-${LATEST_RELEASE}/bin/hierbautberlin stop'

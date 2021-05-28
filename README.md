@@ -38,6 +38,21 @@ You can also run the `ExUnit` tests in watch mode with:
 make run-tests
 ```
 
+## Deployment
+
+The server is configured using [ansible](https://www.ansible.com/) with [this playbook](/ansible/playbook.yml) and can be updated with:
+
+```bash
+ansible-playbook ansible/playbook.yml -i ansible/hosts --extra-vars '{"username": "***********"}'
+```
+
+Deploy is done by running:
+
+```bash
+make prod-build
+scp build/hierbautberlin-VERSION.tar.gz user@server:/hierbautberlin
+ssh user@server 'bash -s' < bin/deploy.sh VERSION
+```
 
 ## Funding
 

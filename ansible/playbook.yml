@@ -1,0 +1,136 @@
+- hosts: hierbautberlin
+  remote_user: "{{username}}"
+  vars:
+  - traefik_version: 2.4.8
+
+  tasks:
+  - name: Install all needed apt packages
+    apt:
+      name: "{{ packages }}"
+    become: true
+    vars:
+      packages:
+      - automake
+      - build-essential
+      - fop
+      - imagemagick
+      - libncurses5-dev
+      - libpng-dev
+      - libssh-dev
+      - libxml2-utils
+      - m4
+      - postgresql-12
+      - postgresql-server-dev-12
+      - python3-dev
+      - python3-pip
+      - python3-setuptools
+      - unixodbc-dev
+      - xsltproc
+      - ufw
+      - certbot
+      - webp
+      - inotify-tools
+
+  - name: Enable UFW
+    become: true
+    ufw: direction=incoming policy=deny state=enabled
+
+  - name: UFW open SSH
+    become: true
+    ufw: rule=allow port=ssh
+
+  - name: UFW open HTTP
+    become: true
+    ufw: rule=allow port=http
+
+  - name: UFW open HTTP
+    become: true
+    ufw: rule=deny port=8080
+
+  - name: UFW open HTTPs
+    become: true
+    ufw: rule=allow port=https
+
+  - name: Install all needed python packages
+    become: true
+    pip:
+      name:
+      - psycopg2
+
+  - name: Create database user
+    become: true
+    become_user: postgres
+    postgresql_user:
+      name: hierbautberlin
+      password: "{{ lookup('env','DB_PASSWORD') }}"
+      role_attr_flags: CREATEDB,NOSUPERUSER
+      no_password_changes: true
+  - name: Create a new database with name "hierbautberlin" and specific encoding and locale
+    become: true
+    become_user: postgres
+    postgresql_db:
+      name: hierbautberlin
+      encoding: UTF-8
+      lc_collate: en_US.UTF-8
+      lc_ctype: en_US.UTF-8
+  - name: Adds citext to hierbautberlin database 
+    become: true
+    become_user: postgres
+    postgresql_ext:
+      ext: citext
+      db: hierbautberlin
+  - name: Adds unaccent to hierbautberlin database 
+    become: true
+    become_user: postgres
+    postgresql_ext:
+      ext: unaccent
+      db: hierbautberlin
+  - name: Adds fuzzystrmatch to hierbautberlin database 
+    become: true
+    become_user: postgres
+    postgresql_ext:
+      ext: fuzzystrmatch
+      db: hierbautberlin
+
+  - import_tasks: traefik/playbook.yml
+    become: true
+
+  - name: Add hierbautberlin service
+    become: true
+    template:
+      src: hierbautberlin@.service.j2
+      dest: /etc/systemd/system/hierbautberlin@.service
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Add hierbautberlin start on boot service
+    become: true
+    template:
+      src: hierbautberlin_start_on_boot.service.j2
+      dest: /etc/systemd/system/hierbautberlin_start_on_boot.service
+      owner: root
+      group: root
+      mode: 0644
+      
+  - name: enable hierbautberlin_start_on_boot
+    become: true
+    systemd:
+      name: hierbautberlin_start_on_boot.service
+      enabled: true
+
+  - name: Add start_after_reboot script
+    template:
+      src: start_after_reboot.sh.j2
+      dest: /home/deploy/hierbautberlin/start_after_reboot.sh
+      owner: deploy
+      group: deploy
+      mode: 0755
+
+  handlers:
+  - name: traefik restart
+    become: true
+    systemd:
+      name: traefik
+      daemon_reload: true
+      state: restarted

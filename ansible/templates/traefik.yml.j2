@@ -1,0 +1,37 @@
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint: 
+          to: websecure
+          scheme: https
+          permanent: true
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: myresolver
+
+providers:
+  file:
+    filename: /etc/traefik/traefik-dynamic-conf.yml
+
+certificatesResolvers:
+  myresolver:
+    # Enable ACME (Let's Encrypt): automatic SSL.
+    acme:
+      # Email address used for registration.
+      email: "bodo@wannawork.de"
+
+      # File or key used for certificates storage.
+      storage: "/etc/traefik/acme.json"
+
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web
+
+api:
+  dashboard: true
+  insecure: true
