@@ -1,0 +1,18 @@
+http:
+  routers:
+    to-my-application:
+      rule: "Host(`beta.hierbautberlin.de`)"
+      entryPoints:
+        - "websecure"
+      service: my-application
+
+  services:
+    my-application:
+      loadBalancer:
+        healthCheck:
+          path: /ping
+          interval: "10s"
+          timeout: "3s"
+        servers:
+        - url: http://localhost:4000
+        - url: http://localhost:4001

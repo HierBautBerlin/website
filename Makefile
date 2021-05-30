@@ -1,3 +1,5 @@
+VERSION = $(shell cat mix.exs | grep version | sed -e 's/.*version: "\(.*\)",/\1/')
+
 start:
 		mix phx.server
 
@@ -17,3 +19,7 @@ i18n:
 update:
 		mix deps.get
 		(cd assets && yarn install)
+
+prod-build:
+		echo Building ${VERSION}
+		earthly --build-arg APP_VERSION=$(VERSION) +build

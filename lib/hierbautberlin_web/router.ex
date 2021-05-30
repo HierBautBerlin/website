@@ -17,6 +17,8 @@ defmodule HierbautberlinWeb.Router do
   scope "/", HierbautberlinWeb do
     pipe_through :browser
 
+    get "/ping", HealthcheckController, :index
+
     live "/", PageLive, :index
   end
 

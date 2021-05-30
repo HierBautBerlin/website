@@ -18,13 +18,18 @@
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^5.2.6",
-    "sass-loader": "^8.0.2",
-    "node-sass": "^6.0.0",
+    "file-loader": "^6.2.0",
+    "glob": "^7.1.6",
     "hard-source-webpack-plugin": "^0.13.1",
     "mini-css-extract-plugin": "^1.6.0",
     "optimize-css-assets-webpack-plugin": "^6.0.0",
+    "sass-loader": "^8.0.2",
+    "sass": "^1.32.8",
+    "source-map-loader": "^2.0.1",
     "terser-webpack-plugin": "^4.2.3",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^4.7.0"
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.2.4",
+    "webpack-cli": "^4.7.0",
+    "webpack": "^4.41.5"
   }
 }

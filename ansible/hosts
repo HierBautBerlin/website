@@ -1,0 +1,5 @@
+[hierbautberlin]
+95.216.182.231
+
+[hierbautberlin:vars]
+ansible_python_interpreter=/usr/bin/python3
