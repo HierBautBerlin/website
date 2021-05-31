@@ -11,7 +11,7 @@ build:
     RUN apt-get update
     RUN apt-get install nodejs build-essential -y
     WORKDIR /src/
-    COPY --dir config lib priv assets ./
+    COPY --dir .git config lib priv assets ./
     COPY mix.exs .
     COPY mix.lock .
     RUN mix local.hex --force
@@ -21,5 +21,5 @@ build:
     RUN export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" && cd assets && yarn install && yarn run deploy
     RUN mix phx.digest
     RUN mix release
-    SAVE ARTIFACT _build/${MIX_ENV}/${APP_NAME}-${APP_VERSION}.tar.gz AS LOCAL build/${APP_NAME}-${APP_VERSION}.tar.gz
+    SAVE ARTIFACT _build/${MIX_ENV}/${APP_NAME}-1.0.0+${APP_VERSION}.tar.gz AS LOCAL build/${APP_NAME}-${APP_VERSION}.tar.gz
 
