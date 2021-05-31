@@ -49,9 +49,10 @@ ansible-playbook ansible/playbook.yml -i ansible/hosts --extra-vars '{"username"
 Deploy is done by running:
 
 ```bash
+VERSION=`git rev-parse HEAD`
 make prod-build
-scp build/hierbautberlin-VERSION.tar.gz user@server:/hierbautberlin
-ssh user@server 'bash -s' < bin/deploy.sh VERSION
+scp build/hierbautberlin-$VERSION.tar.gz user@server:~/hierbautberlin
+ssh user@server 'bash -s' < bin/deploy.sh $VERSION
 ```
 
 ## Funding

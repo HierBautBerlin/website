@@ -20,8 +20,8 @@ else
 fi
 
 # Update release env vars with new port and set non-conflicting node name
-echo "export PORT=${open_port}" >> hierbautberlin-"$VERSION"/releases/"$VERSION"/env.sh
-echo "export RELEASE_NODE=hierbautberlin-${open_port}" >> hierbautberlin-"$VERSION"/releases/"$VERSION"/env.sh
+echo "export PORT=${open_port}" >> hierbautberlin-"$VERSION"/releases/1.0.0+"$VERSION"/env.sh
+echo "export RELEASE_NODE=hierbautberlin-${open_port}" >> hierbautberlin-"$VERSION"/releases/1.0.0+"$VERSION"/env.sh
 
 # Sadly this weird hack is needed because the release tasks exit the bash script hard :(
 finish_after_migration() {

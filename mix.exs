@@ -4,7 +4,7 @@ defmodule Hierbautberlin.MixProject do
   def project do
     [
       app: :hierbautberlin,
-      version: "0.2.0",
+      version: "1.0.0+#{get_commit_sha()}",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -24,6 +24,11 @@ defmodule Hierbautberlin.MixProject do
         ]
       ]
     ]
+  end
+
+  defp get_commit_sha do
+    {sha, 0} = System.cmd("git", ~w[rev-parse HEAD])
+    String.trim(sha)
   end
 
   defp dialyzer do
