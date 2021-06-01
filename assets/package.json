@@ -4,21 +4,37 @@
   "license": "MIT",
   "scripts": {
     "deploy": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "test": "yarn lint",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
+    "mapbox-gl": "^2.2.0",
+    "milligram": "^1.4.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
     "topbar": "^1.0.1"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.4",
+    "@types/mapbox-gl": "^2.1.1",
+    "@types/nprogress": "^0.2.0",
+    "@types/phoenix": "^1.5.1",
+    "@types/phoenix_live_view": "^0.14.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.4",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^5.2.6",
     "file-loader": "^6.2.0",
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-plugin-import": "^2.22.1",
     "glob": "^7.1.6",
     "hard-source-webpack-plugin": "^0.13.1",
     "mini-css-extract-plugin": "^1.6.0",
@@ -30,6 +46,6 @@
     "ts-loader": "^9.2.1",
     "typescript": "^4.2.4",
     "webpack-cli": "^4.7.0",
-    "webpack": "^4.41.5"
+    "webpack": "^5.38.1"
   }
 }

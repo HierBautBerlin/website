@@ -48,6 +48,11 @@ jobs:
           mix local.hex --force
           mix deps.get
 
+      - name: Install yarn Dependencies
+        run: |
+          cd assets
+          yarn install
+
       - name: Retrieve PLT Cache
         uses: actions/cache@v1
         id: plt-cache
@@ -65,3 +70,6 @@ jobs:
 
       - name: Run checks
         run: mix check
+
+      - name: Build javascript assets
+        run: cd assets && yarn deploy

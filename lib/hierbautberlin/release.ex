@@ -1,6 +1,10 @@
 defmodule Hierbautberlin.Release do
   @app :hierbautberlin
 
+  def init_data do
+    Hierbautberlin.Importer.import_all()
+  end
+
   def migrate do
     load_app()
 

@@ -25,7 +25,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
         "features"
       )
       |> Enum.map(fn item ->
-        {item["properties"]["pk"], Geo.JSON.decode!(item["geometry"])}
+        {item["properties"]["pk"], Map.put(Geo.JSON.decode!(item["geometry"]), :srid, 4326)}
       end)
       |> Map.new()
 

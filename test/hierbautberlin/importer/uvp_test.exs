@@ -42,7 +42,7 @@ defmodule Hierbautberlin.Importer.UVPTest do
       assert first.geo_point == %Geo.Point{
                coordinates: {13.248999999999999, 51.96115},
                properties: %{},
-               srid: 3857
+               srid: 4326
              }
 
       assert first.source.short_name == "UVP"

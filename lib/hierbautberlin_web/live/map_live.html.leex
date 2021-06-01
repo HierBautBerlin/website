@@ -1,0 +1,35 @@
+<div id="mapContainer" class="map--container" phx-hook="InteractiveMap" >
+  <div id='map' class="map--container--tiles" phx-update="ignore" data-position-lat="<%= @mapPosition[:lat]%>" data-position-lng="<%= @mapPosition[:lng]%>">
+  </div>
+  <script type="application/json" id="map-data">
+  <%= raw geo_item_to_json(@mapItems) %>
+  </script>
+</div>
+
+<ul class="map--item-list">
+  <%= for item <- @mapItems do %>
+    <li class="map--item-list--item">
+      <h3 class="map--item-list--item--header"><%= item.title %></h3>
+      <%= if !is_blank?(item.subtitle) do %>
+        <h4 class="map--item-list--item--subtitle"><%= item.subtitle %></h3>
+      <% end %>
+      <%= if !is_blank?(item.description) do %>
+        <p class="map--item-list--item--description"><%= item.description %></p>
+      <% end %>
+      <div>
+        <%= if item.url do %>
+          <a href="<%= item.url %>" target="_blank" rel="noopener noreferrer"><%= item.source.name %></a>
+        <% else %>
+          <span><%= item.source.name %></span>
+        <% end %>
+
+        <%= if item.additional_link  do %>
+          - <a href="<%= item.additional_link %>" target="_blank" rel="noopener noreferrer"><%= item.additional_link_name %></a>
+        <% end %>
+      </div>
+      <%= if item.state != nil do %>
+        <div><%= item.state %></div>
+      <% end %>
+    </li>
+  <% end %>
+</ui>
