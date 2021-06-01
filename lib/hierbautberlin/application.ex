@@ -21,9 +21,10 @@ defmodule Hierbautberlin.Application do
           # Start the PubSub system
           {Phoenix.PubSub, name: Hierbautberlin.PubSub},
           # Start the Endpoint (http/https)
-          HierbautberlinWeb.Endpoint
+          HierbautberlinWeb.Endpoint,
           # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
           # {Hierbautberlin.Worker, arg}
+          {Hierbautberlin.ImporterCronjob, []}
         ]
       end
 
