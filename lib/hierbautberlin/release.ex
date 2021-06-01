@@ -2,6 +2,7 @@ defmodule Hierbautberlin.Release do
   @app :hierbautberlin
 
   def init_data do
+    start_app()
     Hierbautberlin.Importer.import_all()
   end
 
@@ -24,5 +25,11 @@ defmodule Hierbautberlin.Release do
 
   defp load_app do
     Application.load(@app)
+  end
+
+  defp start_app do
+    load_app()
+    Application.put_env(@app, :minimal, true)
+    Application.ensure_all_started(@app)
   end
 end

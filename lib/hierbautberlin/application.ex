@@ -6,18 +6,26 @@ defmodule Hierbautberlin.Application do
   use Application
 
   def start(_type, _args) do
-    children = [
-      # Start the Ecto repository
-      Hierbautberlin.Repo,
-      # Start the Telemetry supervisor
-      HierbautberlinWeb.Telemetry,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: Hierbautberlin.PubSub},
-      # Start the Endpoint (http/https)
-      HierbautberlinWeb.Endpoint
-      # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
-      # {Hierbautberlin.Worker, arg}
-    ]
+    children =
+      if Application.get_env(:hierbautberlin, :minimal) do
+        [
+          # Start the Ecto repository
+          Hierbautberlin.Repo
+        ]
+      else
+        [
+          # Start the Ecto repository
+          Hierbautberlin.Repo,
+          # Start the Telemetry supervisor
+          HierbautberlinWeb.Telemetry,
+          # Start the PubSub system
+          {Phoenix.PubSub, name: Hierbautberlin.PubSub},
+          # Start the Endpoint (http/https)
+          HierbautberlinWeb.Endpoint
+          # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
+          # {Hierbautberlin.Worker, arg}
+        ]
+      end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
