@@ -43,7 +43,7 @@
     "sass": "^1.34.0",
     "source-map-loader": "^3.0.0",
     "terser-webpack-plugin": "^4.2.3",
-    "ts-loader": "^9.2.1",
+    "ts-loader": "^9.2.2",
     "typescript": "^4.3.2",
     "webpack-cli": "^4.7.0",
     "webpack": "^5.38.1"
