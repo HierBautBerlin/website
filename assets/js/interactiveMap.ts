@@ -1,4 +1,4 @@
-import mapboxgl, { LngLatLike, Marker, Popup } from 'mapbox-gl';
+import mapboxgl, { LngLatLike, Marker } from 'mapbox-gl';
 import { ViewHookInterface } from 'phoenix_live_view';
 import { difference, isEqual, uniq } from 'lodash-es';
 
@@ -32,7 +32,6 @@ url.searchParams.get('c');
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  zoom: parseInt(url.searchParams.get('zoom') || '', 10) || 15,
 });
 
 interface MapObject {
@@ -49,10 +48,6 @@ const isLineString = (item: Geometry) => {
   const collectionType = uniq(item.geometries?.map((geometry) => geometry.type));
   return item.type === 'LineString' || isEqual(collectionType, ['LineString']);
 };
-
-const popupForItem = (item: GeoItem):Popup => new mapboxgl.Popup({ className: 'my-popup', offset: 25 }).setText(
-  item.title,
-);
 
 const removeUneededMapItems = (mapIds: number[]) => {
   difference<number>(Object.keys(mapObjects).map(Number), mapIds).forEach((itemId: number) => {
@@ -72,13 +67,13 @@ const removeUneededMapItems = (mapIds: number[]) => {
   });
 };
 
-const addMarkerForPoint = (item: GeoItem) => {
+const addMarkerForPoint = (hook: ViewHookInterface, item: GeoItem) => {
   const marker = new mapboxgl.Marker()
-    .setPopup(popupForItem(item))
     .setLngLat(item.point.coordinates as LngLatLike)
     .addTo(map);
 
   marker.getElement().addEventListener('click', (event) => {
+    hook.pushEvent('showDetails', { 'item-id': item.id });
     event.preventDefault();
   });
   return marker;
@@ -129,7 +124,7 @@ const addLayerForGeometry = (layerName:string, item:GeoItem) => {
   }
 };
 
-const updateMapItems = () => {
+const updateMapItems = (hook: ViewHookInterface) => {
   const mapItems = JSON.parse(document.getElementById('map-data')?.innerHTML || '{}')?.items;
   const mapIds:number[] = mapItems.map((item:GeoItem) => item.id);
 
@@ -143,7 +138,7 @@ const updateMapItems = () => {
       mapObjects[item.id] = mapItem;
 
       if (item.point) {
-        mapItem.marker = addMarkerForPoint(item);
+        mapItem.marker = addMarkerForPoint(hook, item);
       }
 
       if (item.geometry) {
@@ -153,11 +148,6 @@ const updateMapItems = () => {
       }
     }
   });
-};
-
-const updateUrl = () => {
-  const center = map.getCenter();
-  window.history.replaceState(null, '', `/map?lat=${center.lat}&lng=${center.lng}&zoom=${map.getZoom()}`);
 };
 
 const InteractiveMap = {
@@ -170,6 +160,7 @@ const InteractiveMap = {
       parseFloat(mapElement?.getAttribute('data-position-lat') || '0'),
     ];
     map.setCenter(position);
+    map.setZoom(parseInt(mapElement?.getAttribute('data-position-zoom') || '10', 10));
 
     map.setPadding({
       right: 42 * 16,
@@ -179,10 +170,9 @@ const InteractiveMap = {
     });
 
     map.on('zoomend', () => {
-      updateUrl();
+      hook.pushEvent('updateZoom', { zoom: map.getZoom() });
     });
     map.on('moveend', () => {
-      updateUrl();
       hook.pushEvent('updateCoordinates', map.getCenter());
     });
 
@@ -194,17 +184,16 @@ const InteractiveMap = {
           const match = layers[0].source.match(/map-item-(\d*)/);
           if (match) {
             const itemId = parseInt(match[1], 10);
-            const popup = popupForItem(mapObjects[itemId].item);
-            popup.setLngLat(e.lngLat);
-            popup.addTo(map);
+            hook.pushEvent('showDetails', { 'item-id': itemId });
           }
         }
       }
     });
-    updateMapItems();
+    updateMapItems(hook);
   },
   updated() {
-    updateMapItems();
+    const hook = this as unknown as ViewHookInterface;
+    updateMapItems(hook);
   },
 };
 

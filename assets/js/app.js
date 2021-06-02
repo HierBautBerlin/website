@@ -8,9 +8,11 @@ import { Socket } from 'phoenix';
 import topbar from 'topbar';
 import { LiveSocket } from 'phoenix_live_view';
 import InteractiveMap from './interactiveMap';
+import PreventDefaultOnClick from './preventDefaultOnClick';
 
 const Hooks = {
   InteractiveMap,
+  PreventDefaultOnClick,
 };
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');

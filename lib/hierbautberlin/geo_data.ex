@@ -20,6 +20,7 @@ defmodule Hierbautberlin.GeoData do
 
   def get_geo_item!(id) do
     Repo.get!(GeoItem, id)
+    |> Repo.preload([:source])
   end
 
   def create_geo_item(attrs \\ %{}) do
