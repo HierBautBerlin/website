@@ -3,6 +3,10 @@ defmodule HierbautberlinWeb.MapLive do
 
   alias Hierbautberlin.GeoData
 
+  @lat_default 52.5166309
+  @lng_default 13.3781537
+  @zoom_default 15
+
   @impl true
   def mount(params, _session, socket) do
     coordinates = calculate_coordinates(params)
@@ -12,27 +16,61 @@ defmodule HierbautberlinWeb.MapLive do
     {:ok,
      assign(socket,
        mapPosition: coordinates,
+       mapZoom: params["zoom"] || to_string(@zoom_default),
        mapItems: items
      )}
   end
 
   @impl true
-  def handle_event("updateCoordinates", %{"lat" => lat, "lng" => lng}, socket) do
+  def handle_params(params, _uri, socket) do
+    lat = parse_with_default(params["lat"], @lat_default)
+    lng = parse_with_default(params["lng"], @lng_default)
+    zoom = parse_with_default(params["zoom"], @zoom_default)
+
     items = GeoData.get_items_near(lat, lng, 100)
 
     socket =
       assign(socket,
         mapPosition: %{lat: lat, lng: lng},
-        mapItems: items
+        mapItems: items,
+        mapZoom: zoom
       )
 
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("updateCoordinates", %{"lat" => lat, "lng" => lng}, socket) do
+    {:noreply,
+     push_patch(socket,
+       to:
+         Routes.map_path(socket, :index,
+           lat: to_string(lat),
+           lng: to_string(lng),
+           zoom: to_string(socket.assigns.mapZoom)
+         ),
+       replace: true
+     )}
+  end
+
+  @impl true
+  def handle_event("updateZoom", %{"zoom" => zoom}, socket) do
+    {:noreply,
+     push_patch(socket,
+       to:
+         Routes.map_path(socket, :index,
+           lat: to_string(socket.assigns.mapPosition.lat),
+           lng: to_string(socket.assigns.mapPosition.lng),
+           zoom: to_string(zoom)
+         ),
+       replace: true
+     )}
+  end
+
   def calculate_coordinates(params) do
     %{
-      lat: parse_with_default(params["lat"], 52.5166309),
-      lng: parse_with_default(params["lng"], 13.3781537)
+      lat: parse_with_default(params["lat"], @lat_default),
+      lng: parse_with_default(params["lng"], @lng_default)
     }
   end
 

@@ -32,7 +32,6 @@ url.searchParams.get('c');
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/streets-v11',
-  zoom: parseInt(url.searchParams.get('zoom') || '', 10) || 15,
 });
 
 interface MapObject {
@@ -155,11 +154,6 @@ const updateMapItems = () => {
   });
 };
 
-const updateUrl = () => {
-  const center = map.getCenter();
-  window.history.replaceState(null, '', `/map?lat=${center.lat}&lng=${center.lng}&zoom=${map.getZoom()}`);
-};
-
 const InteractiveMap = {
   mounted() {
     const hook = this as unknown as ViewHookInterface;
@@ -170,6 +164,7 @@ const InteractiveMap = {
       parseFloat(mapElement?.getAttribute('data-position-lat') || '0'),
     ];
     map.setCenter(position);
+    map.setZoom(parseInt(mapElement?.getAttribute('data-position-zoom') || '10', 10));
 
     map.setPadding({
       right: 42 * 16,
@@ -179,10 +174,9 @@ const InteractiveMap = {
     });
 
     map.on('zoomend', () => {
-      updateUrl();
+      hook.pushEvent('updateZoom', { zoom: map.getZoom() });
     });
     map.on('moveend', () => {
-      updateUrl();
       hook.pushEvent('updateCoordinates', map.getCenter());
     });
 
