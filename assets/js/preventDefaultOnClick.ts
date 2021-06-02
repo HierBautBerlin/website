@@ -1,8 +1,8 @@
-import { ViewHookInterface } from 'phoenix_live_view';
+import { ViewHook } from 'phoenix_live_view';
 
 const PreventDefaultOnClick = {
   mounted() {
-    const hook = this as unknown as ViewHookInterface;
+    const hook = this as unknown as ViewHook;
     hook.el.addEventListener('click', (e) => {
       e.preventDefault();
     });
