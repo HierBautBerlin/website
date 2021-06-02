@@ -33,41 +33,83 @@ defmodule HierbautberlinWeb.MapLive do
       assign(socket,
         mapPosition: %{lat: lat, lng: lng},
         mapItems: items,
-        mapZoom: zoom
+        mapZoom: zoom,
+        detailItem: nil
       )
+
+    socket =
+      if params["details"] do
+        assign(socket, detailItem: GeoData.get_geo_item!(params["details"]))
+      else
+        socket
+      end
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("updateCoordinates", %{"lat" => lat, "lng" => lng}, socket) do
+    socket = assign(socket, :mapPosition, %{lat: lat, lng: lng})
+
     {:noreply,
      push_patch(socket,
-       to:
-         Routes.map_path(socket, :index,
-           lat: to_string(lat),
-           lng: to_string(lng),
-           zoom: to_string(socket.assigns.mapZoom)
-         ),
+       to: route_from_socket(socket),
        replace: true
      )}
   end
 
   @impl true
   def handle_event("updateZoom", %{"zoom" => zoom}, socket) do
+    socket = assign(socket, :mapZoom, zoom)
+
     {:noreply,
      push_patch(socket,
-       to:
-         Routes.map_path(socket, :index,
-           lat: to_string(socket.assigns.mapPosition.lat),
-           lng: to_string(socket.assigns.mapPosition.lng),
-           zoom: to_string(zoom)
-         ),
+       to: route_from_socket(socket),
        replace: true
      )}
   end
 
-  def calculate_coordinates(params) do
+  def handle_event("showDetails", %{"item-id" => item_id}, socket) do
+    socket = assign(socket, :showDetails, item_id)
+
+    {:noreply,
+     push_patch(socket,
+       to: route_from_socket(socket),
+       replace: true
+     )}
+  end
+
+  def handle_event("hideDetails", _params, socket) do
+    socket = assign(socket, :showDetails, nil)
+
+    {:noreply,
+     push_patch(socket,
+       to: route_from_socket(socket),
+       replace: true
+     )}
+  end
+
+  defp route_from_socket(socket) do
+    route_params = [
+      lat: to_string(socket.assigns.mapPosition.lat),
+      lng: to_string(socket.assigns.mapPosition.lng),
+      zoom: to_string(socket.assigns.mapZoom)
+    ]
+
+    route_params =
+      if socket.assigns.showDetails do
+        route_params ++
+          [
+            details: to_string(socket.assigns.showDetails)
+          ]
+      else
+        route_params
+      end
+
+    Routes.map_path(socket, :index, route_params)
+  end
+
+  defp calculate_coordinates(params) do
     %{
       lat: parse_with_default(params["lat"], @lat_default),
       lng: parse_with_default(params["lng"], @lng_default)

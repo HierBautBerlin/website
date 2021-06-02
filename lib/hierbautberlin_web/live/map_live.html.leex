@@ -9,7 +9,7 @@
 <ul class="map--item-list">
   <%= for item <- @mapItems do %>
     <li class="map--item-list--item">
-      <h3 class="map--item-list--item--header"><%= item.title %></h3>
+    <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick"><%= item.title %></a></h3>
       <%= if !is_blank?(item.subtitle) do %>
         <h4 class="map--item-list--item--subtitle"><%= item.subtitle %></h3>
       <% end %>
@@ -32,4 +32,25 @@
       <% end %>
     </li>
   <% end %>
-</ui>
+</ul>
+
+<%= if @detailItem != nil do %>
+  <div class="details" phx-capture-click='hideDetails'>
+    <div class="details--content">
+      <a id="close-details" href="/map" phx-click="hideDetails" phx-hook="PreventDefaultOnClick">Close</a>
+      <div><%= @detailItem.title %></div>
+      <div><%= @detailItem.subtitle %></div>
+      <div><%= @detailItem.description %></div>
+      <div><%= @detailItem.state %></div>
+      <div><%= @detailItem.url %></div>
+      <div><%= @detailItem.date_start %></div>
+      <div><%= @detailItem.date_end %></div>
+      <div><%= @detailItem.participation_open %></div>
+      <div><%= @detailItem.additional_link_name %></div>
+      <div><%= @detailItem.additional_link %></div>
+      <div><%= @detailItem.source.name %></div>
+      <div><%= @detailItem.source.url %></div>
+      <div><%= @detailItem.source.copyright %></div>
+    </div>
+  </div>
+<% end %>
