@@ -1,5 +1,5 @@
 import mapboxgl, { LngLatLike, Marker } from 'mapbox-gl';
-import { ViewHookInterface } from 'phoenix_live_view';
+import { ViewHook } from 'phoenix_live_view';
 import { difference, isEqual, uniq } from 'lodash-es';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYml0Ym94ZXIiLCJhIjoiY2tuazhkcm5nMDZiaDJ2bjA4YzZraTYxbSJ9.VHWcZ-7Q7-zOcBkQ5B0Hzw';
@@ -67,7 +67,7 @@ const removeUneededMapItems = (mapIds: number[]) => {
   });
 };
 
-const addMarkerForPoint = (hook: ViewHookInterface, item: GeoItem) => {
+const addMarkerForPoint = (hook: ViewHook, item: GeoItem) => {
   const marker = new mapboxgl.Marker()
     .setLngLat(item.point.coordinates as LngLatLike)
     .addTo(map);
@@ -124,7 +124,7 @@ const addLayerForGeometry = (layerName:string, item:GeoItem) => {
   }
 };
 
-const updateMapItems = (hook: ViewHookInterface) => {
+const updateMapItems = (hook: ViewHook) => {
   const mapItems = JSON.parse(document.getElementById('map-data')?.innerHTML || '{}')?.items;
   const mapIds:number[] = mapItems.map((item:GeoItem) => item.id);
 
@@ -152,7 +152,7 @@ const updateMapItems = (hook: ViewHookInterface) => {
 
 const InteractiveMap = {
   mounted() {
-    const hook = this as unknown as ViewHookInterface;
+    const hook = this as unknown as ViewHook;
     const mapElement = document.getElementById('map');
 
     const position:LngLatLike = [
@@ -192,7 +192,7 @@ const InteractiveMap = {
     updateMapItems(hook);
   },
   updated() {
-    const hook = this as unknown as ViewHookInterface;
+    const hook = this as unknown as ViewHook;
     updateMapItems(hook);
   },
 };

@@ -1265,10 +1265,10 @@
   resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.5.1.tgz#1cee8eda69ca5b2eff48f0fe1833d9716a17fec2"
   integrity sha512-VPVQAOffPXztCAoLKTjSM+NqhD1gWow3XHF01gdLPeIWEQakoFjg5uGokq8BnX7KM00PWN1XnX5d4FMSxlVv3w==
 
-"@types/phoenix_live_view@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@types/phoenix_live_view/-/phoenix_live_view-0.14.0.tgz#e5ca85978d7456272c0237bb24383514d5d5e90d"
-  integrity sha512-u3Ot4IO7YQ8SMtJwXvkvWXb5sJ8wnmqetU/QfmB8q6jggbNwDQ6+iBwOQxgX3JM6MZIjwV49yQyJp2xGS0JbhQ==
+"@types/phoenix_live_view@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@types/phoenix_live_view/-/phoenix_live_view-0.15.0.tgz#639f62749732b6e585154fabd605d7b9853d0986"
+  integrity sha512-1QSNH5ylM/5kxvxsUL9HDyQ4EOep1lEXkIbQMoHkdnLQcs0u+usimAL034qdAW8CZx4IoCKl9LYwBY2ShhnWwA==
   dependencies:
     "@types/phoenix" "*"
 
