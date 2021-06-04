@@ -70,7 +70,7 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   def handle_event("showDetails", %{"item-id" => item_id}, socket) do
-    socket = assign(socket, :showDetails, item_id)
+    socket = assign(socket, detailItem: GeoData.get_geo_item!(item_id))
 
     {:noreply,
      push_patch(socket,
@@ -80,7 +80,7 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   def handle_event("hideDetails", _params, socket) do
-    socket = assign(socket, :showDetails, nil)
+    socket = assign(socket, :detailItem, nil)
 
     {:noreply,
      push_patch(socket,
@@ -97,10 +97,10 @@ defmodule HierbautberlinWeb.MapLive do
     ]
 
     route_params =
-      if socket.assigns.showDetails do
+      if socket.assigns.detailItem do
         route_params ++
           [
-            details: to_string(socket.assigns.showDetails)
+            details: to_string(socket.assigns.detailItem.id)
           ]
       else
         route_params
