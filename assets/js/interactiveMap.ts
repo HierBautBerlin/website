@@ -1,4 +1,4 @@
-import mapboxgl, { LngLatLike, Marker } from 'mapbox-gl';
+import mapboxgl, { Map, LngLatLike, Marker } from 'mapbox-gl';
 import { ViewHook } from 'phoenix_live_view';
 import { difference, isEqual, uniq } from 'lodash-es';
 
@@ -29,11 +29,7 @@ type GeoItem = {
 const url = new URL(window.location.href);
 url.searchParams.get('c');
 
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11',
-});
-
+let map:Map;
 interface MapObject {
   marker?: Marker,
   layerName?: string
@@ -159,8 +155,17 @@ const InteractiveMap = {
       parseFloat(mapElement?.getAttribute('data-position-lng') || '0'),
       parseFloat(mapElement?.getAttribute('data-position-lat') || '0'),
     ];
-    map.setCenter(position);
-    map.setZoom(parseInt(mapElement?.getAttribute('data-position-zoom') || '10', 10));
+
+    map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: position,
+      zoom: parseInt(mapElement?.getAttribute('data-position-zoom') || '10', 10),
+    });
+
+    map.on('load', () => {
+      updateMapItems(hook);
+    });
 
     map.setPadding({
       right: 42 * 16,
@@ -189,7 +194,6 @@ const InteractiveMap = {
         }
       }
     });
-    updateMapItems(hook);
   },
   updated() {
     const hook = this as unknown as ViewHook;
