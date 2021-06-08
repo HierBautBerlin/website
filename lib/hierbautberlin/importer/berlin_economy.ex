@@ -35,8 +35,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomy do
       description: item["properties"]["description"],
       url: item["properties"]["url"],
       geo_point: point,
-      inserted_at: date,
-      updated_at: date
+      date_updated: date
     }
   end
 

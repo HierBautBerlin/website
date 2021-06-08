@@ -90,8 +90,8 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
       assert first.state == "finished"
       assert first.title == "XII - 181 - Mariannenstr., Pößneckerstr., Georgenstr."
       assert first.url == "http://fbinter.stadt-berlin.de/ScansBPlan/06_steg-zeh/xii-181.html"
-      assert first.updated_at == ~U[1978-04-08 00:00:00Z]
-      assert first.inserted_at == ~U[1978-04-08 00:00:00Z]
+      assert first.date_start == ~U[1966-11-28 00:00:00Z]
+      assert first.date_end == ~U[1978-04-08 00:00:00Z]
     end
 
     test "Updates an entry" do

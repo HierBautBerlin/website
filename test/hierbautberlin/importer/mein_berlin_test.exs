@@ -59,8 +59,6 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
                "Machen Sie Vorschläge, um Politik und Verwaltung dabei zu unterstützen, die knappen Finanzen des Bezirks bedarfsgerecht einzusetzen."
 
       assert first.external_id == "/projekte/burgerhaushalt-treptow-kopenick/"
-      assert first.inserted_at == ~U[2019-02-13 14:40:17Z]
-      assert first.updated_at == ~U[2019-02-13 14:40:17Z]
       assert first.source.short_name == "MEIN_BERLIN"
       assert first.state == "finished"
       assert first.subtitle == "Bezirksamt Treptow-Köpenick"
@@ -81,12 +79,10 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
                srid: 4326
              }
 
-      assert last.inserted_at == ~U[2020-09-22 14:27:38Z]
       assert last.source.short_name == "MEIN_BERLIN"
       assert last.state == "active"
       assert last.subtitle == "infraVelo"
       assert last.title == "Radschnellverbindung \"Y-Trasse\""
-      assert last.updated_at == ~U[2020-09-22 14:27:38Z]
       assert last.url == "https://mein.berlin.de/vorhaben/2019-00002/"
       assert last.participation_open == true
     end
@@ -96,7 +92,7 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
 
       assert first.external_id == "/projekte/burgerhaushalt-treptow-kopenick/"
       assert first.title == "Bürgerhaushalt Treptow-Köpenick"
-      assert first.inserted_at == ~U[2019-02-13 14:40:17Z]
+      assert first.date_updated == ~U[2019-02-13 14:40:17Z]
 
       second = ImportUpdateMock |> MeinBerlin.import() |> List.first()
       second = GeoData.get_geo_item!(second.id)
@@ -104,8 +100,6 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
       assert(first.id == second.id)
       assert second.external_id == "/projekte/burgerhaushalt-treptow-kopenick/"
       assert second.title == "Bürgerhaushalt Treptow-Köpenick Update"
-      assert second.inserted_at == ~U[2019-02-13 14:40:17Z]
-      assert second.updated_at == ~U[2019-03-15 14:40:17Z]
     end
   end
 end

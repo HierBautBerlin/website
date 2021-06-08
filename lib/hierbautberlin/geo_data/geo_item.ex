@@ -23,6 +23,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :state, :string
     field :date_start, :utc_datetime
     field :date_end, :utc_datetime
+    field :date_updated, :utc_datetime
     field :geo_point, Geo.PostGIS.Geometry
     field :geo_geometry, Geo.PostGIS.Geometry
     field :participation_open, :boolean, default: false
@@ -45,6 +46,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :state,
       :date_start,
       :date_end,
+      :date_updated,
       :geo_point,
       :geo_geometry,
       :source_id,

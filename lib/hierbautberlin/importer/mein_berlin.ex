@@ -36,8 +36,7 @@ defmodule Hierbautberlin.Importer.MeinBerlin do
       state: if(item["status"] == 0, do: "active", else: "finished"),
       geo_point: point,
       participation_open: if(item["participation"] == 0, do: true, else: false),
-      inserted_at: date,
-      updated_at: date
+      date_updated: date
     }
   end
 
