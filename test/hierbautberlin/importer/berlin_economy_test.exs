@@ -50,8 +50,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
                srid: 4326
              }
 
-      assert first.inserted_at == ~U[2021-03-24 13:51:44Z]
-      assert first.updated_at == ~U[2021-03-24 13:51:44Z]
+      assert first.date_updated == ~U[2021-03-24 13:51:44Z]
       assert first.participation_open == false
       assert first.source.short_name == "BERLIN_ECONOMY"
       assert first.state == nil
@@ -69,8 +68,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
                "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html"
 
       assert first.title == "Mix it like Berlin in der Heidestraße"
-      assert first.inserted_at == ~U[2021-03-24 13:51:44Z]
-      assert first.updated_at == ~U[2021-03-24 13:51:44Z]
+      assert first.date_updated == ~U[2021-03-24 13:51:44Z]
 
       second = ImportUpdateMock |> BerlinEconomy.import() |> List.first()
       second = GeoData.get_geo_item!(second.id)
@@ -81,8 +79,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
                "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html"
 
       assert second.title == "Mix it like Berlin in der Heidestraße - Update"
-      assert second.inserted_at == ~U[2021-03-24 13:51:44Z]
-      assert second.updated_at == ~U[2021-05-24 13:51:44Z]
+      assert second.date_updated == ~U[2021-05-24 13:51:44Z]
     end
   end
 end

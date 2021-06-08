@@ -45,7 +45,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
   end
 
   defp to_geo_item(item, polygons) do
-    date =
+    dates =
       [
         parse_date(item["fsg_gvbl_d"]),
         parse_date(item["aul_start"]),
@@ -55,7 +55,6 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
       ]
       |> Enum.filter(&(!is_nil(&1)))
       |> Enum.sort(&(Timex.diff(&1, &2) > 0))
-      |> List.first()
 
     Map.merge(
       %{
@@ -65,8 +64,8 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
         geo_geometry: polygons[item["id"]],
         participation_open: Enum.member?(["aul", "bbg", "imVerfahren"], item["status"]),
         state: @state_mapping[item["status"]],
-        inserted_at: date,
-        updated_at: date
+        date_start: List.last(dates),
+        date_end: List.first(dates)
       },
       get_additional_link(item)
     )
