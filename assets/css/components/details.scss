@@ -54,12 +54,27 @@
 
 @media only screen and (max-width: 50em) {
 
-  .details--box {
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw;
-    max-height: 100vh;
-    margin: 0;
+  .details {
+    width: auto;
+    height: auto;
   }
 
+  .details--box {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    min-width: auto;
+    max-width: unset;
+    max-height: unset;
+    margin: 0;
+    padding: 0;
+  }
+
+  .details--content {
+    padding: 2rem;
+  }
 }

@@ -73,9 +73,11 @@
 
 @media only screen and (max-width: 50em) {
   .map--item-list {
-    width: auto;
-    height: calc(100vh - 37vh - 10rem);
+    position: absolute;
     left: 2rem;
     top: 45vh;
+    bottom: 1em;
+    width: auto;
+    height: auto;
   }
 }
