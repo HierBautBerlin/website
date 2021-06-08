@@ -81,7 +81,8 @@ defmodule Hierbautberlin.MixProject do
       {:exkml, "~> 0.3.2"},
       {:timex, "~> 3.7.2"},
       {:ex_machina, "~> 2.7.0", only: :test},
-      {:phoenix_inline_svg, "~> 1.4"}
+      {:phoenix_inline_svg, "~> 1.4"},
+      {:bugsnag, "~> 3.0.0"}
     ]
   end
 

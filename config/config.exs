@@ -28,6 +28,11 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :bugsnag,
+  release_stage: "development",
+  use_logger: false,
+  exception_filter: Hierbautberlin.ExceptionFilter
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
