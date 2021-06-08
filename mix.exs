@@ -62,7 +62,7 @@ defmodule Hierbautberlin.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_view, "~> 0.15.1"},
-      {:floki, ">= 0.27.0", only: :test},
+      {:floki, ">= 0.27.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.4"},
@@ -80,7 +80,8 @@ defmodule Hierbautberlin.MixProject do
       {:httpoison, "~> 1.8"},
       {:exkml, "~> 0.3.2"},
       {:timex, "~> 3.7.2"},
-      {:ex_machina, "~> 2.7.0", only: :test}
+      {:ex_machina, "~> 2.7.0", only: :test},
+      {:phoenix_inline_svg, "~> 1.4"}
     ]
   end
 

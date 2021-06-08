@@ -146,6 +146,24 @@ const updateMapItems = (hook: ViewHook) => {
   });
 };
 
+const resetMapPadding = () => {
+  if (window.innerWidth > 800) {
+    map.setPadding({
+      right: 42 * 16,
+      top: 0,
+      left: 0,
+      bottom: 0,
+    });
+  } else {
+    map.setPadding({
+      right: 0,
+      top: 0,
+      left: 0,
+      bottom: window.innerHeight / 2 + window.innerHeight / 100,
+    });
+  }
+};
+
 const InteractiveMap = {
   mounted() {
     const hook = this as unknown as ViewHook;
@@ -167,12 +185,8 @@ const InteractiveMap = {
       updateMapItems(hook);
     });
 
-    map.setPadding({
-      right: 42 * 16,
-      top: 0,
-      left: 0,
-      bottom: 0,
-    });
+    resetMapPadding();
+    window.addEventListener('resize', resetMapPadding);
 
     map.on('zoomend', () => {
       hook.pushEvent('updateZoom', { zoom: map.getZoom() });

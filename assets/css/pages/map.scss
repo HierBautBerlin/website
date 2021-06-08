@@ -31,6 +31,7 @@
   border-bottom: 1px solid #c4c4c4;
   padding-bottom: 2rem;
   padding-top: 1rem;
+  cursor: pointer;
 }
 
 .map--item-list--item--header {
@@ -42,6 +43,10 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  
+  a {
+    color: black;
+  }
 }
 
 .map--item-list--item--subtitle {
@@ -64,4 +69,13 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+}
+
+@media only screen and (max-width: 50em) {
+  .map--item-list {
+    width: auto;
+    height: calc(100vh - 37vh - 10rem);
+    left: 2rem;
+    top: 45vh;
+  }
 }

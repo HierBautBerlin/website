@@ -1,8 +1,8 @@
 @import 'milligram';
 @import './header';
-@import './map';
 @import './fonts/inter';
-@import './details';
+@import './components/index';
+@import './pages/index';
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
