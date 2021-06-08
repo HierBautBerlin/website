@@ -80,6 +80,7 @@ defmodule HierbautberlinWeb do
     quote do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+      use PhoenixInlineSvg.Helpers
 
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
@@ -90,6 +91,7 @@ defmodule HierbautberlinWeb do
       import HierbautberlinWeb.ErrorHelpers
       import HierbautberlinWeb.Gettext
       import HierbautberlinWeb.GeoItemToJson
+      import HierbautberlinWeb.StateHelpers
       import Hierbautberlin.Services.Blank
 
       alias HierbautberlinWeb.Router.Helpers, as: Routes

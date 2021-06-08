@@ -8,49 +8,87 @@
 
 <ul class="map--item-list">
   <%= for item <- @mapItems do %>
-    <li class="map--item-list--item">
-    <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick"><%= item.title %></a></h3>
-      <%= if !is_blank?(item.subtitle) do %>
-        <h4 class="map--item-list--item--subtitle"><%= item.subtitle %></h3>
+    <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
+      <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" ><%= item.title %></a></h3>
+      <%= cond do %>
+        <% !is_blank?(item.subtitle) -> %>
+          <p class="map--item-list--item--description"><%= item.subtitle %></p>
+        <% !is_blank?(item.description) -> %>
+          <p class="map--item-list--item--description"><%= item.description %></p>
+        <% true -> %>
       <% end %>
-      <%= if !is_blank?(item.description) do %>
-        <p class="map--item-list--item--description"><%= item.description %></p>
-      <% end %>
-      <div>
-        <%= if item.url do %>
-          <a href="<%= item.url %>" target="_blank" rel="noopener noreferrer"><%= item.source.name %></a>
-        <% else %>
-          <span><%= item.source.name %></span>
-        <% end %>
 
-        <%= if item.additional_link  do %>
-          - <a href="<%= item.additional_link %>" target="_blank" rel="noopener noreferrer"><%= item.additional_link_name %></a>
+      <div>
+        <%= if item.participation_open do %>
+          <span class="label--participation">Beteiligung möglich</span>
         <% end %>
+        <%= if item.state do %>
+          <span class="label--state"><%= state_to_text(item) %></span>
+        <% end %>
+        <span class="label--source"><%= item.source.name %></span>
       </div>
-      <%= if item.state != nil do %>
-        <div><%= item.state %></div>
-      <% end %>
     </li>
   <% end %>
 </ul>
 
 <%= if @detailItem != nil do %>
   <div class="details" phx-capture-click='hideDetails'>
-    <div class="details--content">
-      <a id="close-details" href="/map" phx-click="hideDetails" phx-hook="PreventDefaultOnClick">Close</a>
-      <div><%= @detailItem.title %></div>
-      <div><%= @detailItem.subtitle %></div>
-      <div><%= @detailItem.description %></div>
-      <div><%= @detailItem.state %></div>
-      <div><%= @detailItem.url %></div>
-      <div><%= @detailItem.date_start %></div>
-      <div><%= @detailItem.date_end %></div>
-      <div><%= @detailItem.participation_open %></div>
-      <div><%= @detailItem.additional_link_name %></div>
-      <div><%= @detailItem.additional_link %></div>
-      <div><%= @detailItem.source.name %></div>
-      <div><%= @detailItem.source.url %></div>
-      <div><%= @detailItem.source.copyright %></div>
+    <div class="details--box">
+      <a id="close-details" class="details--close" href="/map" phx-click="hideDetails" phx-hook="PreventDefaultOnClick">
+        <%= PhoenixInlineSvg.Helpers.svg_image(HierbautberlinWeb.Endpoint, "close") %>
+      </a>
+
+      <div class="details--content">
+        <h3 class="details--content--title"><%= @detailItem.title %></h3>
+
+        <%= if !is_blank?(@detailItem.subtitle) do %>
+          <h4><%= @detailItem.subtitle %></h4>
+        <% end %>
+
+        <div class="details--labels">
+          <%= if @detailItem.participation_open do %>
+            <span class="label--participation">Beteiligung möglich</span>
+          <% end %>
+          <%= if @detailItem.state do %>
+            <span class="label--state"><%= state_to_text(@detailItem) %></span>
+          <% end %>
+          <span class="label--source"><%= @detailItem.source.name %></span>
+        </div>
+
+        <%= if !is_blank?(@detailItem.description) do %>
+          <p><%= @detailItem.description%></p>
+        <% end %>
+
+        <%= if !is_blank?(@detailItem.url)  do %>
+          <div class="details--links">
+            <div><a href="<%= @detailItem.url %>" target="_blank" rel="noopener noreferrer">&gt; Details</a></div>
+            <%= if !is_blank?(@detailItem.additional_link_name) do %>
+              <div><a href="<%= @detailItem.additional_link %>" target="_blank" rel="noopener noreferrer">&gt; <%= @detailItem.additional_link_name %></a></div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%= if @detailItem.date_start || @detailItem.date_end do %>
+          <p>
+            Datum:
+            <%= if @detailItem.date_start do %>
+              <%= Timex.format!(@detailItem.date_start, "{D}.{M}.{YYYY}") %>
+            <% end %>
+            <%= if @detailItem.date_end && @detailItem.date_start != @detailItem.date_end do %>
+              - <%= Timex.format!(@detailItem.date_end, "{D}.{M}.{YYYY}") %>
+            <% end %>
+          </p>
+        <% end %>
+
+        <%= if !is_blank?(@detailItem.source.copyright) do %>
+        <div>&copy;
+          <a href="<%= @detailItem.source.url %>" target="_blank" rel="noopener noreferrer">
+            <%= @detailItem.source.copyright %>
+          </a>
+        </div>
+        <% end %>
+      </div>
     </div>
+
   </div>
 <% end %>

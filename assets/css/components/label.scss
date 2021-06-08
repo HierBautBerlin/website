@@ -1,0 +1,22 @@
+.label {
+  border: 1px solid #6f6f6f;
+  background-color: #efefef;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  margin-bottom: 0.5em;
+  display: inline-block;
+}
+
+.label--source {
+  @extend .label;
+}
+
+.label--state {
+  @extend .label;
+}
+
+.label--participation {
+  @extend .label;
+}
