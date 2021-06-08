@@ -20,6 +20,11 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
+  config :bugsnag,
+    release_stage: "production",
+    use_logger: true,
+    api_key: System.get_env("BUGSNAG_API")
+
   config :hierbautberlin, HierbautberlinWeb.Endpoint,
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
