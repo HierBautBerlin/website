@@ -66,7 +66,7 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
       assert first.url == "https://mein.berlin.de/projekte/burgerhaushalt-treptow-kopenick/"
       assert first.geo_geometry == nil
       assert first.geo_point == nil
-      assert first.participation_open == true
+      assert first.participation_open == false
 
       last = List.last(result) |> Repo.preload(:source)
 
