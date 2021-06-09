@@ -1,0 +1,15 @@
+<h1>Passwort vergessen?</h1>
+
+<%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
+  <%= label f, :email %>
+  <%= email_input f, :email, required: true %>
+
+  <div>
+    <%= submit "Sende Email zum Zurücksetzen des Passwortes" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %> |
+  <%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %>
+</p>

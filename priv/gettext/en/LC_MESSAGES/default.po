@@ -10,8 +10,3 @@ msgid ""
 msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2\n"
-
-#, elixir-format
-#: lib/hierbautberlin_web/live/page_live.html.leex:2
-msgid "Welcome to %{name}!"
-msgstr ""

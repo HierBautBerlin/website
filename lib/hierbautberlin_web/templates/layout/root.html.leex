@@ -14,10 +14,12 @@
   </head>
   <body>
     <header>
+      <a href="/" class="header--logo">
+        <img src="/images/hierbautberlin.png" class="header--logo--image" alt="Ein Berliner Bär mit einem Arbeitshelm.">
+        Hier Baut Berlin
+      </a>
       <nav role="navigation">
-        <ul>
-          <li><a href="/map">Karte</a></li>
-        </ul>
+        <%= render "_user_menu.html", assigns %>
       </nav>
     </header>
     <%= @inner_content %>

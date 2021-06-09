@@ -1,0 +1,57 @@
+<h1>Einstellungen</h1>
+
+<h3>Email ändern</h3>
+
+<%= form_for @email_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
+  <%= if @email_changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+  <% end %>
+
+  <%= hidden_input f, :action, name: "action", value: "update_email" %>
+
+  <%= label f, :email %>
+  <%= email_input f, :email, required: true %>
+  <%= error_tag f, :email %>
+
+  <%= label f, :current_password, "Aktuelles Passwort", for: "current_password_for_email" %>
+  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_email" %>
+  <%= error_tag f, :current_password %>
+
+  <div>
+    <%= submit "Email-Adresse ändern" %>
+  </div>
+<% end %>
+
+<h3>Passwort ändern</h3>
+
+<%= form_for @password_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
+  <%= if @password_changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+  <% end %>
+
+  <%= hidden_input f, :action, name: "action", value: "update_password" %>
+
+  <%= label f, :password, "Neues Passwort" %>
+  <%= password_input f, :password, required: true %>
+  <%= error_tag f, :password %>
+
+  <%= label f, :password_confirmation, "Neues Passwort bestätigen" %>
+  <%= password_input f, :password_confirmation, required: true %>
+  <%= error_tag f, :password_confirmation %>
+
+  <%= label f, :current_password, "Aktuelles Passwort", for: "current_password_for_password" %>
+  <%= password_input f, :current_password, required: true, name: "current_password", id: "current_password_for_password" %>
+  <%= error_tag f, :current_password %>
+
+  <div>
+    <%= submit "Passwort ändern" %>
+  </div>
+<% end %>
+
+<h3>Konto löschen</h3>
+
+<%= link("Konto löschen", to: Routes.user_settings_path(@conn, :delete), class: "button", method: :delete, data: [confirm: "Wirklich das Konto löschen?"]) %>

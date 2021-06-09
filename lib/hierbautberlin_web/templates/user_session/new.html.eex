@@ -1,0 +1,29 @@
+<h1>Anmelden</h1>
+
+<%= form_for @conn, Routes.user_session_path(@conn, :create), [as: :user], fn f -> %>
+  <%= if @error_message do %>
+    <div class="alert alert-danger">
+      <p><%= @error_message %></p>
+    </div>
+  <% end %>
+
+  <%= label f, :email %>
+  <%= email_input f, :email, required: true %>
+
+  <%= label f, :password, "Passwort" %>
+  <%= password_input f, :password, required: true %>
+
+  <label>
+    <%= checkbox f, :remember_me %>
+    Für 60 Tage angemeldet bleiben
+  </label>
+
+  <div>
+    <%= submit "Anmelden" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %> |
+  <%= link "Passwort vergessen?", to: Routes.user_reset_password_path(@conn, :new) %>
+</p>

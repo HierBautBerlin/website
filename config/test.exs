@@ -1,5 +1,10 @@
 import Config
 
+config :hierbautberlin, :environment, :test
+
+# Only in tests, remove the complexity from the password hashing algorithm
+config :bcrypt_elixir, :log_rounds, 1
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -20,3 +25,6 @@ config :hierbautberlin, HierbautberlinWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :hierbautberlin, HierbautberlinWeb.Mailer, adapter: Bamboo.TestAdapter
+config :bamboo, :refute_timeout, 5

@@ -20,6 +20,10 @@ config :hierbautberlin, HierbautberlinWeb.Endpoint,
   pubsub_server: Hierbautberlin.PubSub,
   live_view: [signing_salt: "ocVH8z5c"]
 
+config :hierbautberlin, :generators,
+  binary_id: false,
+  sample_binary_id: "11111111-1111-1111-1111-111111111111"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -32,6 +36,8 @@ config :bugsnag,
   release_stage: "development",
   use_logger: false,
   exception_filter: Hierbautberlin.ExceptionFilter
+
+config :gettext, :default_locale, "de"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

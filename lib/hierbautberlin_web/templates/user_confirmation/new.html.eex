@@ -1,0 +1,15 @@
+<h1>Bestätigungsanweisungen erneut senden</h1>
+
+<%= form_for :user, Routes.user_confirmation_path(@conn, :create), fn f -> %>
+  <%= label f, :email %>
+  <%= email_input f, :email, required: true %>
+
+  <div>
+    <%= submit "Bestätigungsanweisungen erneut senden" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %> |
+  <%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %>
+</p>

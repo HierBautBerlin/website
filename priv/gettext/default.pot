@@ -9,8 +9,3 @@
 ## effect: edit them in PO (.po) files instead.
 msgid ""
 msgstr ""
-
-#, elixir-format
-#: lib/hierbautberlin_web/live/page_live.html.leex:2
-msgid "Welcome to %{name}!"
-msgstr ""

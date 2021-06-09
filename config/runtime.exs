@@ -31,4 +31,10 @@ if config_env() == :prod do
       transport_options: [socket_opts: [:inet6]]
     ],
     secret_key_base: secret_key_base
+
+  config :hierbautberlin, HierbautberlinWeb.Mailer,
+    adapter: Bamboo.MailgunAdapter,
+    api_key: System.get_env("MAILGUN_API"),
+    domain: System.get_env("MAILGUN_DOMAIN"),
+    base_uri: "https://api.eu.mailgun.net/v3"
 end

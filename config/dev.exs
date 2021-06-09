@@ -1,5 +1,7 @@
 import Config
 
+config :hierbautberlin, :environment, :dev
+
 # Configure your database
 config :hierbautberlin, Hierbautberlin.Repo,
   username: "postgres",
@@ -62,6 +64,8 @@ config :hierbautberlin, HierbautberlinWeb.Endpoint,
       ~r"lib/hierbautberlin_web/templates/.*(eex)$"
     ]
   ]
+
+config :hierbautberlin, HierbautberlinWeb.Mailer, adapter: Bamboo.LocalAdapter
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
