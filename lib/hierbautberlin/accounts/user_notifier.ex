@@ -23,7 +23,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
       </p>
 
       <p>
-      Wenn du dieses Konto nicht selber angelegt hast, ingoriere bitte diese Email.
+      Wenn du dieses Konto nicht selber angelegt hast, ignoriere bitte diese Email.
       </p>
       """,
       """
@@ -33,7 +33,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
 
       #{url}
 
-      Wenn du dieses Konto nicht selber angelegt hast, ingoriere bitte diese Email.
+      Wenn du dieses Konto nicht selber angelegt hast, ignoriere bitte diese Email.
       """
     )
   end
@@ -50,7 +50,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
 
       <p>Du kannst dein Passwort <a href="#{url}">hier zurücksetzen</a>.</p>
 
-      <p>Wenn du diese Änderung nicht selber angefragt hast, ingoriere bitte diese Email.</p>
+      <p>Wenn du diese Änderung nicht selber angefragt hast, ignoriere bitte diese Email.</p>
       """,
       """
       Hi #{user.email},
@@ -59,7 +59,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
 
       #{url}
 
-      Wenn du diese Änderung nicht selber angefragt hast, ingoriere bitte diese Email.
+      Wenn du diese Änderung nicht selber angefragt hast, ignoriere bitte diese Email.
       """
     )
   end
@@ -76,7 +76,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
 
       <p>Du kannst mit dieser URL deine Email <a href="#{url}">hier ändern</a>.</p>
 
-      <p>Wenn du diese Änderung nicht selber angefragt hast, ingoriere bitte diese Email.</p>
+      <p>Wenn du diese Änderung nicht selber angefragt hast, ignoriere bitte diese Email.</p>
       """,
       """
       Hi #{user.email},
@@ -85,7 +85,7 @@ defmodule Hierbautberlin.Accounts.UserNotifier do
 
       #{url}
 
-      Wenn du diese Änderung nicht selber angefragt hast, ingoriere bitte diese Email.
+      Wenn du diese Änderung nicht selber angefragt hast, ignoriere bitte diese Email.
       """
     )
   end
