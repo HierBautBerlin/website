@@ -1,0 +1,10 @@
+<ul>
+  <li><a href="/map">Karte</a></li>
+<%= if @current_user do %>
+  <li><%= link "Einstellungen", to: Routes.user_settings_path(@conn, :edit) %></li>
+  <li><%= link "Abmelden", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
+<% else %>
+  <li><%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %></li>
+  <li><%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %></li>
+<% end %>
+</ul>

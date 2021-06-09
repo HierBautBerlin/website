@@ -57,6 +57,7 @@ defmodule Hierbautberlin.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 2.0"},
       {:phoenix, "~> 1.5.8"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
@@ -82,7 +83,9 @@ defmodule Hierbautberlin.MixProject do
       {:timex, "~> 3.7.2"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:phoenix_inline_svg, "~> 1.4"},
-      {:bugsnag, "~> 3.0.0"}
+      {:bugsnag, "~> 3.0.0"},
+      {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
+      {:bamboo, "~> 2.1.0"}
     ]
   end
 
