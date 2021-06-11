@@ -39,7 +39,7 @@
     "hard-source-webpack-plugin": "^0.13.1",
     "mini-css-extract-plugin": "^1.6.0",
     "optimize-css-assets-webpack-plugin": "^6.0.0",
-    "sass-loader": "^12.0.0",
+    "sass-loader": "^12.1.0",
     "sass": "^1.34.1",
     "source-map-loader": "^3.0.0",
     "terser-webpack-plugin": "^5.1.3",
