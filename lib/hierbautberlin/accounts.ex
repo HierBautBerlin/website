@@ -124,6 +124,15 @@ defmodule Hierbautberlin.Accounts do
   end
 
   @doc """
+  changes the role of the user
+  """
+  def change_role(user, role) do
+    user
+    |> User.role_changeset(%{role: role})
+    |> Repo.update()
+  end
+
+  @doc """
   Emulates that the email will change without actually changing
   it in the database.
 

@@ -504,4 +504,20 @@ defmodule Hierbautberlin.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "change_role/2" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "updates the role", %{user: user} do
+      {:ok, _user} = Accounts.change_role(user, :admin)
+      assert Accounts.get_user!(user.id).role == :admin
+    end
+
+    test "refutes update if role is not in enum", %{user: user} do
+      {:error, changeset} = Accounts.change_role(user, :wrong)
+      assert "is invalid" in errors_on(changeset).role
+    end
+  end
 end
