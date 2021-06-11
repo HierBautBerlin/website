@@ -1,0 +1,72 @@
+.phx-modal {
+  opacity: 1!important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 101;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phx-modal-inner {
+  background-color: white;
+  padding: 2rem;
+  z-index: 102;
+  min-width: 60rem;
+  max-width: 80rem;
+  max-height: 80vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.phx-modal-content {
+  padding: 2rem;
+  overflow: scroll;
+}
+
+.phx-modal-close {
+  position: absolute;
+  right: 1rem;
+  top: 0;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.phx-modal-close:hover,
+.phx-modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 50em) {
+
+  .phx-modal {
+    width: auto;
+    height: auto;
+  }
+
+  .phx-modal-inner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    min-width: auto;
+    max-width: unset;
+    max-height: unset;
+  }
+}
