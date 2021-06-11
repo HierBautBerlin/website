@@ -7,7 +7,7 @@
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 101;
+  z-index: 401;
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.4);
   display: flex;
@@ -18,7 +18,7 @@
 .phx-modal-inner {
   background-color: white;
   padding: 2rem;
-  z-index: 102;
+  z-index: 402;
   min-width: 60rem;
   max-width: 80rem;
   max-height: 80vh;

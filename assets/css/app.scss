@@ -1,8 +1,9 @@
-@import 'milligram';
-@import './header';
+@import 'focus.scss';
+@import 'colors.scss';
 @import './fonts/inter';
 @import './components/index';
 @import './pages/index';
+@import 'milligram';
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
@@ -73,4 +74,31 @@ body {
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+}
+
+/** Prevent zoom on ios if clicking in input fields */
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+select:focus,
+textarea {
+  font-size: 16px;
+}
+
+@media screen and (max-width: 50rem) {
+  .container {
+    margin-top: 6rem;
+  }
+
 }

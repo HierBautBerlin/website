@@ -1,0 +1,29 @@
+<header class="header" data-controller="hamburger">
+  <div class="inner">
+    <div class="logo">
+        <div class="logo--image">
+            <a href="/"><img src="/images/hierbautberlin.png" alt="<%= gettext("Ein Berliner Bär mit einem Arbeitshelm.") %>"></a>
+        </div>
+        <div class="logo--text">
+            <a href="/"><%= gettext("Hier Baut Berlin") %></a>
+        </div>
+    </div>
+    <nav role="navigation">
+        <!-- [THE HAMBURGER] -->
+        <label for="hamburger" class="hamburger-label">&#9776;</label>
+        <input type="checkbox" id="hamburger" data-action="hamburger#stateChange"/>
+
+        <!-- [MENU ITEMS] -->
+        <ul class="header--menu">
+          <li><a href="/map">Karte</a></li>
+          <%= if @current_user do %>
+            <li><%= link "Einstellungen", to: Routes.user_settings_path(@conn, :edit) %></li>
+            <li><%= link "Abmelden", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
+          <% else %>
+            <li><%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %></li>
+            <li><%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %></li>
+          <% end %>
+        </ul>
+    </nav>
+  </div>
+</header>
