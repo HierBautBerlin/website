@@ -93,6 +93,7 @@ defmodule HierbautberlinWeb do
       import HierbautberlinWeb.Gettext
       import HierbautberlinWeb.GeoItemToJson
       import HierbautberlinWeb.StateHelpers
+      import HierbautberlinWeb.MapRouteHelpers
       import Hierbautberlin.Services.Blank
 
       alias HierbautberlinWeb.Router.Helpers, as: Routes

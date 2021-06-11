@@ -2,6 +2,7 @@ defmodule HierbautberlinWeb.MapLive do
   use HierbautberlinWeb, :live_view
 
   alias Hierbautberlin.GeoData
+  alias HierbautberlinWeb.MapRouteHelpers
 
   @lat_default 52.5166309
   @lng_default 13.3781537
@@ -90,23 +91,12 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   defp route_from_socket(socket) do
-    route_params = [
-      lat: to_string(socket.assigns.mapPosition.lat),
-      lng: to_string(socket.assigns.mapPosition.lng),
-      zoom: to_string(socket.assigns.mapZoom)
-    ]
-
-    route_params =
-      if socket.assigns.detailItem do
-        route_params ++
-          [
-            details: to_string(socket.assigns.detailItem.id)
-          ]
-      else
-        route_params
-      end
-
-    Routes.map_path(socket, :index, route_params)
+    MapRouteHelpers.route_to_map(
+      socket,
+      socket.assigns.mapPosition,
+      socket.assigns.mapZoom,
+      socket.assigns.detailItem
+    )
   end
 
   defp calculate_coordinates(params) do
