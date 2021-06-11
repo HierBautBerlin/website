@@ -8,7 +8,7 @@ defmodule Hierbautberlin.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
-
+    field :role, Ecto.Enum, values: [:user, :moderator, :admin]
     timestamps()
   end
 
@@ -110,6 +110,14 @@ defmodule Hierbautberlin.Accounts.User do
   def confirm_changeset(user) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     change(user, confirmed_at: now)
+  end
+
+  @doc """
+  Changes the role of the user
+  """
+  def role_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:role])
   end
 
   @doc """
