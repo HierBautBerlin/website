@@ -1,0 +1,19 @@
+<footer>
+  <div class="footer--left">
+    <p>
+      Gefördert bis 30.09.2021 durch
+    <p>
+    <p>
+      <a href="https://prototypefund.de"><%= PhoenixInlineSvg.Helpers.svg_image(@conn, "logo-prototype", class: "footer-logo", alt: "Prototype Fund") %></a>
+      <a href="https://www.bmbf.de/"><%= PhoenixInlineSvg.Helpers.svg_image(@conn, "logo-bmbf", class: "footer-logo", alt: "Bundesministeriums für Bildung und Forschung") %></a>
+    </p>
+  </div>
+
+  <div class="footer--right">
+    <p>
+      <a href="https://github.com/hierbautberlin/website">GitHub</a> |
+      <a href="/impressum">Impressum</a> |
+      <a href="/datenschutz">Datenschutz</a>
+    </p>
+  </div>
+</footer>

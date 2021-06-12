@@ -13,7 +13,9 @@
     <script>Bugsnag.start({ apiKey: '68d18513cd64891ed5b4d409575effa0' })</script>
   </head>
   <body>
-    <%= render "_header.html", assigns %>
-    <%= @inner_content %>
+    <div class="layout">
+      <%= render "_header.html", assigns %>
+      <%= @inner_content %>
+    </div>
   </body>
 </html>

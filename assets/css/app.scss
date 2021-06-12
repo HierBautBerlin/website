@@ -17,8 +17,13 @@ body {
 }
 
 .container {
+  grid-area: main;
   margin-top: 4rem;
   margin-bottom: 4rem;
+}
+
+.live-wrapper {
+  grid-area: main;
 }
 
 .live-header {
@@ -96,9 +101,23 @@ textarea {
   font-size: 16px;
 }
 
+.layout {
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+  grid-template-rows:
+    auto
+    1fr
+    auto;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
 @media screen and (max-width: 50rem) {
   .container {
     margin-top: 6rem;
   }
-
 }
