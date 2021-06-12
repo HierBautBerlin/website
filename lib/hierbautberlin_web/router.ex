@@ -60,9 +60,11 @@ defmodule HierbautberlinWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
 
+    get "/", WelcomeController, :index
+    get "/impressum", ImpressumController, :index
+    get "/datenschutz", PrivacyController, :index
     get "/ping", HealthcheckController, :index
 
-    get "/", WelcomeController, :index
     live "/map", MapLive, :index
   end
 

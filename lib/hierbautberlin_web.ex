@@ -45,6 +45,7 @@ defmodule HierbautberlinWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
+        container: {:div, class: "live-wrapper"},
         layout: {HierbautberlinWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())

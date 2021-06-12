@@ -1,4 +1,4 @@
-<header class="header" data-controller="hamburger">
+<header class="header">
   <div class="inner">
     <div class="logo">
         <div class="logo--image">
@@ -11,7 +11,7 @@
     <nav role="navigation">
         <!-- [THE HAMBURGER] -->
         <label for="hamburger" class="hamburger-label">&#9776;</label>
-        <input type="checkbox" id="hamburger" data-action="hamburger#stateChange"/>
+        <input type="checkbox" id="hamburger"/>
 
         <!-- [MENU ITEMS] -->
         <ul class="header--menu">

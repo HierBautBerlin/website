@@ -6,30 +6,36 @@
   </script>
 </div>
 
-<ul class="map--item-list">
-  <%= for item <- @mapItems do %>
-    <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
-      <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" ><%= item.title %></a></h3>
-      <%= cond do %>
-        <% !is_blank?(item.subtitle) -> %>
-          <p class="map--item-list--item--description"><%= item.subtitle %></p>
-        <% !is_blank?(item.description) -> %>
-          <p class="map--item-list--item--description"><%= item.description %></p>
-        <% true -> %>
-      <% end %>
+<div class="map--item-list-wrapper">
+  <ul class="map--item-list">
+    <%= for item <- @mapItems do %>
+      <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
+        <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" ><%= item.title %></a></h3>
+        <%= cond do %>
+          <% !is_blank?(item.subtitle) -> %>
+            <p class="map--item-list--item--description"><%= item.subtitle %></p>
+          <% !is_blank?(item.description) -> %>
+            <p class="map--item-list--item--description"><%= item.description %></p>
+          <% true -> %>
+        <% end %>
 
-      <div>
-        <%= if item.participation_open do %>
-          <span class="label--participation">Beteiligung möglich</span>
-        <% end %>
-        <%= if item.state do %>
-          <span class="label--state"><%= state_to_text(item) %></span>
-        <% end %>
-        <span class="label--source"><%= item.source.name %></span>
-      </div>
-    </li>
-  <% end %>
-</ul>
+        <div>
+          <%= if item.participation_open do %>
+            <span class="label--participation">Beteiligung möglich</span>
+          <% end %>
+          <%= if item.state do %>
+            <span class="label--state"><%= state_to_text(item) %></span>
+          <% end %>
+          <span class="label--source"><%= item.source.name %></span>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+  <div class="map--item-list-footer">
+    <a href="/impressum">Impressum</a> |
+    <a href="/datenschutz">Datenschutz</a>
+  </div>
+</div>
 
 <%= if @detailItem != nil do %>
   <%= live_modal @socket, HierbautberlinWeb.Components.DetailsModal,
