@@ -1,1 +1,36 @@
-<a href="/map" class="button">Zur Karte</a>
+<div class="welcome">
+  <div class="welcome--head">
+    <div class="welcome--head--logo"><img src="/images/hierbautberlin.png" alt="Logo von Hier Baut Berlin, ein Bär mit einem Arbeitshelm"/></div>
+    <div class="welcome--head--text">
+      <h1>Hier Baut Berlin</h1>
+      <h2>Transparenz für Berliner Bürger*innen</h2>
+    </div>
+  </div>
+
+  <ul>
+    <li>Was macht die Stadt in meinem Kiez?</li>
+    <li>Warum ist hier eine Baustelle?</li>
+    <li>Was wird demnächst gebaut?</li>
+  </ul>
+
+  <p>
+    Dich interessiert, was in deinem Umfeld passiert? Wo du dich beteiligen kannst?
+    Eventuell sogar mit einer E-Mail-Benachrichtigung, sobald etwas Neues gefunden wird?
+    Dann ist Hier Baut Berlin die Lösung.
+  </p>
+
+  <div class="welcome--map--actions">
+    <a href="/map" class="welcome--map--button">Karte öffnen</a>
+  </div>
+
+  <p>
+    Hier Baut Berlin sucht auf diversen Seiten der Stadt nach Informationen und stellt diese
+    übersichtlich auf einer Karte dar. Zusätzlich kannst du dich über neue Einträge per E-Mail
+    benachrichtigen lassen. Verpasse nie mehr spannende Neuigkeiten oder Beteiligungsverfahren.
+  </p>
+
+  <p>
+    Die Software wurde durch den <a href="https://prototypefund.de">Prototypefund</a> und das <a href="https://www.bmbf.de">Bundesministeriums für Bildung und Forschung</a>
+    finanziert und ist Open Source. Der Code findet sich auf <a href="https://github.com/hierBautBerlin/website">GitHub</a>.
+  </p>
+</div>
