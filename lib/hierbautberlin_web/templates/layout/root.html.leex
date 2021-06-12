@@ -13,15 +13,7 @@
     <script>Bugsnag.start({ apiKey: '68d18513cd64891ed5b4d409575effa0' })</script>
   </head>
   <body>
-    <header>
-      <a href="/" class="header--logo">
-        <img src="/images/hierbautberlin.png" class="header--logo--image" alt="Ein Berliner Bär mit einem Arbeitshelm.">
-        Hier Baut Berlin
-      </a>
-      <nav role="navigation">
-        <%= render "_user_menu.html", assigns %>
-      </nav>
-    </header>
+    <%= render "_header.html", assigns %>
     <%= @inner_content %>
   </body>
 </html>
