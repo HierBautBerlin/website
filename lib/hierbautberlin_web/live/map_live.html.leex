@@ -1,14 +1,14 @@
 <div id="mapContainer" class="map--container" phx-hook="InteractiveMap" >
-  <div id='map' class="map--container--tiles" phx-update="ignore" data-position-lat="<%= @mapPosition[:lat]%>" data-position-lng="<%= @mapPosition[:lng]%>" data-position-zoom="<%= @mapZoom %>">
+  <div id='map' class="map--container--tiles" phx-update="ignore" data-position-lat="<%= @map_position[:lat]%>" data-position-lng="<%= @map_position[:lng]%>" data-position-zoom="<%= @map_zoom %>">
   </div>
   <script type="application/json" id="map-data">
-  <%= raw geo_item_to_json(@mapItems) %>
+  <%= raw geo_item_to_json(@map_items) %>
   </script>
 </div>
 
 <div class="map--item-list-wrapper">
   <ul class="map--item-list">
-    <%= for item <- @mapItems do %>
+    <%= for item <- @map_items do %>
       <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
         <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" ><%= item.title %></a></h3>
         <%= cond do %>
@@ -32,8 +32,25 @@
     <% end %>
   </ul>
   <div class="map--item-list-footer">
-    <a href="/impressum">Impressum</a> |
-    <a href="/datenschutz">Datenschutz</a>
+    <%= if @current_user do %>
+      <div class="map--item-list-footer--subscribe">
+        <form phx-change="subscribe">
+          <label class="toggle toggle--small">
+            <div class="toggle-inner">
+              <input type="checkbox" name="subscribe" <%= if @subscription, do: "checked" %>/>
+              <div class="toggle-switch"></div>
+            </div>
+            Sende E-Mail bei neuen Einträgen im <%= if @subscription, do: "#{trunc(@subscription.radius / 1000)} KM", else: "2 KM" %> Radius.
+          </label>
+        </form>
+      </div>
+    <% else %>
+      <div class="map--item-list-footer--register">Willst du keine neuen Einträge verpassen? <a href="/users/register">Melde dich an!</a></div>
+    <% end %>
+    <div class="map--item-list-footer--impressum">
+      <a href="/impressum">Impressum</a> |
+      <a href="/datenschutz">Datenschutz</a>
+    </div>
   </div>
 </div>
 
@@ -41,5 +58,5 @@
   <%= live_modal @socket, HierbautberlinWeb.Components.DetailsModal,
     id: @detailItem.id,
     detailItem: @detailItem,
-    return_to: route_to_map(@socket, @mapPosition, @mapZoom, nil) %>
+    return_to: route_to_map(@socket, @map_position, @map_zoom, nil) %>
 <% end %>

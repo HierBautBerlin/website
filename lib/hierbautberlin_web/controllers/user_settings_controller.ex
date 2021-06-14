@@ -6,8 +6,9 @@ defmodule HierbautberlinWeb.UserSettingsController do
 
   plug :assign_email_and_password_changesets
 
-  def edit(conn, _params) do
-    render(conn, "edit.html")
+  def edit(%{assigns: %{current_user: current_user}} = conn, _params) do
+    current_user = Accounts.with_subscriptions(current_user)
+    render(conn, "edit.html", current_user: current_user)
   end
 
   def update(conn, %{"action" => "update_email"} = params) do
@@ -30,7 +31,8 @@ defmodule HierbautberlinWeb.UserSettingsController do
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
       {:error, changeset} ->
-        render(conn, "edit.html", email_changeset: changeset)
+        current_user = Accounts.with_subscriptions(user)
+        render(conn, "edit.html", email_changeset: changeset, current_user: current_user)
     end
   end
 
@@ -46,10 +48,12 @@ defmodule HierbautberlinWeb.UserSettingsController do
         |> UserAuth.log_in_user(user)
 
       {:error, changeset} ->
-        render(conn, "edit.html", password_changeset: changeset)
+        current_user = Accounts.with_subscriptions(user)
+        render(conn, "edit.html", password_changeset: changeset, current_user: current_user)
     end
   end
 
+  @spec delete(Plug.Conn.t(), any) :: Plug.Conn.t()
   def delete(conn, _params) do
     user = conn.assigns.current_user
 

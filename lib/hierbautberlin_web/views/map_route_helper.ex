@@ -1,11 +1,11 @@
 defmodule HierbautberlinWeb.MapRouteHelpers do
   alias HierbautberlinWeb.Router.Helpers, as: Routes
 
-  def route_to_map(socket, mapPosition, mapZoom, detailItem) do
+  def route_to_map(socket, map_position, map_zoom, detailItem) do
     route_params = [
-      lat: to_string(mapPosition.lat),
-      lng: to_string(mapPosition.lng),
-      zoom: to_string(mapZoom)
+      lat: to_string(map_position.lat),
+      lng: to_string(map_position.lng),
+      zoom: to_string(map_zoom)
     ]
 
     route_params =

@@ -2,6 +2,8 @@ defmodule Hierbautberlin.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Hierbautberlin.Accounts.Subscription
+
   @derive {Inspect, except: [:password]}
   schema "users" do
     field :email, :string
@@ -9,6 +11,8 @@ defmodule Hierbautberlin.Accounts.User do
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
     field :role, Ecto.Enum, values: [:user, :moderator, :admin]
+
+    has_many :subscriptions, Subscription
     timestamps()
   end
 

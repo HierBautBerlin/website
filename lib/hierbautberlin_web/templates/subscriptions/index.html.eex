@@ -1,0 +1,33 @@
+<p>
+  <%= link "< Zurück", to: Routes.user_settings_path(@conn, :edit) %>
+</p>
+
+<h2>Orte für Benachrichtigungen</h2>
+
+<%= if Enum.empty?(@current_user.subscriptions) do %>
+  <p>
+    Gehe auf der Karte zu einem Ort, für den du Benachrichtigungen
+    erhalten willst und drücke auf den "Sende E-Mail bei neuen Einträgen" Knopf.
+    Die so hinzugefügten Orte kannst du dann hier nachträglich bearbeiten.
+  </p>
+<% else %>
+  <%= for subscription <- @current_user.subscriptions do %>
+    <% {lat, lng} = subscription.point.coordinates %>
+
+    <div class="map-details"
+         data-controller="map-details"
+         data-map-details-lat-value="<%= lat %>"
+         data-map-details-lng-value="<%= lng %>"
+         data-map-details-radius-value="<%= subscription.radius %>">
+      <div class="map-details--map" data-map-details-target="map"></div>
+      <%= form_for Hierbautberlin.Accounts.change_subscription(subscription, @current_user), Routes.subscriptions_path(@conn, :update, subscription.id), [class: "map-details--form"], fn f -> %>
+        <label>
+          Radius
+          <%= select f, :radius, ["500 M": 500, "1 KM": 1000, "2 KM": 2000, "4 KM": 4000, "8 KM": 8000, "10 KM": 10000], ["data-map-details-target": "radius"] %>
+        </label>
+        <%= submit "Aktualisieren", class: "button button--small" %>
+        <%= link "Löschen", to: Routes.subscriptions_path(@conn, :delete, subscription.id), method: :delete, data: [confirm: "Wirklich löschen?"], class: "button button--danger" %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

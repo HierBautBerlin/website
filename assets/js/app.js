@@ -7,8 +7,13 @@ import 'phoenix_html';
 import { Socket } from 'phoenix';
 import topbar from 'topbar';
 import { LiveSocket } from 'phoenix_live_view';
+import { Application } from 'stimulus';
+import { definitionsFromContext } from 'stimulus/webpack-helpers';
+import mapboxgl from 'mapbox-gl';
 import InteractiveMap from './interactiveMap';
 import PreventDefaultOnClick from './preventDefaultOnClick';
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYml0Ym94ZXIiLCJhIjoiY2tuazhkcm5nMDZiaDJ2bjA4YzZraTYxbSJ9.VHWcZ-7Q7-zOcBkQ5B0Hzw';
 
 const Hooks = {
   InteractiveMap,
@@ -26,3 +31,7 @@ window.addEventListener('phx:page-loading-stop', (_info) => topbar.hide());
 liveSocket.connect();
 
 window.liveSocket = liveSocket;
+
+const application = Application.start();
+const context = require.context('./controllers', true, /\.ts$/);
+application.load(definitionsFromContext(context));

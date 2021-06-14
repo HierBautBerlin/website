@@ -1,0 +1,16 @@
+.map-details {
+  display: flex;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.map-details--map {
+  width: 20rem;
+  height: 20rem;
+  margin-right: 2rem;
+  border-radius: 8px;
+}
+
+.map-details--form {
+  flex-grow: 1;
+}
