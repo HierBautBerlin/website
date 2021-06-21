@@ -74,18 +74,20 @@ defmodule Hierbautberlin.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ex_check, "~> 0.14.0", only: [:dev, :test], runtime: false},
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, ">= 0.0.0", only: [:dev, :text], runtime: false},
-      {:mix_test_watch, "~> 1.0"},
+      {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
       {:ecto_psql_extras, "~> 0.2"},
       {:geo_postgis, "~> 3.1"},
       {:httpoison, "~> 1.8"},
-      {:exkml, "~> 0.3.2"},
+      {:exkml, github: "bitboxer/exkml", branch: "update-deps"},
       {:timex, "~> 3.7.2"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:phoenix_inline_svg, "~> 1.4"},
       {:bugsnag, "~> 3.0.0"},
       {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
-      {:bamboo, "~> 2.1.0"}
+      {:bamboo, "~> 2.1.0"},
+      {:bamboo_phoenix, "~> 1.0.0"},
+      {:premailex, "~> 0.3.13"}
     ]
   end
 

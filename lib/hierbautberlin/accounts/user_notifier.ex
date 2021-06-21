@@ -1,11 +1,13 @@
 defmodule Hierbautberlin.Accounts.UserNotifier do
+  alias HierbautberlinWeb.{Email, Mailer}
+
   defp deliver(to, subject, html_body, text_body) do
     require Logger
     Logger.debug(text_body)
 
     to
-    |> HierbautberlinWeb.Email.default_email(subject, html_body, text_body)
-    |> HierbautberlinWeb.Mailer.deliver_later()
+    |> Email.default_email(subject, html_body, text_body)
+    |> Mailer.deliver_later()
   end
 
   @doc """

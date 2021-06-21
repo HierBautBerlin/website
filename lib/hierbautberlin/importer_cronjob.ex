@@ -11,7 +11,12 @@ defmodule Hierbautberlin.ImporterCronjob do
   end
 
   def handle_info(:work, state) do
+    import_start =
+      Timex.now()
+      |> Timex.shift(minutes: -1)
+
     Hierbautberlin.Importer.import_all()
+    Hierbautberlin.NotifySubscription.notify_changes_since(import_start)
     schedule_work()
     {:noreply, state}
   end

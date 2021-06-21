@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hier Baut Berlin</title>
+    <style>
+      body {
+        font-weight: 400;
+        color: black;
+      }
+
+      h1 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-top: 2rem;
+      }
+
+      a {
+        color: #000;
+      }
+
+      a.button {
+        display: inline-block;
+        background-color: #4dbc9a;
+        padding: 0.5em 1em;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 2em;
+        margin-bottom: 1em;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        font-weight: 900;
+        letter-spacing: 0.025rem;
+        margin: 2px;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0);
+      }
+
+      p {
+        margin-bottom: 1rem;
+      }
+
+      p.topSpacer {
+        margin-top: 1.5rem;
+      }
+
+      .footer {
+        color: #666965;
+        font-size: 90%;
+      }
+
+      .footer hr {
+        border-bottom: none;
+        border-top: 1px solid #666965;
+        margin: 3rem 0rem 1rem 0rem;
+      }
+
+      .footer a {
+        color: #666965;
+      }
+    </style>
+  </head>
+  <body>
+    <%= @inner_content %>
+
+    <div class="footer">
+      <hr />
+      <a href="https://beta.hierbautberlin.de">HierBautBerlin.de</a> | <a href="mailto:mail@hierbautberlin.de">E-Mail</a> | <a href="https://beta.hierbautberlin.de/impressum">Impressum</a>
+    </div>
+  </body>
+</html>
