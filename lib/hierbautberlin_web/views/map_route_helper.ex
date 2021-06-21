@@ -20,4 +20,23 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
 
     Routes.map_path(socket, :index, route_params)
   end
+
+  def link_to_details(conn, item) do
+    %{lat: lat, lng: lng} = get_point_for_details(item)
+    Routes.map_url(conn, :index, lat: lat, lng: lng, details: item.id)
+  end
+
+  defp get_point_for_details(%{geo_point: item}) when not is_nil(item) do
+    %{coordinates: {lng, lat}} = item
+    %{lat: Float.to_string(lat), lng: Float.to_string(lng)}
+  end
+
+  defp get_point_for_details(%{geo_geometry: geometry}) when not is_nil(geometry) do
+    %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
+    %{lat: Float.to_string(lat), lng: Float.to_string(lng)}
+  end
+
+  defp get_point_for_details(_item) do
+    %{lat: nil, lng: nil}
+  end
 end

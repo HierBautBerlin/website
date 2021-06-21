@@ -87,7 +87,8 @@ defmodule Hierbautberlin.MixProject do
       {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
       {:bamboo, "~> 2.1.0"},
       {:bamboo_phoenix, "~> 1.0.0"},
-      {:premailex, "~> 0.3.13"}
+      {:premailex, "~> 0.3.13"},
+      {:geo_turf, "~> 0.1.0"}
     ]
   end
 

@@ -58,10 +58,10 @@ defmodule Hierbautberlin.NotifySubscription do
             )
           )
 
-        if !conditions do
-          dynamic([item], ^filter_conditions)
-        else
+        if conditions do
           dynamic([item], ^filter_conditions or ^conditions)
+        else
+          dynamic([item], ^filter_conditions)
         end
       end)
 

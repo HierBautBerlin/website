@@ -7,9 +7,9 @@
 </p>
 
 <ul>
-<%= for item <- @items do %>
-  <li><a href="https://beta.hierbautberlin.de/map/?details=<%= item.id %>"><%= item.title %></a></li>
-<% end %>
+  <%= for item <- @items do %>
+    <li><%= link item.title, to: HierbautberlinWeb.MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) %></li>
+  <% end %>
 </ul>
 
 <p>

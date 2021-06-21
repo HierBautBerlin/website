@@ -3,10 +3,8 @@ Hi,
 Es gibt neue Einträge, die zu deinen Benachrichtigungen passen:
 
 <%= for item <- @items do %>
-  <%= item.title %>
-
-  https://beta.hierbautberlin.de/map/?details=<%= item.id %>">
-
+* <%= item.title %>
+  <%= HierbautberlinWeb.MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) %>
 <% end %>
 
 Du kannst deine Benachrichtigungen jederzeit hier ändern:
