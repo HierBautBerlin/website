@@ -36,9 +36,29 @@
 }
 
 .map--item-list-footer {
+  border-top: 1px solid var(--light-text-color);
+  padding: 0.5em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map--item-list-footer--subscribe {
+  font-size: 0.8em;
+  padding: 0 1rem;
+  
+  form {
+    margin: 0;
+  }
+}
+
+.map--item-list-footer--register {
+  font-size: 0.8em;
+}
+
+.map--item-list-footer--impressum {
   text-align: center;
   font-size: 0.8em;
-  padding: 0.5em 0;
   color: var(--light-text-color);
   a {
     color: var(--light-text-color);

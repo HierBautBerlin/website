@@ -9,21 +9,44 @@
         </div>
     </div>
     <nav role="navigation">
-        <!-- [THE HAMBURGER] -->
-        <label for="hamburger" class="hamburger-label">&#9776;</label>
-        <input type="checkbox" id="hamburger"/>
+      <!-- [THE HAMBURGER] -->
+      <label for="hamburger" class="hamburger-label">&#9776;</label>
+      <input type="checkbox" id="hamburger"/>
 
-        <!-- [MENU ITEMS] -->
-        <ul class="header--menu">
-          <li><a href="/map">Karte</a></li>
-          <%= if @current_user do %>
-            <li><%= link "Einstellungen", to: Routes.user_settings_path(@conn, :edit) %></li>
-            <li><%= link "Abmelden", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
-          <% else %>
-            <li><%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %></li>
-            <li><%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %></li>
-          <% end %>
-        </ul>
+      <!-- [MENU ITEMS] -->
+      <ul class="header--menu">
+        <li><a href="/map">Karte</a></li>
+        <li><a href="https://blog.hierbautberlin.de">Blog</a></li>
+        <%= if @current_user do %>
+          <li><%= link "Einstellungen", to: Routes.user_settings_path(@conn, :edit) %></li>
+          <li><%= link "Abmelden", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
+        <% else %>
+          <li><%= link "Registrieren", to: Routes.user_registration_path(@conn, :new) %></li>
+          <li><%= link "Anmelden", to: Routes.user_session_path(@conn, :new) %></li>
+        <% end %>
+      </ul>
+
+      <div class="nav--footer">
+        <div>
+          <p>
+            Gefördert bis 30.09.2021 durch
+          </p>
+          <p>
+            <a href="https://prototypefund.de"><%= PhoenixInlineSvg.Helpers.svg_image(@conn, "logo-prototype", class: "footer-logo", alt: "Prototype Fund") %></a>
+            <a href="https://www.bmbf.de/"><%= PhoenixInlineSvg.Helpers.svg_image(@conn, "logo-bmbf", class: "footer-logo", alt: "Bundesministeriums für Bildung und Forschung") %></a>
+          </p>
+        </div>
+
+        <div>
+          <p>
+            <a href="https://github.com/hierbautberlin/website">GitHub</a> |
+            <a href="/impressum">Impressum</a> |
+            <a href="/datenschutz">Datenschutz</a>
+          </p>
+        </div>
+      </div>
     </nav>
+
+
   </div>
 </header>

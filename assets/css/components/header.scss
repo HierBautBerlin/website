@@ -40,6 +40,10 @@ header {
       display: flex;
       align-items: center;
 
+      .nav--footer {
+        display: none;
+      }
+
       .header--menu {
         list-style: none;
         margin: 0;
@@ -240,6 +244,20 @@ form .header--link {
         display: none;
       }
 
+      nav input:checked ~ .nav--footer {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 301;
+        text-align: center;
+        
+        p:first-child {
+          margin-bottom: 0.5rem;
+        }
+      }
+
       nav input:checked ~ ul {
         display: block;
         z-index: 300;
@@ -267,6 +285,7 @@ form .header--link {
           padding-left: 0;
           padding-right: 1rem;
           text-align: right;
+          font-size: 1.3em;
 
           &:last-child {
             padding-right: 1rem;

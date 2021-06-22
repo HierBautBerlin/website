@@ -1,0 +1,17 @@
+<p>
+  Hi,
+</p>
+
+<p>
+  Es gibt neue Einträge, die zu deinen Benachrichtigungen passen:
+</p>
+
+<ul>
+  <%= for item <- @items do %>
+    <li><%= link item.title, to: HierbautberlinWeb.MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) %></li>
+  <% end %>
+</ul>
+
+<p>
+  Du kannst deine Benachrichtigungen jederzeit <a href="https://beta.hierbautberlin.de/users/subscriptions">hier</a> ändern.
+</p>

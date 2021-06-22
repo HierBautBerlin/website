@@ -2,8 +2,10 @@ defmodule Hierbautberlin.AccountsTest do
   use Hierbautberlin.DataCase
 
   alias Hierbautberlin.Accounts
+  alias Hierbautberlin.Repo
+  alias Hierbautberlin.Accounts.{User, UserToken, Subscription}
+
   import Hierbautberlin.AccountsFixtures
-  alias Hierbautberlin.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -518,6 +520,233 @@ defmodule Hierbautberlin.AccountsTest do
     test "refutes update if role is not in enum", %{user: user} do
       {:error, changeset} = Accounts.change_role(user, :wrong)
       assert "is invalid" in errors_on(changeset).role
+    end
+  end
+
+  describe "subscribe/2" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "subscribes to a lat/lng position and use the default radius", %{user: user} do
+      {:ok, _subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648})
+
+      user = user |> Repo.preload(:subscriptions)
+
+      assert length(user.subscriptions) == 1
+
+      subscription = List.first(user.subscriptions)
+      assert subscription.point.coordinates == {52.52329675804731, 13.445322017049648}
+      assert subscription.radius == 2000
+    end
+
+    test "subscribes to a lat/lng position and set the radius", %{user: user} do
+      {:ok, _subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      user = user |> Repo.preload(:subscriptions)
+
+      assert length(user.subscriptions) == 1
+
+      subscription = List.first(user.subscriptions)
+      assert subscription.point.coordinates == {52.52329675804731, 13.445322017049648}
+      assert subscription.radius == 4000
+    end
+  end
+
+  describe "get_subscription/2" do
+    setup do
+      user = user_fixture()
+
+      {:ok, _subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user}
+    end
+
+    test "get the current subscription", %{user: user} do
+      subscription =
+        Accounts.get_subscription(user, %{lat: 52.523296758047, lng: 13.4453220170496})
+
+      assert subscription.point.coordinates == {52.52329675804731, 13.445322017049648}
+      assert subscription.radius == 4000
+    end
+
+    test "does not return the current subscription of other users" do
+      user = user_fixture()
+
+      subscription =
+        Accounts.get_subscription(user, %{lat: 52.52329675804731, lng: 13.445322017049648})
+
+      assert subscription == nil
+    end
+
+    test "return nil if there is no subscription near that point", %{user: user} do
+      subscription = Accounts.get_subscription(user, %{lat: 50.528, lng: 10.449})
+
+      assert subscription == nil
+    end
+  end
+
+  describe "unsubscribe/2" do
+    setup do
+      user = user_fixture()
+
+      {:ok, _subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user}
+    end
+
+    test "unsubscribe a user", %{user: user} do
+      {:ok, _subscription} =
+        Accounts.unsubscribe(user, %{
+          lat: 52.52329675804731,
+          lng: 13.445322017049648
+        })
+
+      user = user |> Repo.preload(:subscriptions)
+      assert Enum.empty?(user.subscriptions)
+    end
+
+    test "should not unsubscribe wrong user", %{user: user} do
+      other_user = user_fixture()
+
+      {:error, :not_found} =
+        Accounts.unsubscribe(other_user, %{
+          lat: 52.52329675804731,
+          lng: 13.445322017049648
+        })
+
+      user = user |> Repo.preload(:subscriptions)
+      assert length(user.subscriptions) == 1
+    end
+  end
+
+  describe "is_subscribed" do
+    setup do
+      user = user_fixture()
+
+      {:ok, _subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user}
+    end
+
+    test "returns true if the user is subscribed", %{user: user} do
+      assert Accounts.get_subscription(user, %{lat: 52.523296758047, lng: 13.4453220170496})
+    end
+
+    test "returns false if the user is not subscribed" do
+      user = user_fixture()
+      refute Accounts.get_subscription(user, %{lat: 52.523296758047, lng: 13.4453220170496})
+    end
+  end
+
+  describe "change_subscription/3" do
+    setup do
+      user = user_fixture()
+      %{user: user}
+    end
+
+    test "returns a changeset", %{user: user} do
+      assert %Ecto.Changeset{} = changeset = Accounts.change_subscription(%Subscription{}, user)
+      assert changeset.required == []
+    end
+
+    test "allows fields to be set", %{user: user} do
+      changeset =
+        Accounts.change_subscription(%Subscription{}, user, %{
+          lat: 50,
+          lng: 12,
+          radius: 1234
+        })
+
+      assert changeset.valid?
+      assert get_change(changeset, :lat) == 50
+      assert get_change(changeset, :lng) == 12
+      assert get_change(changeset, :radius) == 1234
+
+      assert get_change(changeset, :point) == %Geo.Point{
+               coordinates: {50, 12},
+               properties: %{},
+               srid: 4326
+             }
+    end
+  end
+
+  describe "get_subscription_by_id/2" do
+    setup do
+      user = user_fixture()
+
+      {:ok, subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user, subscription: subscription}
+    end
+
+    test "returns a subscription if the user is correct", %{
+      user: user,
+      subscription: subscription
+    } do
+      found_subscription = Accounts.get_subscription_by_id(user, subscription.id)
+      assert subscription.id == found_subscription.id
+    end
+
+    test "returns an error if the user is wrong", %{
+      subscription: subscription
+    } do
+      user = user_fixture()
+      assert Accounts.get_subscription_by_id(user, subscription.id) == nil
+    end
+
+    test "returns an error if the id does not exist", %{
+      user: user
+    } do
+      assert Accounts.get_subscription_by_id(user, 1_212_121_211_212) == nil
+    end
+  end
+
+  describe "update_subscription/2" do
+    setup do
+      user = user_fixture()
+
+      {:ok, subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user, subscription: subscription}
+    end
+
+    test "updates a subscription", %{user: user, subscription: subscription} do
+      {:ok, _sub} = Accounts.update_subscription(subscription, %{lat: 50, lng: 12, radius: 1000})
+
+      sub = Accounts.get_subscription_by_id(user, subscription.id)
+
+      assert sub.point == %Geo.Point{
+               coordinates: {50, 12},
+               properties: %{},
+               srid: 4326
+             }
+
+      assert sub.radius == 1000
+      assert sub.user_id == user.id
+    end
+  end
+
+  describe "delete_subscription/1" do
+    setup do
+      user = user_fixture()
+
+      {:ok, subscription} =
+        Accounts.subscribe(user, %{lat: 52.52329675804731, lng: 13.445322017049648, radius: 4000})
+
+      %{user: user, subscription: subscription}
+    end
+
+    test "it removes the subscription", %{user: user, subscription: subscription} do
+      {:ok, _sub} = Accounts.delete_subscription(subscription)
+      assert Accounts.get_subscription_by_id(user, subscription.id) == nil
     end
   end
 end

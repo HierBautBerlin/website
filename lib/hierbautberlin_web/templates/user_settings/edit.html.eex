@@ -1,6 +1,29 @@
 <h1>Einstellungen</h1>
 
-<h3>Email ändern</h3>
+<h2>Orte für Benachrichtigungen</h2>
+
+<%= if Enum.empty?(@current_user.subscriptions) do %>
+  <p>
+    Gehe auf der Karte zu einem Ort, für den du Benachrichtigungen
+    erhalten willst und drücke auf den "Sende E-Mail bei neuen Einträgen" Knopf.
+    Die so hinzugefügten Orte kannst du dann hier nachträglich bearbeiten.
+  </p>
+<% else %>
+  <p>
+    Du hast
+    <%= if Enum.count_until(@current_user.subscriptions, 2) == 1 do %>
+      eine Ort, für den du
+    <% else %>
+      <%= Enum.count(@current_user.subscriptions) %> Orte, für die du
+    <% end %>
+    Benachrichtigungen erhalten willst.
+  </p>
+  <p>
+    <%= link "Orte editieren", class: "button", to: Routes.subscriptions_path(@conn, :index) %>
+  </p>
+<% end %>
+
+<h2>Email ändern</h2>
 
 <%= form_for @email_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
   <%= if @email_changeset.action do %>
@@ -24,7 +47,7 @@
   </div>
 <% end %>
 
-<h3>Passwort ändern</h3>
+<h2>Passwort ändern</h2>
 
 <%= form_for @password_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
   <%= if @password_changeset.action do %>
@@ -52,6 +75,6 @@
   </div>
 <% end %>
 
-<h3>Konto löschen</h3>
+<h2>Konto löschen</h2>
 
 <%= link("Konto löschen", to: Routes.user_settings_path(@conn, :delete), class: "button", method: :delete, data: [confirm: "Wirklich das Konto löschen?"]) %>

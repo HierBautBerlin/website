@@ -1,0 +1,68 @@
+:root {
+  --toggle-width: 40px;
+  --toggle-padding: 3px;
+  --toggle-height: calc(var(--toggle-width) / 2 + var(--toggle-padding));
+}
+
+.toggle {
+  display: flex;
+  font-weight: normal;
+  align-items: center;
+}
+
+.toggle--small {
+  --toggle-width: 30px;
+  --toggle-height: calc(var(--toggle-width) / 2 + var(--toggle-padding));
+  font-size: 1.3rem;
+
+  .toggle-inner {
+    margin-right: 0.7rem;
+  }
+}
+
+.toggle-inner {
+  margin-right: 1rem;
+  cursor: pointer;
+  background: #15273b;
+  padding: var(--toggle-padding);
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: calc(var(--toggle-height) / 2);
+  font-weight: normal;
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.toggle-switch {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 0fr 1fr 1fr;
+  transition: .2s;
+  //ICYMI, pseudo elements are treated as grid items
+  &::after {
+    content: '';
+    border-radius: 50%;
+    background: #ccc;
+    grid-column: 2;
+    transition: background .2s;
+  }
+}
+
+.toggle input:checked {
+  + .toggle-switch {
+    grid-template-columns: 1fr 1fr 0fr; 
+    &::after {
+      background-color: #52cf71;
+    }
+  }
+}
+
+.toggle input:focus+.toggle-switch {
+  outline: #5d9dd5 solid 1px;
+  box-shadow: 0 0 8px #5e9ed6;
+  border-radius: calc(var(--toggle-height) / 2);
+}

@@ -5,7 +5,7 @@ defmodule Hierbautberlin.Accounts do
 
   import Ecto.Query, warn: false
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.Accounts.{User, UserToken, UserNotifier}
+  alias Hierbautberlin.Accounts.{User, UserToken, UserNotifier, Subscription}
 
   ## Database getters
 
@@ -374,5 +374,83 @@ defmodule Hierbautberlin.Accounts do
 
   def delete_user(user) do
     Repo.delete(user)
+  end
+
+  def with_subscriptions(user) do
+    Repo.preload(user, :subscriptions)
+  end
+
+  @doc """
+  Returns true if the user is subscribed to this lat long, will
+  check in a 100m radius of the given point.
+  """
+  def is_subscribed(user, coordinates)
+
+  def is_subscribed(nil, _coordinates) do
+    false
+  end
+
+  def is_subscribed(user, coordinates) do
+    get_subscription(user, coordinates) != nil
+  end
+
+  @doc """
+  Gets a subscription that is near the lat lng coordinates
+  """
+  def get_subscription(user, coordinates)
+
+  def get_subscription(nil, _coordinates) do
+    nil
+  end
+
+  def get_subscription(%{id: user_id}, %{lat: lat, lng: lng}) do
+    query =
+      from item in Subscription,
+        where:
+          item.user_id == ^user_id and
+            fragment(
+              "ST_DWITHIN(point, ST_MakePoint(?, ?)::geography, ?)",
+              ^lat,
+              ^lng,
+              100
+            ),
+        limit: 1
+
+    Repo.one(query)
+  end
+
+  def subscribe(user, attrs) do
+    %Subscription{}
+    |> Subscription.changeset_for_user(user, attrs)
+    |> Repo.insert()
+  end
+
+  def unsubscribe(user, coordinates) do
+    subscription = get_subscription(user, coordinates)
+
+    if subscription do
+      Repo.delete(subscription)
+    else
+      {:error, :not_found}
+    end
+  end
+
+  def get_subscription_by_id(%{id: user_id}, id) do
+    query = from s in Subscription, where: s.user_id == ^user_id and s.id == ^id
+    Repo.one(query)
+  end
+
+  def change_subscription(%Subscription{} = subscription, user, attrs \\ %{}) do
+    Subscription.changeset_for_user(subscription, user, attrs)
+  end
+
+  def update_subscription(%Subscription{} = subscription, attrs \\ %{}) do
+    subscription
+    |> Subscription.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_subscription(subscription) do
+    Repo.delete(subscription)
   end
 end

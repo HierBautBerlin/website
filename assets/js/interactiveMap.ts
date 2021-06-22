@@ -2,8 +2,6 @@ import mapboxgl, { Map, LngLatLike, Marker } from 'mapbox-gl';
 import { ViewHook } from 'phoenix_live_view';
 import { difference, isEqual, uniq } from 'lodash-es';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYml0Ym94ZXIiLCJhIjoiY2tuazhkcm5nMDZiaDJ2bjA4YzZraTYxbSJ9.VHWcZ-7Q7-zOcBkQ5B0Hzw';
-
 type Geometry = {
   type: string,
   coordinates?: number[],
@@ -39,6 +37,15 @@ interface MapObject {
 const mapObjects: {
   [key: number] : MapObject
 } = {};
+
+const centerMarkerElement = document.createElement('div');
+centerMarkerElement.className = 'marker';
+centerMarkerElement.innerHTML = '+';
+centerMarkerElement.style.fontSize = '30px';
+centerMarkerElement.style.color = '#6f6f6f';
+centerMarkerElement.style.width = '20px';
+centerMarkerElement.style.height = '20px';
+const centerMarker = new mapboxgl.Marker(centerMarkerElement);
 
 const isLineString = (item: Geometry) => {
   const collectionType = uniq(item.geometries?.map((geometry) => geometry.type));
@@ -149,7 +156,7 @@ const updateMapItems = (hook: ViewHook) => {
 const resetMapPadding = () => {
   if (window.innerWidth > 800) {
     map.setPadding({
-      right: 42 * 16,
+      right: 416,
       top: 0,
       left: 0,
       bottom: 0,
@@ -193,6 +200,11 @@ const InteractiveMap = {
     });
     map.on('moveend', () => {
       hook.pushEvent('updateCoordinates', map.getCenter());
+    });
+
+    centerMarker.setLngLat(map.getCenter()).addTo(map);
+    map.on('move', () => {
+      centerMarker.setLngLat(map.getCenter()).addTo(map);
     });
 
     map.on('click', (e) => {

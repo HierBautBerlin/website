@@ -23,6 +23,7 @@ defmodule HierbautberlinWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import HierbautberlinWeb.ConnCase
+      import Hierbautberlin.Factory
 
       alias HierbautberlinWeb.Router.Helpers, as: Routes
 

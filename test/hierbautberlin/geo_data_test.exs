@@ -8,7 +8,7 @@ defmodule Hierbautberlin.GeoDataTest do
       data = insert(:source)
 
       geo_data = GeoData.get_source!(data.id)
-      assert geo_data.short_name == "TEST"
+      assert geo_data.short_name =~ ~r/^TEST-/
       assert geo_data.name == "City Source"
       assert geo_data.url == "https://city.example.com"
       assert geo_data.copyright == "Example"
