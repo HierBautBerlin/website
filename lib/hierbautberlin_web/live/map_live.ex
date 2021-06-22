@@ -110,7 +110,10 @@ defmodule HierbautberlinWeb.MapLive do
 
   @impl true
   def handle_event("subscribe", %{"subscribe" => "on"}, socket) do
-    Accounts.subscribe(socket.assigns.current_user, socket.assigns.map_position)
+    if Accounts.get_subscription(socket.assigns.current_user, socket.assigns.map_position) == nil do
+      Accounts.subscribe(socket.assigns.current_user, socket.assigns.map_position)
+    end
+
     socket = assign(socket, :subscribed, true)
     {:noreply, socket}
   end

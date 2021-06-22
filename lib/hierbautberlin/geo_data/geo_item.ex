@@ -60,4 +60,15 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     |> validate_required([:source_id, :external_id, :title])
     |> unique_constraint([:source_id, :external_id])
   end
+
+  def newest_date(geo_item) do
+    [
+      geo_item.date_start,
+      geo_item.date_end,
+      geo_item.date_updated
+    ]
+    |> Enum.filter(&(!is_nil(&1)))
+    |> Enum.sort(&(Timex.diff(&1, &2) > 0))
+    |> List.first()
+  end
 end

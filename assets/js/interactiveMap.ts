@@ -185,7 +185,7 @@ const InteractiveMap = {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: position,
-      zoom: parseInt(mapElement?.getAttribute('data-position-zoom') || '10', 10),
+      zoom: parseFloat(mapElement?.getAttribute('data-position-zoom') || '14.5'),
     });
 
     map.on('load', () => {
@@ -228,6 +228,7 @@ const InteractiveMap = {
           const newMapPosition = { lat: item.coords.latitude, lng: item.coords.longitude };
           hook.pushEvent('updateCoordinates', newMapPosition);
           map.setCenter(newMapPosition);
+          map.setZoom(14.5);
         }, () => {
           locationButton.setAttribute('disabled', 'disabled');
         });
