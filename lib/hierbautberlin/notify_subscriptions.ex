@@ -16,7 +16,7 @@ defmodule Hierbautberlin.NotifySubscription do
     )
   end
 
-  def process_user(user, since) do
+  defp process_user(user, since) do
     user = Accounts.with_subscriptions(user)
     items = get_items_for_subscriptions_since(user.subscriptions, since)
 
@@ -25,7 +25,7 @@ defmodule Hierbautberlin.NotifySubscription do
     end
   end
 
-  def get_users_with_subscriptions() do
+  defp get_users_with_subscriptions() do
     query =
       from u in User,
         where: u.id in fragment("select distinct user_id from subscriptions")
@@ -33,7 +33,7 @@ defmodule Hierbautberlin.NotifySubscription do
     Repo.stream(query)
   end
 
-  def get_items_for_subscriptions_since(subscriptions, since) do
+  defp get_items_for_subscriptions_since(subscriptions, since) do
     conditions = false
 
     conditions =
