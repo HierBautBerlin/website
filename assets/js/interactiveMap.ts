@@ -220,6 +220,19 @@ const InteractiveMap = {
         }
       }
     });
+
+    const locationButton = document.getElementById('map-location-button');
+    locationButton?.addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((item) => {
+          const newMapPosition = { lat: item.coords.latitude, lng: item.coords.longitude };
+          hook.pushEvent('updateCoordinates', newMapPosition);
+          map.setCenter(newMapPosition);
+        }, () => {
+          locationButton.setAttribute('disabled', 'disabled');
+        });
+      }
+    });
   },
   updated() {
     const hook = this as unknown as ViewHook;
