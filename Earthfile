@@ -1,4 +1,4 @@
-FROM elixir:1.11.3
+FROM elixir:1.12.0
 
 all:
     BUILD +build

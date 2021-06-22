@@ -4,7 +4,7 @@ defmodule HierbautberlinWeb.UserConfirmationController do
   alias Hierbautberlin.Accounts
 
   def new(conn, _params) do
-    render(conn, "new.html")
+    render(conn, "new.html", page_title: "Email-Bestätigung")
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do

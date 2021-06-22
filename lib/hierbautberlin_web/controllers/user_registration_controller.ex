@@ -7,7 +7,7 @@ defmodule HierbautberlinWeb.UserRegistrationController do
 
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, page_title: "Registrieren")
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -24,7 +24,7 @@ defmodule HierbautberlinWeb.UserRegistrationController do
         |> UserAuth.log_in_user(user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, page_title: "Registrieren")
     end
   end
 end

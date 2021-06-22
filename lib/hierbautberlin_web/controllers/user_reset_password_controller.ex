@@ -6,7 +6,7 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
   plug :get_user_by_reset_password_token when action in [:edit, :update]
 
   def new(conn, _params) do
-    render(conn, "new.html")
+    render(conn, "new.html", page_title: "Passwort vergessen")
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do
@@ -27,7 +27,10 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
   end
 
   def edit(conn, _params) do
-    render(conn, "edit.html", changeset: Accounts.change_user_password(conn.assigns.user))
+    render(conn, "edit.html",
+      changeset: Accounts.change_user_password(conn.assigns.user),
+      page_title: "Passwort ändern"
+    )
   end
 
   # Do not log in the user after reset password to avoid a
@@ -40,7 +43,7 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
         |> redirect(to: Routes.user_session_path(conn, :new))
 
       {:error, changeset} ->
-        render(conn, "edit.html", changeset: changeset)
+        render(conn, "edit.html", changeset: changeset, page_title: "Passwort ändern")
     end
   end
 

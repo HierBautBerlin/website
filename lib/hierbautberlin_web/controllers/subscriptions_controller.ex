@@ -34,7 +34,10 @@ defmodule HierbautberlinWeb.SubscriptionsController do
 
           conn
           |> put_flash(:error, "Aktualisierung fehlgeschlagen")
-          |> render("index.html", current_user: current_user)
+          |> render("index.html",
+            current_user: current_user,
+            page_title: "Benachrichtigungen bearbeiten"
+          )
       end
     end
   end
