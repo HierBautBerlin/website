@@ -8,7 +8,11 @@ defmodule HierbautberlinWeb.UserSettingsController do
 
   def edit(%{assigns: %{current_user: current_user}} = conn, _params) do
     current_user = Accounts.with_subscriptions(current_user)
-    render(conn, "edit.html", current_user: current_user)
+
+    render(conn, "edit.html",
+      current_user: current_user,
+      page_title: "Einstellungen"
+    )
   end
 
   def update(conn, %{"action" => "update_email"} = params) do

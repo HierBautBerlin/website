@@ -28,7 +28,8 @@ defmodule HierbautberlinWeb.MapLive do
        map_zoom: params["zoom"] || to_string(@zoom_default),
        map_items: items,
        current_user: current_user,
-       subscription: Accounts.get_subscription(current_user, coordinates)
+       subscription: Accounts.get_subscription(current_user, coordinates),
+       page_title: "Karte"
      )}
   end
 
