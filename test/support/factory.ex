@@ -9,4 +9,12 @@ defmodule Hierbautberlin.Factory do
       copyright: "Example"
     }
   end
+
+  def geo_item_factory do
+    %Hierbautberlin.GeoData.GeoItem{
+      title: "This is a nice item",
+      description: "This is a description",
+      source: fn -> build(:source) end
+    }
+  end
 end

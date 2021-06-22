@@ -1,7 +1,7 @@
 defmodule HierbautberlinWeb.MapRouteHelpers do
   alias HierbautberlinWeb.Router.Helpers, as: Routes
 
-  def route_to_map(socket, map_position, map_zoom, detailItem) do
+  def route_to_map(conn_or_endpoint, map_position, map_zoom, detailItem \\ nil) do
     route_params = [
       lat: to_string(map_position.lat),
       lng: to_string(map_position.lng),
@@ -18,12 +18,17 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
         route_params
       end
 
-    Routes.map_path(socket, :index, route_params)
+    Routes.map_path(conn_or_endpoint, :index, route_params)
   end
 
-  def link_to_details(conn, item) do
+  def link_to_details(endpoint, item) do
     %{lat: lat, lng: lng} = get_point_for_details(item)
-    Routes.map_url(conn, :index, lat: lat, lng: lng, details: item.id)
+
+    if lat && lng do
+      Routes.map_url(endpoint, :index, lat: lat, lng: lng, details: item.id)
+    else
+      Routes.map_url(endpoint, :index, details: item.id)
+    end
   end
 
   defp get_point_for_details(%{geo_point: item}) when not is_nil(item) do
