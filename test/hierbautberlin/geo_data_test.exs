@@ -121,4 +121,125 @@ defmodule Hierbautberlin.GeoDataTest do
       assert updated_item.subtitle == "Amazing Title"
     end
   end
+
+  describe "get_point/1" do
+    test "it returns a point based on a geo point" do
+      item =
+        insert(:geo_item,
+          geo_point: %Geo.Point{
+            coordinates: {13.2677, 52.49},
+            properties: %{},
+            srid: 4326
+          }
+        )
+
+      assert GeoData.get_point(item) == %{lat: 52.49, lng: 13.2677}
+    end
+
+    test "it returns a point based on a a geo polygon" do
+      item =
+        insert(:geo_item,
+          geo_geometry: %Geo.MultiPolygon{
+            coordinates: [
+              [
+                [
+                  {13.4343272619011, 52.5405861405958},
+                  {13.4371221660038, 52.5396388337848},
+                  {13.4376794632698, 52.5401260460066},
+                  {13.4392118915391, 52.5394073982677},
+                  {13.4392324135568, 52.5395221795781},
+                  {13.4343272619011, 52.5405861405958}
+                ]
+              ]
+            ],
+            properties: %{},
+            srid: 4326
+          }
+        )
+
+      assert GeoData.get_point(item) == %{lat: 52.53999676943175, lng: 13.436779837728949}
+    end
+
+    test "it returns nil if no geometry is inside the geo item" do
+      item = insert(:geo_item)
+
+      assert GeoData.get_point(item) == %{lat: nil, lng: nil}
+    end
+  end
+
+  describe "get_items_near/3" do
+    setup do
+      insert(:geo_item,
+        title: "One",
+        geo_point: %Geo.Point{
+          coordinates: {13.2677, 52.49},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      insert(:geo_item,
+        title: "Two",
+        date_end: Timex.shift(Timex.now(), months: -10),
+        geo_point: %Geo.Point{
+          coordinates: {13.2679, 52.51},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      insert(:geo_item,
+        title: "Three",
+        geo_geometry: %Geo.MultiPolygon{
+          coordinates: [
+            [
+              [
+                {13.4343272619011, 52.5405861405958},
+                {13.4371221660038, 52.5396388337848},
+                {13.4376794632698, 52.5401260460066},
+                {13.4392118915391, 52.5394073982677},
+                {13.4392324135568, 52.5395221795781},
+                {13.4343272619011, 52.5405861405958}
+              ]
+            ]
+          ],
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      insert(:geo_item,
+        title: "Four",
+        participation_open: true,
+        geo_point: %Geo.Point{
+          coordinates: {13.2679, 52.51},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      insert(:geo_item,
+        title: "Five",
+        date_end: Timex.parse!("2001-01-01", "{YYYY}-{0M}-{0D}"),
+        geo_point: %Geo.Point{
+          coordinates: {13.2689, 52.61},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      %{}
+    end
+
+    test "it returns a correctly sorted list without too old items" do
+      items = GeoData.get_items_near(52.51, 13.2679)
+      assert 4 == length(items)
+      assert ["Four", "Two", "One", "Three"] == Enum.map(items, & &1.title)
+    end
+
+    test "it returns 3 items if count is 3" do
+      items = GeoData.get_items_near(52.51, 13.2679, 3)
+      assert 3 == length(items)
+    end
+  end
 end

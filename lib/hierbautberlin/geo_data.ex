@@ -40,9 +40,25 @@ defmodule Hierbautberlin.GeoData do
     )
   end
 
-  def get_items_near(lat, long, count \\ 10) do
+  def get_point(geo_item)
+
+  def get_point(%{geo_point: item}) when not is_nil(item) do
+    %{coordinates: {lng, lat}} = item
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(%{geo_geometry: geometry}) when not is_nil(geometry) do
+    %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(_item) do
+    %{lat: nil, lng: nil}
+  end
+
+  def get_items_near(lat, lng, count \\ 10) do
     geom = %Geo.Point{
-      coordinates: {long, lat},
+      coordinates: {lng, lat},
       properties: %{},
       srid: 4326
     }
@@ -60,5 +76,42 @@ defmodule Hierbautberlin.GeoData do
     query
     |> Repo.all()
     |> Repo.preload(:source)
+    |> remove_old_items()
+    |> sort_by_relevance(%{lat: lat, lng: lng})
+  end
+
+  defp remove_old_items(items) do
+    Enum.filter(items, fn item ->
+      date = GeoItem.newest_date(item)
+
+      date == nil || Timex.after?(date, Timex.shift(Timex.today(), years: -5))
+    end)
+  end
+
+  defp sort_by_relevance(items, %{lat: lat, lng: lng}) do
+    Enum.sort_by(items, fn item ->
+      date = GeoItem.newest_date(item)
+
+      months_difference =
+        Timex.diff(Timex.now(), date || Timex.shift(Timex.today(), months: -3), :months)
+
+      %{lat: item_lat, lng: item_lng} = get_point(item)
+
+      distance =
+        Geo.Turf.Measure.distance(
+          %Geo.Point{coordinates: {lng, lat}},
+          %Geo.Point{coordinates: {item_lng, item_lat}},
+          :meters
+        )
+
+      push_factor =
+        if item.participation_open do
+          30
+        else
+          0
+        end
+
+      distance / 10 + months_difference - push_factor
+    end)
   end
 end
