@@ -242,4 +242,159 @@ defmodule Hierbautberlin.GeoDataTest do
       assert 3 == length(items)
     end
   end
+
+  describe "analyze_text/1" do
+    setup do
+      street = insert(:street, name: "Isabel-de-Villena-Straße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+      %{}
+    end
+
+    test "it should return a street if the text contains it" do
+      street = insert(:street, name: "Emma Watson Straße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result =
+        GeoData.analyze_text("Wir haben eine neue Baustelle in der Emma Watson Straße die...")
+
+      assert [street.id] == Enum.map(result.streets, & &1.id)
+    end
+
+    test "it should return two streets" do
+      street_1 = insert(:street, name: "Laura-Cereta-Straße")
+      street_2 = insert(:street, name: "Balaram-Das-Straße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_1, street_2])
+
+      result =
+        GeoData.analyze_text(
+          "Der neue Spieplatz an der Ecke Laura-Cereta-Straße und Balaram-Das-Straße"
+        )
+
+      assert [street_1.id, street_2.id] == result.streets |> Enum.map(& &1.id) |> Enum.sort()
+    end
+
+    test "it should transform Strasse to Straße and find words with it" do
+      street = insert(:street, name: "Annestine-Beyer-Straße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result =
+        GeoData.analyze_text(
+          "Wir haben eine neue Baustelle in der Annestine-Beyer-Strasse die..."
+        )
+
+      assert [street.id] == Enum.map(result.streets, & &1.id)
+    end
+
+    test "it should transform Str. to Straße" do
+      street = insert(:street, name: "Mary-Shelley-Straße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result =
+        GeoData.analyze_text("Wir haben eine neue Baustelle in der Mary-Shelley-Str. die...")
+
+      assert [street.id] == Enum.map(result.streets, & &1.id)
+    end
+
+    test "it should try to figure out which street is ment when it is not unique based on other info" do
+      street_1 = insert(:street, name: "Jane-Addams-Straße")
+      street_2 = insert(:street, name: "Jane-Addams-Straße", district: "Neuköln")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_1, street_2])
+
+      result =
+        GeoData.analyze_text(
+          "Wir haben eine neue Baustelle in der Jane-Addams-Straße die...",
+          %{districts: ["Friedrichshain", "Mitte"]}
+        )
+
+      assert [street_1.id] == result.streets |> Enum.map(& &1.id)
+    end
+
+    test "it should try to figure out which street is ment when it is not unique and other streets are present, too" do
+      street_1 = insert(:street, name: "Anna-Wheeler-Straße")
+      street_2 = insert(:street, name: "Frances-Wright-Straße")
+      street_3 = insert(:street, name: "Anna-Wheeler-Straße", district: "Neuköln")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_1, street_2, street_3])
+
+      result =
+        GeoData.analyze_text(
+          "Wir haben eine neue Baustelle in der Anna-Wheeler-Straße Ecke Frances-Wright-Straße die..."
+        )
+
+      assert [street_1.id, street_2.id] == result.streets |> Enum.map(& &1.id) |> Enum.sort()
+    end
+
+    test "it should try to figure out which street is ment when it is not unique and other street numbers are present, too" do
+      street_1 = insert(:street, name: "Robin-Morgan-Straße")
+      street_2 = insert(:street, name: "Laura-Mulvey-Straße")
+      street_number = insert(:street_number, number: "20", geo_street_id: street_2.id)
+      street_3 = insert(:street, name: "Robin-Morgan-Straße", district: "Neuköln")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_1, street_2, street_3])
+
+      result =
+        GeoData.analyze_text(
+          "Wir haben eine neue Baustelle in der Robin-Morgan-Straße Ecke Laura-Mulvey-Straße 20 die..."
+        )
+
+      assert [street_1.id] == result.streets |> Enum.map(& &1.id) |> Enum.sort()
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id) |> Enum.sort()
+    end
+
+    test "it should find the exact house number if the text contains it" do
+      street = insert(:street, name: "Molly Yard Straße")
+      street_number = insert(:street_number, number: "20", geo_street_id: street.id)
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Molly Yard Straße 20 wird ...")
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+    end
+
+    test "it should use the street if the house number cannot be found" do
+      street = insert(:street, name: "Anne Knight Straße")
+      insert(:street_number, number: "20A", geo_street_id: street.id)
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Anne Knight Straße 25 wird ...")
+      assert Enum.empty?(result.street_numbers)
+      assert [street.id] == result.streets |> Enum.map(& &1.id)
+    end
+
+    test "it should find the exact house number if the street exists in two districts" do
+      street = insert(:street, name: "Fatima Mernissi Weg", district: "Mitte")
+      street_number = insert(:street_number, number: "78", geo_street_id: street.id)
+
+      street_neukoeln = insert(:street, name: "Fatima Mernissi Weg", district: "Neuköln")
+      insert(:street_number, number: "78", geo_street_id: street_neukoeln.id)
+
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street, street_neukoeln])
+
+      result =
+        GeoData.analyze_text(
+          "In dem Fatima Mernissi Weg 78 wird ...",
+          %{districts: ["Friedrichshain", "Mitte"]}
+        )
+
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+    end
+
+    test "it should find the exact house number if the text contains a house number with letter like 2A or 2 A" do
+      street = insert(:street, name: "John Neal Straße")
+      street_number = insert(:street_number, number: "120C", geo_street_id: street.id)
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der John Neal Straße 120 c wird ...")
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+    end
+
+    test "it should find the exact house number if the text contains a dashed version like 73/74 or 70-80" do
+      street = insert(:street, name: "Sojourner Truth Straße")
+      street_number = insert(:street_number, number: "73", geo_street_id: street.id)
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Sojourner Truth Strasse 73/70 wird ...")
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+
+      result = GeoData.analyze_text("In der Sojourner Truth Strasse 73-70 wird ...")
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+    end
+  end
 end

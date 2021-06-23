@@ -34,7 +34,8 @@ defmodule Hierbautberlin.MixProject do
   defp dialyzer do
     [
       plt_core_path: "priv/plts",
-      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+      plt_add_apps: [:mix]
     ]
   end
 
@@ -88,7 +89,9 @@ defmodule Hierbautberlin.MixProject do
       {:bamboo, "~> 2.1.0"},
       {:bamboo_phoenix, "~> 1.0.0"},
       {:premailex, "~> 0.3.13"},
-      {:geo_turf, "~> 0.1.0"}
+      {:geo_turf, "~> 0.1.0"},
+      {:csv, "~> 2.4"},
+      {:aho_corasick, "~> 0.0.1"}
     ]
   end
 
