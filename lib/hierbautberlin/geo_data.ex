@@ -2,8 +2,7 @@ defmodule Hierbautberlin.GeoData do
   import Ecto.Query, warn: false
 
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.GeoData.Source
-  alias Hierbautberlin.GeoData.GeoItem
+  alias Hierbautberlin.GeoData.{Source, GeoItem, AnalyzeText}
 
   def get_source!(id) do
     Repo.get!(Source, id)
@@ -113,5 +112,9 @@ defmodule Hierbautberlin.GeoData do
 
       distance / 10 + months_difference - push_factor
     end)
+  end
+
+  def analyze_text(text, options \\ %{}) do
+    AnalyzeText.analyze_text(text, options)
   end
 end

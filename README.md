@@ -38,6 +38,10 @@ You can also run the `ExUnit` tests in watch mode with:
 make run-tests
 ```
 
+## Download geo objects
+
+This system needs the list of streets and places of a city to have a working text parser. To download the data and parse them into the database you need to execute the `./bin/download_geo_objects.s` script. It will download a couple of hundred megabytes of data.
+
 ## Deployment
 
 The server is configured using [ansible](https://www.ansible.com/) with [this playbook](/ansible/playbook.yml) and can be updated with:

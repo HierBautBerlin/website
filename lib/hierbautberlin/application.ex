@@ -22,6 +22,8 @@ defmodule Hierbautberlin.Application do
           {Phoenix.PubSub, name: Hierbautberlin.PubSub},
           # Start the Endpoint (http/https)
           HierbautberlinWeb.Endpoint,
+          # Text parser
+          {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText},
           # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
           # {Hierbautberlin.Worker, arg}
           {Hierbautberlin.ImporterCronjob, []}
