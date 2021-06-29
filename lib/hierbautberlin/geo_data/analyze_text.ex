@@ -4,15 +4,18 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   import Ecto.Query, warn: false
 
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.GeoData.{GeoStreet, GeoStreetNumber}
+  alias Hierbautberlin.GeoData.{GeoPlace, GeoStreet, GeoStreetNumber}
 
-  def init(streets) when is_list(streets) do
+  def init(%{streets: streets, places: places}) when is_list(streets) and is_list(places) do
     street_names = Enum.map(streets, & &1.name)
+    place_names = Enum.map(places, & &1.name)
 
     {:ok,
      %{
-       streets: street_map(%{}, streets),
-       graph: AhoCorasick.new(street_names)
+       streets: geo_map(%{}, streets),
+       places: geo_map(%{}, places),
+       street_graph: AhoCorasick.new(street_names),
+       place_graph: AhoCorasick.new(place_names)
      }}
   end
 
@@ -20,21 +23,35 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
 
   def start_link(options \\ []) do
     Logger.debug("Booting street analyzer")
-    query = from(streets in GeoStreet)
+    query = from(streets in GeoStreet, select: [:name, :city, :district])
     streets = Repo.all(query)
-    Logger.debug("... with #{length(streets)} Streets")
-    server = GenServer.start_link(__MODULE__, streets, options)
+
+    query = from(places in GeoPlace, select: [:name, :city, :district])
+    places = Repo.all(query)
+
+    Logger.debug("... with #{length(streets)} Streets and #{length(places)} Places")
+
+    server = GenServer.start_link(__MODULE__, %{streets: streets, places: places}, options)
     Logger.debug("Booting street analyzer completed")
     server
   end
 
   def handle_call({:add_streets, streets}, _from, state) do
     Enum.each(streets, fn street ->
-      AhoCorasick.add_term(state.graph, street.name)
+      AhoCorasick.add_term(state.street_graph, street.name)
     end)
 
-    AhoCorasick.build_trie(state.graph)
-    {:reply, :ok, Map.merge(state, %{streets: street_map(state.streets, streets)})}
+    AhoCorasick.build_trie(state.street_graph)
+    {:reply, :ok, Map.merge(state, %{streets: geo_map(state.streets, streets)})}
+  end
+
+  def handle_call({:add_places, places}, _from, state) do
+    Enum.each(places, fn place ->
+      AhoCorasick.add_term(state.place_graph, place.name)
+    end)
+
+    AhoCorasick.build_trie(state.place_graph)
+    {:reply, :ok, Map.merge(state, %{places: geo_map(state.places, places)})}
   end
 
   def handle_call({:analyze_text, text, options}, _from, state) do
@@ -44,29 +61,21 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     districts = options.districts
 
     result =
-      state.graph
-      |> AhoCorasick.search(text)
-      |> MapSet.to_list()
-      |> Enum.reduce(
-        %{
-          streets: [],
-          street_numbers: [],
-          places: [],
-          unclear: %{}
-        },
-        fn {hit, start_pos, length}, acc ->
-          number = text |> String.slice(start_pos + length, 10) |> get_street_number()
-
-          if number do
-            find_street_number_in(acc, state.streets[hit], number)
-          else
-            find_street_in(acc, state.streets[hit])
-          end
-        end
-      )
+      %{
+        streets: [],
+        street_numbers: [],
+        places: [],
+        unclear: %{}
+      }
+      |> search_street(state, text)
+      |> search_place(state, text)
 
     if Enum.empty?(result.unclear) do
-      {:reply, Map.delete(result, :unclear), state}
+      {:reply,
+       result
+       |> remove_street_if_place_exists()
+       |> remove_place_if_street_number_exists()
+       |> Map.delete(:unclear), state}
     else
       relevant_districts = Enum.uniq(districts_for(result) ++ districts)
 
@@ -74,15 +83,75 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
        result
        |> guess_streets(relevant_districts)
        |> guess_street_numbers(relevant_districts)
+       |> guess_place(relevant_districts)
+       |> remove_street_if_place_exists()
+       |> remove_place_if_street_number_exists()
        |> Map.delete(:unclear), state}
     end
+  end
+
+  defp remove_place_if_street_number_exists(map) do
+    street_names = Enum.map(map.street_numbers, & &1.geo_street.name)
+
+    Map.merge(map, %{
+      places:
+        Enum.filter(map.places, fn place ->
+          !(place.name in street_names)
+        end)
+    })
+  end
+
+  defp remove_street_if_place_exists(map) do
+    place_names = Enum.map(map.places, & &1.name)
+
+    Map.merge(map, %{
+      streets:
+        Enum.filter(map.streets, fn street ->
+          !(street.name in place_names)
+        end)
+    })
+  end
+
+  defp search_place(map, state, text) do
+    state.place_graph
+    |> AhoCorasick.search(text)
+    |> MapSet.to_list()
+    |> Enum.reduce(map, fn {hit, _, _}, acc ->
+      places = state.places[hit]
+
+      if length(places) == 1 do
+        Map.merge(acc, %{places: map.places ++ places})
+      else
+        unclear_places = Map.get(acc.unclear, :places, [])
+
+        Map.merge(acc, %{
+          unclear: Map.merge(acc.unclear, %{places: unclear_places ++ [places]})
+        })
+      end
+    end)
+  end
+
+  defp search_street(map, state, text) do
+    state.street_graph
+    |> AhoCorasick.search(text)
+    |> MapSet.to_list()
+    |> Enum.reduce(map, fn {hit, start_pos, length}, acc ->
+      number = text |> String.slice(start_pos + length, 10) |> get_street_number()
+
+      if number do
+        find_street_number_in(acc, state.streets[hit], number)
+      else
+        find_street_in(acc, state.streets[hit])
+      end
+    end)
   end
 
   defp districts_for(map) do
     street_districts = map.streets |> Enum.map(& &1.district)
     street_number_districts = map.street_numbers |> Enum.map(& &1.geo_street.district)
+    place_districts = map.places |> Enum.map(& &1.district)
 
-    Enum.uniq(street_districts ++ street_number_districts)
+    Enum.uniq(street_districts ++ street_number_districts ++ place_districts)
   end
 
   defp find_street_in(acc, streets) do
@@ -194,25 +263,50 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     Map.merge(map, %{street_numbers: map.street_numbers ++ found_street_numbers})
   end
 
+  defp guess_place(%{unclear: unclear} = map, districts) do
+    found_places =
+      Enum.map(Map.get(unclear, :places, []), fn places ->
+        filtered =
+          Enum.filter(places, fn place ->
+            Enum.member?(districts, place.district)
+          end)
+
+        if Enum.count_until(filtered, 2) == 1 do
+          filtered
+        else
+          nil
+        end
+      end)
+      |> List.flatten()
+      |> Enum.filter(fn item ->
+        item != nil
+      end)
+
+    Map.merge(map, %{places: map.places ++ found_places})
+  end
+
   defp clean_text(text) do
     text
     |> String.replace("Strasse", "Straße")
     |> String.replace("Str.", "Straße")
   end
 
-  defp street_map(map, streets) do
-    Enum.reduce(streets, map, fn street, map ->
-      if Map.has_key?(map, street.name) do
-        Map.put(map, street.name, Map.get(map, street.name) ++ [street])
+  defp geo_map(map, items) do
+    Enum.reduce(items, map, fn item, map ->
+      if Map.has_key?(map, item.name) do
+        Map.put(map, item.name, Map.get(map, item.name) ++ [item])
       else
-        Map.put(map, street.name, [street])
+        Map.put(map, item.name, [item])
       end
     end)
   end
 
-  @spec add_streets(atom | pid | {atom, any} | {:via, atom, any}, any) :: any
   def add_streets(manager \\ __MODULE__, streets) do
     GenServer.call(manager, {:add_streets, streets})
+  end
+
+  def add_places(manager \\ __MODULE__, places) do
+    GenServer.call(manager, {:add_places, places})
   end
 
   def analyze_text(manager \\ __MODULE__, text, options) do

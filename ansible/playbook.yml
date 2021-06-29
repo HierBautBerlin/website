@@ -12,26 +12,28 @@
       packages:
       - automake
       - build-essential
+      - certbot
       - fop
+      - gdal-bin
       - imagemagick
+      - inotify-tools
       - libncurses5-dev
       - libpng-dev
       - libssh-dev
       - libxml2-utils
       - m4
+      - osmctools
       - postgresql-12
-      - postgresql-server-dev-12
       - postgresql-12-postgis-3
+      - postgresql-server-dev-12
       - python3-dev
       - python3-pip
       - python3-setuptools
-      - unixodbc-dev
-      - xsltproc
-      - ufw
-      - certbot
-      - webp
-      - inotify-tools
       - tmux
+      - ufw
+      - unixodbc-dev
+      - webp
+      - xsltproc
 
   - name: Enable UFW
     become: true

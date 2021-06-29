@@ -91,7 +91,8 @@ defmodule Hierbautberlin.MixProject do
       {:premailex, "~> 0.3.13"},
       {:geo_turf, "~> 0.1.0"},
       {:csv, "~> 2.4"},
-      {:aho_corasick, "~> 0.0.1"}
+      {:aho_corasick, "~> 0.0.1"},
+      {:jaxon, "~> 2.0"}
     ]
   end
 
