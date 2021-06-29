@@ -14,6 +14,13 @@ defmodule Hierbautberlin.Release do
     end
   end
 
+  def import_all do
+    IO.puts("Importing streets..")
+    Mix.Tasks.ImportStreets.run(nil)
+    IO.puts("Importing parks..")
+    Mix.Tasks.ImportParks.run(nil)
+  end
+
   def rollback(repo, version) do
     load_app()
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))

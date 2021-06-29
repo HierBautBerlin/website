@@ -396,5 +396,52 @@ defmodule Hierbautberlin.GeoDataTest do
       result = GeoData.analyze_text("In der Sojourner Truth Strasse 73-70 wird ...")
       assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
     end
+
+    test "it should find a park" do
+      park = insert(:place, name: "Sojourner-Truth-Park")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([park])
+
+      result = GeoData.analyze_text("Im Sojourner-Truth-Park wird ein neuer ...")
+      assert [park.id] == result.places |> Enum.map(& &1.id)
+    end
+
+    test "it should favour a place if a street is found with the same name of a place" do
+      street = insert(:street, name: "Boxhagener Platz")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      park = insert(:place, name: "Boxhagener Platz")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([park])
+
+      result = GeoData.analyze_text("Am Boxhagener Platz wird ein neuer ...")
+      assert Enum.empty?(result.streets)
+      assert [park.id] == result.places |> Enum.map(& &1.id)
+    end
+
+    test "it should favour the street number if it is found with the same name of a park" do
+      street = insert(:street, name: "Wakanda Platz")
+      street_number = insert(:street_number, number: "42", geo_street_id: street.id)
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      park = insert(:place, name: "Wakanda Platz")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([park])
+
+      result = GeoData.analyze_text("Am Wakanda Platz 42 wird ein neuer ...")
+      assert Enum.empty?(result.places)
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+    end
+
+    test "it uses the place in the correct district if more than one is found" do
+      place_fhain = insert(:place, name: "Rathausplatz", district: "Friedrichshain")
+      place_mitte = insert(:place, name: "Rathausplatz", district: "Mitte")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place_fhain, place_mitte])
+
+      result =
+        GeoData.analyze_text(
+          "Auf dem Rathausplatz wird ein neuer ...",
+          %{districts: ["Kreuzberg", "Mitte"]}
+        )
+
+      assert [place_mitte.id] == result.places |> Enum.map(& &1.id)
+    end
   end
 end

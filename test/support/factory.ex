@@ -43,4 +43,13 @@ defmodule Hierbautberlin.Factory do
       source: fn -> build(:source) end
     }
   end
+
+  def place_factory do
+    %Hierbautberlin.GeoData.GeoPlace{
+      external_id: sequence(:place_external_id, &"ID-#{&1}"),
+      name: "Malcom-X-Platz",
+      district: "Friedrichshain",
+      city: "Berlin"
+    }
+  end
 end
