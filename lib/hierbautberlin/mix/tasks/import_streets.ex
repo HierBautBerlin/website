@@ -4,6 +4,7 @@ defmodule Mix.Tasks.ImportStreets do
   alias Hierbautberlin.Repo
   alias Hierbautberlin.GeoData.GeoStreet
   alias Hierbautberlin.GeoData.GeoStreetNumber
+  alias Hierbautberlin.Services.Berlin
 
   import Hierbautberlin.Services.Blank
 
@@ -15,7 +16,7 @@ defmodule Mix.Tasks.ImportStreets do
       File.stream!("data/street_with_number.csv")
       |> CSV.decode!(separator: ?;)
       |> Stream.map(fn row ->
-        [external_id, name, number, zip, city, district, lng, lat] = row
+        [external_id, name, number, zip, city, local_center, lng, lat] = row
 
         %{
           external_id: external_id,
@@ -23,7 +24,7 @@ defmodule Mix.Tasks.ImportStreets do
           number: number,
           zip: zip,
           city: city,
-          district: district,
+          district: Berlin.district_for_local_center(local_center),
           geo_point: %Geo.Point{
             coordinates: {String.to_float(lng), String.to_float(lat)},
             srid: 4326

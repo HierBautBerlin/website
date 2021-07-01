@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         elixir: [1.12.0]
-        otp: [23.1]
+        otp: [24.0]
 
     steps:
       - name: Cancel Previous Runs
@@ -25,7 +25,8 @@ jobs:
           postgresql db: 'hierbautberlin_test'
 
       - name: Setup elixir
-        uses: actions/setup-elixir@v1
+        id: setup-beam
+        uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{ matrix.elixir }} # Define the elixir version [required]
           otp-version: ${{ matrix.otp }} # Define the OTP version [required]

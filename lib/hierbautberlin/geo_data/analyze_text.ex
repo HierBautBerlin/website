@@ -6,6 +6,8 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   alias Hierbautberlin.Repo
   alias Hierbautberlin.GeoData.{GeoPlace, GeoStreet, GeoStreetNumber}
 
+  @place_sorting ["Park", "School", "LOR"]
+
   def init(%{streets: streets, places: places}) when is_list(streets) and is_list(places) do
     street_names = Enum.map(streets, & &1.name)
     place_names = Enum.map(places, & &1.name)
@@ -73,8 +75,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     if Enum.empty?(result.unclear) do
       {:reply,
        result
-       |> remove_street_if_place_exists()
-       |> remove_place_if_street_number_exists()
+       |> clean_results()
        |> Map.delete(:unclear), state}
     else
       relevant_districts = Enum.uniq(districts_for(result) ++ districts)
@@ -84,10 +85,28 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
        |> guess_streets(relevant_districts)
        |> guess_street_numbers(relevant_districts)
        |> guess_place(relevant_districts)
-       |> remove_street_if_place_exists()
-       |> remove_place_if_street_number_exists()
+       |> clean_results()
        |> Map.delete(:unclear), state}
     end
+  end
+
+  defp clean_results(map) do
+    map
+    |> remove_lor_if_street_exists()
+    |> remove_street_if_place_exists()
+    |> remove_place_if_street_number_exists()
+  end
+
+  defp remove_lor_if_street_exists(map) do
+    street_names = Enum.map(map.streets, & &1.name)
+    districts = Enum.map(map.streets, & &1.district)
+
+    Map.merge(map, %{
+      places:
+        Enum.filter(map.places, fn place ->
+          place.type != "LOR" || !(place.district in districts || place.name in street_names)
+        end)
+    })
   end
 
   defp remove_place_if_street_number_exists(map) do
@@ -114,7 +133,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
 
   defp search_place(map, state, text) do
     state.place_graph
-    |> AhoCorasick.search(text)
+    |> do_search_place(text)
     |> MapSet.to_list()
     |> Enum.reduce(map, fn {hit, _, _}, acc ->
       places = state.places[hit]
@@ -129,6 +148,22 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
         })
       end
     end)
+  end
+
+  defp do_search_place(graph, text) do
+    AhoCorasick.search(graph, text)
+    |> MapSet.union(
+      AhoCorasick.search(
+        graph,
+        String.replace(text, ~r/(\w+)(viertel)\b/, "\\1kiez")
+      )
+    )
+    |> MapSet.union(
+      AhoCorasick.search(
+        graph,
+        String.replace(text, ~r/(\w+)(kiez)\b/, "\\1viertel")
+      )
+    )
   end
 
   defp search_street(map, state, text) do
@@ -266,16 +301,10 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   defp guess_place(%{unclear: unclear} = map, districts) do
     found_places =
       Enum.map(Map.get(unclear, :places, []), fn places ->
-        filtered =
-          Enum.filter(places, fn place ->
-            Enum.member?(districts, place.district)
-          end)
-
-        if Enum.count_until(filtered, 2) == 1 do
-          filtered
-        else
-          nil
-        end
+        places
+        |> do_filter_park_districts(districts)
+        |> do_sort_places()
+        |> Enum.take(1)
       end)
       |> List.flatten()
       |> Enum.filter(fn item ->
@@ -283,6 +312,20 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
       end)
 
     Map.merge(map, %{places: map.places ++ found_places})
+  end
+
+  defp do_sort_places(places) do
+    Enum.sort_by(places, fn place ->
+      Enum.find_index(@place_sorting, fn item ->
+        item == place.type
+      end)
+    end)
+  end
+
+  defp do_filter_park_districts(places, districts) do
+    Enum.filter(places, fn place ->
+      Enum.member?(districts, place.district)
+    end)
   end
 
   defp clean_text(text) do

@@ -49,7 +49,8 @@ defmodule Hierbautberlin.Factory do
       external_id: sequence(:place_external_id, &"ID-#{&1}"),
       name: "Malcom-X-Platz",
       district: "Friedrichshain",
-      city: "Berlin"
+      city: "Berlin",
+      type: "Park"
     }
   end
 end
