@@ -3,7 +3,6 @@ defmodule Hierbautberlin.Release do
 
   def init_data do
     start_app()
-    Hierbautberlin.Importer.import_all()
   end
 
   def migrate do

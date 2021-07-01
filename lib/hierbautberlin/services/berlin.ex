@@ -98,7 +98,28 @@ defmodule Hierbautberlin.Services.Berlin do
     "Zehlendorf" => "Steglitz-Zehlendorf"
   }
 
+  @berlin_districts [
+    "Charlottenburg-Wilmersdorf",
+    "Friedrichshain-Kreuzberg",
+    "Lichtenberg",
+    "Marzahn-Hellersdorf",
+    "Mitte",
+    "Neukölln",
+    "Pankow",
+    "Reinickendorf",
+    "Spandau",
+    "Steglitz-Zehlendorf",
+    "Tempelhof-Schöneberg",
+    "Treptow-Köpenick"
+  ]
+
   def district_for_local_center(local_center) do
     @berlin_local_centers[local_center]
+  end
+
+  def find_districts(text) do
+    Enum.filter(@berlin_districts, fn district ->
+      String.contains?(text, district)
+    end)
   end
 end

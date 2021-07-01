@@ -100,7 +100,9 @@ defmodule Mix.Tasks.ImportStreets do
         city: item.city,
         district: item.district,
         geometry: geometry,
-        geo_point: middle.geo_point
+        geo_point: middle.geo_point,
+        inserted_at: item.inserted_at,
+        updated_at: item.updated_at
       })
 
     numbers =

@@ -381,7 +381,11 @@ defmodule Hierbautberlin.GeoDataTest do
       street_number = insert(:street_number, number: "120C", geo_street_id: street.id)
       Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
 
-      result = GeoData.analyze_text("In der John Neal Straße 120 c wird ...")
+      result =
+        GeoData.analyze_text(
+          "In der John Neal Straße 120 c wird am Haus der John Neal Straße 120 c ..."
+        )
+
       assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
     end
 
@@ -415,6 +419,27 @@ defmodule Hierbautberlin.GeoDataTest do
       result = GeoData.analyze_text("Am Boxhagener Platz wird ein neuer ...")
       assert Enum.empty?(result.streets)
       assert [park.id] == result.places |> Enum.map(& &1.id)
+    end
+
+    test "it should find two streets with bla- and otherstreet" do
+      street_one = insert(:street, name: "Blastraße")
+      street_two = insert(:street, name: "Otherstraße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_one, street_two])
+
+      result = GeoData.analyze_text("An der Bla- und Otherstraße wird ...")
+      assert [street_one.id, street_two.id] == result.streets |> Enum.map(& &1.id) |> Enum.sort()
+    end
+
+    test "it should find two streets with foo-, bar- and fizzrstreet" do
+      street_one = insert(:street, name: "Foostraße")
+      street_two = insert(:street, name: "Barstraße")
+      street_three = insert(:street, name: "Fizzstraße")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street_one, street_two, street_three])
+
+      result = GeoData.analyze_text("An der Foo-, Bar- und Fizzstraße wird ...")
+
+      assert [street_one.id, street_two.id, street_three.id] ==
+               result.streets |> Enum.map(& &1.id) |> Enum.sort()
     end
 
     test "it should favour the street number if it is found with the same name of a park" do

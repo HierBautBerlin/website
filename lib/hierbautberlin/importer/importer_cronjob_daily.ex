@@ -1,4 +1,4 @@
-defmodule Hierbautberlin.ImporterCronjob do
+defmodule Hierbautberlin.Importer.ImporterCronjobDaily do
   use GenServer
 
   def start_link(state) do
@@ -15,7 +15,7 @@ defmodule Hierbautberlin.ImporterCronjob do
       Timex.now()
       |> Timex.shift(minutes: -1)
 
-    Hierbautberlin.Importer.import_all()
+    Hierbautberlin.Importer.import_daily()
     Hierbautberlin.NotifySubscription.notify_changes_since(import_start)
     schedule_work()
     {:noreply, state}

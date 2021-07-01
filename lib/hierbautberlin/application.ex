@@ -25,8 +25,8 @@ defmodule Hierbautberlin.Application do
           # Text parser
           {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText},
           # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
-          # {Hierbautberlin.Worker, arg}
-          {Hierbautberlin.ImporterCronjob, []}
+          {Hierbautberlin.Importer.ImporterCronjobDaily, []},
+          {Hierbautberlin.Importer.ImporterCronjobHourly, []}
         ]
       end
 

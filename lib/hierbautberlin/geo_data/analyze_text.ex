@@ -95,6 +95,15 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     |> remove_lor_if_street_exists()
     |> remove_street_if_place_exists()
     |> remove_place_if_street_number_exists()
+    |> make_items_unique()
+  end
+
+  defp make_items_unique(map) do
+    %{
+      streets: Enum.uniq_by(map.streets, & &1.id),
+      street_numbers: Enum.uniq_by(map.street_numbers, & &1.id),
+      places: Enum.uniq_by(map.places, & &1.id)
+    }
   end
 
   defp remove_lor_if_street_exists(map) do
@@ -332,6 +341,24 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     text
     |> String.replace("Strasse", "Straße")
     |> String.replace("Str.", "Straße")
+    |> street_enumeration()
+  end
+
+  defp street_enumeration(text) do
+    match = Regex.run(~r/((\w*-), )*(\w*-) und \w*straße/, text)
+
+    if match do
+      [phrase | _] = match
+
+      new_phrase =
+        phrase
+        |> String.replace("-, ", "straße, ")
+        |> String.replace("- und ", "straße und ")
+
+      String.replace(text, phrase, new_phrase)
+    else
+      text
+    end
   end
 
   defp geo_map(map, items) do
