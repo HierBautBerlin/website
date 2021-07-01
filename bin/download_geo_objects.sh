@@ -63,3 +63,12 @@ echo "# 📨  Importing into DB "
 echo "#############################"
 
 mix import_parks
+
+echo 
+echo "#############################"
+echo "# 🌳  Downloading LORs "
+echo "#############################"
+
+curl https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_planungsgraeume/lor_planungsraeume.geojson > data/berlin-lors.geojson
+
+mix import_lors

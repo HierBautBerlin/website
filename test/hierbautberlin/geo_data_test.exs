@@ -405,7 +405,7 @@ defmodule Hierbautberlin.GeoDataTest do
       assert [park.id] == result.places |> Enum.map(& &1.id)
     end
 
-    test "it should favour a place if a street is found with the same name of a place" do
+    test "it should favour a park if a street is found with the same name of a park" do
       street = insert(:street, name: "Boxhagener Platz")
       Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
 
@@ -442,6 +442,70 @@ defmodule Hierbautberlin.GeoDataTest do
         )
 
       assert [place_mitte.id] == result.places |> Enum.map(& &1.id)
+    end
+
+    test "if a lor and a street have the same name, return the street" do
+      street = insert(:street, name: "Skalitzer Platz", district: "Neuköln")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      place = insert(:place, name: "Skalitzer Platz", district: "Mitte", type: "LOR")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place])
+
+      result =
+        GeoData.analyze_text(
+          "Am Skalitzer Platz wird ein neuer ...",
+          %{districts: ["Kreuzberg", "Mitte"]}
+        )
+
+      assert Enum.empty?(result.places)
+      assert [street.id] == result.streets |> Enum.map(& &1.id)
+    end
+
+    test "if a lor and a street have the same district, return the street" do
+      street = insert(:street, name: "Bergstraße", district: "Neuköln")
+      Hierbautberlin.GeoData.AnalyzeText.add_streets([street])
+
+      place = insert(:place, name: "Turm Platz", district: "Neuköln", type: "LOR")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place])
+
+      result =
+        GeoData.analyze_text(
+          "In der Bergstraße am Turm Platz wird ein neuer ...",
+          %{districts: ["Kreuzberg", "Mitte"]}
+        )
+
+      assert Enum.empty?(result.places)
+      assert [street.id] == result.streets |> Enum.map(& &1.id)
+    end
+
+    test "a place with the same name might exists twice in a district, just return one of them, prefer parks over schools over lor" do
+      place_lor = insert(:place, name: "Traveplatz", district: "Mitte", type: "LOR")
+      place_park = insert(:place, name: "Traveplatz", district: "Mitte", type: "Park")
+      place_school = insert(:place, name: "Traveplatz", district: "Mitte", type: "School")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place_lor, place_park, place_school])
+
+      result =
+        GeoData.analyze_text(
+          "Am Traveplatz wird ein neuer ...",
+          %{districts: ["Kreuzberg", "Mitte"]}
+        )
+
+      assert [place_park.id] == result.places |> Enum.map(& &1.id)
+    end
+
+    test "viertel and kiez are the same thing" do
+      place_lor =
+        insert(:place, name: "Severinsviertel", district: "Friedrichshain-Kreuzberg", type: "LOR")
+
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place_lor])
+
+      result =
+        GeoData.analyze_text(
+          "Im Severinskiez wird ein neuer ...",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert [place_lor.id] == result.places |> Enum.map(& &1.id)
     end
   end
 end

@@ -2,6 +2,7 @@ defmodule HierbautberlinWeb.UserSettingsController do
   use HierbautberlinWeb, :controller
 
   alias Hierbautberlin.Accounts
+  alias Hierbautberlin.Accounts.User
   alias HierbautberlinWeb.UserAuth
 
   plug :assign_email_and_password_changesets
@@ -17,7 +18,7 @@ defmodule HierbautberlinWeb.UserSettingsController do
 
   def update(conn, %{"action" => "update_email"} = params) do
     %{"current_password" => password, "user" => user_params} = params
-    user = conn.assigns.current_user
+    %User{} = user = conn.assigns.current_user
 
     case Accounts.apply_user_email(user, password, user_params) do
       {:ok, applied_user} ->
