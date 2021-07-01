@@ -72,3 +72,10 @@ echo "#############################"
 curl https://tsb-opendata.s3.eu-central-1.amazonaws.com/lor_planungsgraeume/lor_planungsraeume.geojson > data/berlin-lors.geojson
 
 mix import_lors
+
+echo 
+echo "#############################"
+echo "# 🏫  Importing schools "
+echo "#############################"
+
+mix import_schools
