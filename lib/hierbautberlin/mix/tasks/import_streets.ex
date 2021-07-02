@@ -28,9 +28,7 @@ defmodule Mix.Tasks.ImportStreets do
           geo_point: %Geo.Point{
             coordinates: {String.to_float(lng), String.to_float(lat)},
             srid: 4326
-          },
-          inserted_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second),
-          updated_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second)
+          }
         }
       end)
       |> Stream.filter(fn item ->
@@ -101,14 +99,21 @@ defmodule Mix.Tasks.ImportStreets do
         district: item.district,
         geometry: geometry,
         geo_point: middle.geo_point,
-        inserted_at: item.inserted_at,
-        updated_at: item.updated_at
+        inserted_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second),
+        updated_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second)
       })
 
     numbers =
       numbers
       |> Enum.map(fn item ->
-        Map.merge(%{geo_street_id: struct.id}, item)
+        Map.merge(
+          %{
+            geo_street_id: struct.id,
+            inserted_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second),
+            updated_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second)
+          },
+          item
+        )
       end)
 
     Repo.insert_all(GeoStreetNumber, numbers)
