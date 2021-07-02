@@ -92,7 +92,9 @@ defmodule Hierbautberlin.MixProject do
       {:geo_turf, "~> 0.1.0"},
       {:csv, "~> 2.4"},
       {:aho_corasick, "~> 0.0.1"},
-      {:jaxon, "~> 2.0"}
+      {:jaxon, "~> 2.0"},
+      {:fast_rss, "~> 0.3.4"},
+      {:rustler, "~> 0.22.0", override: true}
     ]
   end
 
