@@ -34,6 +34,7 @@
       - unixodbc-dev
       - webp
       - xsltproc
+      - libncurses5
 
   - name: Enable UFW
     become: true
