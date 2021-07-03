@@ -27,6 +27,12 @@ defmodule Hierbautberlin.GeoData.NewsItem do
     timestamps(type: :utc_datetime)
   end
 
+  def changeset(news_item, attrs) do
+    news_item
+    |> cast(attrs, [:external_id, :title, :content, :link, :published_at, :source_id])
+    |> unique_constraint(:external_id)
+  end
+
   def change_associations(%NewsItem{} = news_item, attrs) do
     news_item
     |> cast(%{}, [])

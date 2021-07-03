@@ -51,17 +51,15 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
         %{districts: districts}
       )
 
-    Repo.insert!(
-      %NewsItem{
-        external_id: link,
-        title: title,
-        link: link,
-        content: content,
-        published_at: published,
-        source_id: source.id
-      },
-      replace_all_except: [:id, :inserted_at]
-    )
+    NewsItem.changeset(%NewsItem{}, %{
+      external_id: link,
+      title: title,
+      link: link,
+      content: content,
+      published_at: published,
+      source_id: source.id
+    })
+    |> Repo.insert!(replace_all_except: [:id, :inserted_at])
     |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
     |> NewsItem.change_associations(
       geo_streets: result.streets,
