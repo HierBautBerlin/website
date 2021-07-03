@@ -25,6 +25,7 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
   rescue
     exception ->
       Bugsnag.report(exception)
+      reraise(exception, __STACKTRACE__)
   end
 
   defp parse_entry(entry, http_connection, source) do
@@ -59,7 +60,10 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       published_at: published,
       source_id: source.id
     })
-    |> Repo.insert!(replace_all_except: [:id, :inserted_at])
+    |> Repo.insert!(
+      on_conflict: {:replace_all_except, [:id, :inserted_at]},
+      conflict_target: :external_id
+    )
     |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
     |> NewsItem.change_associations(
       geo_streets: result.streets,

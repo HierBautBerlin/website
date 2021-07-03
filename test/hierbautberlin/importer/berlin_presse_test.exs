@@ -103,6 +103,11 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
 
       assert second.geo_street_numbers |> Enum.map(& &1.id) == [street_number.id]
       assert second.geo_places |> Enum.map(& &1.id) == [park.id]
+
+      # Try to import again
+      result = BerlinPresse.import(ImportMock)
+
+      assert length(result) == 2
     end
   end
 end
