@@ -25,10 +25,10 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
 
   def start_link(options \\ []) do
     Logger.debug("Booting street analyzer")
-    query = from(streets in GeoStreet, select: [:name, :city, :district])
+    query = from(streets in GeoStreet, select: [:id, :name, :city, :district])
     streets = Repo.all(query)
 
-    query = from(places in GeoPlace, select: [:name, :city, :district])
+    query = from(places in GeoPlace, select: [:id, :name, :city, :district])
     places = Repo.all(query)
 
     Logger.debug("... with #{length(streets)} Streets and #{length(places)} Places")
