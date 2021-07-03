@@ -22,6 +22,9 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
     Enum.map(feed["items"], fn entry ->
       parse_entry(entry, http_connection, source)
     end)
+  rescue
+    exception ->
+      Bugsnag.report(exception)
   end
 
   defp parse_entry(entry, http_connection, source) do
@@ -57,7 +60,7 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
         published_at: published,
         source_id: source.id
       },
-      replace_all_except: [:id]
+      replace_all_except: [:id, :inserted_at]
     )
     |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
     |> NewsItem.change_associations(
