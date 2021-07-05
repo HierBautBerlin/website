@@ -159,16 +159,33 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     end)
   end
 
+  defp do_aho_corasick_search(graph, text) do
+    graph
+    |> AhoCorasick.search(text)
+    |> MapSet.to_list()
+    |> Enum.filter(fn {hit, position, _} ->
+      character = String.at(text, position + String.length(hit) - 1)
+
+      character == nil ||
+        !Enum.member?(
+          [:L, :Ll, :Lm, :Lo, :Lt, :Lu],
+          character |> Unicode.category() |> List.first()
+        )
+    end)
+    |> MapSet.new()
+  end
+
   defp do_search_place(graph, text) do
-    AhoCorasick.search(graph, text)
+    graph
+    |> do_aho_corasick_search(text)
     |> MapSet.union(
-      AhoCorasick.search(
+      do_aho_corasick_search(
         graph,
         String.replace(text, ~r/(\w+)(viertel)\b/, "\\1kiez")
       )
     )
     |> MapSet.union(
-      AhoCorasick.search(
+      do_aho_corasick_search(
         graph,
         String.replace(text, ~r/(\w+)(kiez)\b/, "\\1viertel")
       )
@@ -177,7 +194,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
 
   defp search_street(map, state, text) do
     state.street_graph
-    |> AhoCorasick.search(text)
+    |> do_aho_corasick_search(text)
     |> MapSet.to_list()
     |> Enum.reduce(map, fn {hit, start_pos, length}, acc ->
       number = text |> String.slice(start_pos + length, 10) |> get_street_number()
