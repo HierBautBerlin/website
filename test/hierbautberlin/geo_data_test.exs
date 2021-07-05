@@ -532,5 +532,34 @@ defmodule Hierbautberlin.GeoDataTest do
 
       assert [place_lor.id] == result.places |> Enum.map(& &1.id)
     end
+
+    test "it should not find buch if only partial match" do
+      place_buch = insert(:place, name: "Buch", district: "Mitte")
+      Hierbautberlin.GeoData.AnalyzeText.add_places([place_buch])
+
+      result =
+        GeoData.analyze_text(
+          "Im Buchungssystem wird ein neuer ...",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert Enum.empty?(result.places)
+
+      result =
+        GeoData.analyze_text(
+          "Hier in Buch",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert [place_buch.id] == result.places |> Enum.map(& &1.id)
+
+      result =
+        GeoData.analyze_text(
+          "Hier in Buch.",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert [place_buch.id] == result.places |> Enum.map(& &1.id)
+    end
   end
 end
