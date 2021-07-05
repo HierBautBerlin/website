@@ -1,0 +1,3 @@
+<h3 class="details--content--title"><%= @detail_item.name %></h3>
+
+<%= live_component @socket, HierbautberlinWeb.Components.NewsItemsList, news_items: @detail_item.news_items %>

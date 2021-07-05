@@ -20,9 +20,9 @@ defmodule Hierbautberlin.Release do
     Mix.Tasks.ImportParks.run(nil)
   end
 
-  def import_daf do
+  def refresh_news_items do
     Ecto.Migrator.with_repo(Hierbautberlin.Repo, fn _repo ->
-      Hierbautberlin.Importer.DafMap.import()
+      Hierbautberlin.GeoData.NewsItem.update_all_geometries()
     end)
   end
 

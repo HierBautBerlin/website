@@ -89,7 +89,7 @@ defmodule Hierbautberlin.Importer.DafMap do
         description: cleanup_description(description),
         url: "https://www.dafmap.de/d/berlin?id=#{id}&mt=0&zoom=17",
         geo_point: %Geo.Point{coordinates: {long, lat}, srid: 4326},
-        geo_geometry: geometry,
+        geometry: geometry,
         additional_link: url,
         additional_link_name: "Deutsches Architekturforum",
         date_start: if(begin_dt, do: Timex.parse!(begin_dt, "{YYYY}-{0M}-{0D}")),

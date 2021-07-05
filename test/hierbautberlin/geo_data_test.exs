@@ -2,6 +2,7 @@ defmodule Hierbautberlin.GeoDataTest do
   use Hierbautberlin.DataCase
 
   alias Hierbautberlin.GeoData
+  alias Hierbautberlin.GeoData.{GeoMapItem, GeoPosition}
 
   describe "get_source/1" do
     test "gets a source by it's id" do
@@ -72,6 +73,34 @@ defmodule Hierbautberlin.GeoDataTest do
     end
   end
 
+  describe "get_news_item!/1" do
+    test "it returns a news item" do
+      news = insert(:news_item)
+      assert GeoData.get_news_item!(news.id).id == news.id
+    end
+  end
+
+  describe "get_geo_street!/1" do
+    test "it returns a geo street" do
+      geo_street = insert(:street)
+      assert GeoData.get_geo_street!(geo_street.id).id == geo_street.id
+    end
+  end
+
+  describe "get_geo_street_number!/1" do
+    test "it returns a geo street number" do
+      geo_street_number = insert(:street_number_with_street)
+      assert GeoData.get_geo_street_number!(geo_street_number.id).id == geo_street_number.id
+    end
+  end
+
+  describe "get_geo_place!/1" do
+    test "it returns a geo place" do
+      geo_place = insert(:place)
+      assert GeoData.get_geo_place!(geo_place.id).id == geo_place.id
+    end
+  end
+
   describe "change_geo_item!/1" do
     test "it returns a GeoItem changeset" do
       source = insert(:source)
@@ -139,7 +168,7 @@ defmodule Hierbautberlin.GeoDataTest do
     test "it returns a point based on a a geo polygon" do
       item =
         insert(:geo_item,
-          geo_geometry: %Geo.MultiPolygon{
+          geometry: %Geo.MultiPolygon{
             coordinates: [
               [
                 [
@@ -164,6 +193,16 @@ defmodule Hierbautberlin.GeoDataTest do
       item = insert(:geo_item)
 
       assert GeoData.get_point(item) == %{lat: nil, lng: nil}
+    end
+
+    test "it returns a coordinate for a news item with geo_points" do
+      item = insert(:news_item)
+      assert GeoData.get_point(item) == %{lat: 52.0, lng: 13.0}
+    end
+
+    test "it returns a coordinate for a news item with geometries" do
+      item = Map.merge(insert(:news_item), %{geo_points: nil})
+      assert GeoData.get_point(item) == %{lat: 52.05, lng: 13.05}
     end
   end
 
@@ -190,7 +229,7 @@ defmodule Hierbautberlin.GeoDataTest do
 
       insert(:geo_item,
         title: "Three",
-        geo_geometry: %Geo.MultiPolygon{
+        geometry: %Geo.MultiPolygon{
           coordinates: [
             [
               [
@@ -208,18 +247,23 @@ defmodule Hierbautberlin.GeoDataTest do
         }
       )
 
-      insert(:geo_item,
-        title: "Four",
-        participation_open: true,
-        geo_point: %Geo.Point{
-          coordinates: {13.2679, 52.51},
-          properties: %{},
-          srid: 4326
-        }
-      )
+      four =
+        insert(:geo_item,
+          title: "Four",
+          subtitle: "Four Subtitle",
+          description: "Four Description",
+          participation_open: true,
+          date_end: Timex.parse!("2021-01-01", "{YYYY}-{0M}-{0D}"),
+          geo_point: %Geo.Point{
+            coordinates: {13.2679, 52.51},
+            properties: %{},
+            srid: 4326
+          },
+          url: "https://example.com"
+        )
 
       insert(:geo_item,
-        title: "Five",
+        title: "Five, too old",
         date_end: Timex.parse!("2001-01-01", "{YYYY}-{0M}-{0D}"),
         geo_point: %Geo.Point{
           coordinates: {13.2689, 52.61},
@@ -228,13 +272,104 @@ defmodule Hierbautberlin.GeoDataTest do
         }
       )
 
-      %{}
+      news_item = insert(:news_item)
+
+      %{four: four, news_item: news_item}
     end
 
-    test "it returns a correctly sorted list without too old items" do
+    test "it returns a correctly sorted list without too old items", %{
+      four: four,
+      news_item: news_item
+    } do
       items = GeoData.get_items_near(52.51, 13.2679)
-      assert 4 == length(items)
-      assert ["Four", "Two", "One", "Three"] == Enum.map(items, & &1.title)
+      assert 5 == length(items)
+
+      assert ["Four", "Two", "One", "This is a nice title", "Three"] ==
+               Enum.map(items, & &1.title)
+
+      first = List.first(items)
+
+      four_id = four.id
+      source_id = four.source_id
+      geo_point = four.geo_point
+      geo_metry = four.geometry
+
+      assert %GeoMapItem{
+               title: "Four",
+               subtitle: "Four Subtitle",
+               description: "Four Description",
+               id: ^four_id,
+               type: :geo_item,
+               newest_date: ~U[2021-01-01 00:00:00Z],
+               url: "https://example.com",
+               participation_open: true,
+               source: %{
+                 id: ^source_id
+               },
+               item: %{
+                 id: ^four_id
+               },
+               positions: [
+                 %GeoPosition{
+                   type: :geo_item,
+                   id: ^four_id,
+                   geopoint: ^geo_point,
+                   geometry: ^geo_metry
+                 }
+               ]
+             } = first
+
+      third_item = Enum.at(items, 3)
+
+      news_id = news_item.id
+      news_source_id = news_item.source_id
+      news_published_at = news_item.published_at
+
+      assert %GeoMapItem{
+               title: "This is a nice title",
+               subtitle: nil,
+               description: "This is a nice content",
+               id: ^news_id,
+               type: :news_item,
+               newest_date: ^news_published_at,
+               url: "https://www.example.com",
+               participation_open: false,
+               source: %{
+                 id: ^news_source_id
+               },
+               item: %{
+                 id: ^news_id
+               },
+               positions: [
+                 %Hierbautberlin.GeoData.GeoPosition{
+                   geometry: nil,
+                   geopoint: %Geo.Point{
+                     coordinates: {13.0, 52.0},
+                     properties: %{},
+                     srid: 4326
+                   },
+                   type: :geo_street
+                 },
+                 %Hierbautberlin.GeoData.GeoPosition{
+                   geometry: nil,
+                   geopoint: %Geo.Point{coordinates: {13.0, 52.0}, properties: %{}, srid: 4326},
+                   type: :geo_street_number
+                 },
+                 %Hierbautberlin.GeoData.GeoPosition{
+                   geometry: %Geo.Polygon{
+                     coordinates: [[{13.0, 52.0}, {13.1, 52.1}, {13.1, 52.0}, {13.0, 52.0}]],
+                     properties: %{},
+                     srid: 4326
+                   },
+                   geopoint: %Geo.Point{
+                     coordinates: {13.3799820166143, 52.5189643842998},
+                     properties: %{},
+                     srid: 4326
+                   },
+                   type: :geo_place
+                 }
+               ]
+             } = third_item
     end
 
     test "it returns 3 items if count is 3" do

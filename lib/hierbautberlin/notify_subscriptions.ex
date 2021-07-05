@@ -2,7 +2,7 @@ defmodule Hierbautberlin.NotifySubscription do
   import Ecto.Query, warn: false
   alias Hierbautberlin.Accounts.User
   alias Hierbautberlin.{Accounts, Repo}
-  alias Hierbautberlin.GeoData.GeoItem
+  alias Hierbautberlin.GeoData.{GeoItem, NewsItem}
   alias HierbautberlinWeb.Email
 
   def notify_changes_since(since) do
@@ -18,7 +18,10 @@ defmodule Hierbautberlin.NotifySubscription do
 
   defp process_user(user, since) do
     user = Accounts.with_subscriptions(user)
-    items = get_items_for_subscriptions_since(user.subscriptions, since)
+
+    items =
+      get_geo_items_for_subscriptions_since(user.subscriptions, since) ++
+        get_news_items_for_subscriptions_since(user.subscriptions, since)
 
     if !Enum.empty?(items) do
       Email.new_items_found(user, items)
@@ -33,7 +36,7 @@ defmodule Hierbautberlin.NotifySubscription do
     Repo.stream(query)
   end
 
-  defp get_items_for_subscriptions_since(subscriptions, since) do
+  defp get_geo_items_for_subscriptions_since(subscriptions, since) do
     conditions = false
 
     conditions =
@@ -46,9 +49,42 @@ defmodule Hierbautberlin.NotifySubscription do
           dynamic(
             [item],
             fragment(
-              """
-              (geo_point is not null and ST_DWITHIN(geo_point, ST_MakePoint(?, ?)::geography, ?)) or (geo_geometry is not null and ST_DWITHIN(geo_geometry, ST_MakePoint(?, ?)::geography, ?))
-              """,
+              "ST_DWITHIN(COALESCE(geometry, geo_point), ST_MakePoint(?, ?)::geography, ?)",
+              ^lng,
+              ^lat,
+              ^radius
+            )
+          )
+
+        if conditions do
+          dynamic([item], ^filter_conditions or ^conditions)
+        else
+          dynamic([item], ^filter_conditions)
+        end
+      end)
+
+    query =
+      from item in GeoItem,
+        where: item.inserted_at >= ^since,
+        where: ^conditions
+
+    Repo.all(query)
+  end
+
+  defp get_news_items_for_subscriptions_since(subscriptions, since) do
+    conditions = false
+
+    conditions =
+      Enum.reduce(subscriptions, conditions, fn subscription, conditions ->
+        %{coordinates: {lat, lng}} = subscription.point
+
+        radius = subscription.radius
+
+        filter_conditions =
+          dynamic(
+            [item],
+            fragment(
+              "(ST_DWITHIN(geometries, ST_MakePoint(?, ?)::geography, ?) OR ST_DWITHIN(geo_points, ST_MakePoint(?, ?)::geography, ?))",
               ^lng,
               ^lat,
               ^radius,
@@ -66,7 +102,7 @@ defmodule Hierbautberlin.NotifySubscription do
       end)
 
     query =
-      from item in GeoItem,
+      from item in NewsItem,
         where: item.inserted_at >= ^since,
         where: ^conditions
 

@@ -29,9 +29,9 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
   end
 
   defp parse_entry(entry, http_connection, source) do
-    title = entry["title"]
-    link = entry["link"]
-    content = entry["description"]
+    title = HtmlEntities.decode(entry["title"])
+    content = HtmlEntities.decode(entry["description"])
+    url = entry["link"]
 
     published =
       entry["pub_date"]
@@ -53,9 +53,9 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       )
 
     NewsItem.changeset(%NewsItem{}, %{
-      external_id: link,
+      external_id: url,
       title: title,
-      link: link,
+      url: url,
       content: content,
       published_at: published,
       source_id: source.id

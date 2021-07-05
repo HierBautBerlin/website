@@ -25,7 +25,7 @@ defmodule Hierbautberlin.Importer.DafMapTest do
       assert first.description == nil
       assert first.external_id == "7603"
 
-      assert first.geo_geometry == %Geo.Polygon{
+      assert first.geometry == %Geo.Polygon{
                coordinates: [
                  [
                    {13.13438, 52.36896},

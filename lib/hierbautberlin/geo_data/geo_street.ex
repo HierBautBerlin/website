@@ -2,7 +2,7 @@ defmodule Hierbautberlin.GeoData.GeoStreet do
   use Ecto.Schema
 
   alias Geo.PostGIS.Geometry
-  alias Hierbautberlin.GeoData.GeoStreetNumber
+  alias Hierbautberlin.GeoData.{GeoStreetNumber, NewsItem}
 
   schema "geo_streets" do
     field :name, :string
@@ -12,6 +12,8 @@ defmodule Hierbautberlin.GeoData.GeoStreet do
     field :geo_point, Geometry
 
     has_many :street_numbers, GeoStreetNumber
+
+    many_to_many :news_items, NewsItem, join_through: "geo_streets_news_items"
 
     timestamps(type: :utc_datetime)
   end

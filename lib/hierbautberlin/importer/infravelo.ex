@@ -44,7 +44,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
       url: item["link"],
       state: @state_mapping[item["status"]],
       geo_point: point,
-      geo_geometry: polygon,
+      geometry: polygon,
       date_start: parse_start(item["dateStart"]),
       date_end: parse_end(item["dateEnd"])
     }

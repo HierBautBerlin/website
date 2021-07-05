@@ -37,7 +37,7 @@ defmodule Hierbautberlin.Importer.UVPTest do
       first = List.first(result) |> Repo.preload(:source)
 
       assert first.external_id == "294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
-      assert first.geo_geometry == nil
+      assert first.geometry == nil
 
       assert first.geo_point == %Geo.Point{
                coordinates: {13.248999999999999, 51.96115},

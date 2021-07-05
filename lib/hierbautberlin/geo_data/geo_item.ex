@@ -1,8 +1,10 @@
 defmodule Hierbautberlin.GeoData.GeoItem do
   use Ecto.Schema
+  import Ecto.Query, warn: false
   import Ecto.Changeset
 
-  alias Hierbautberlin.GeoData.Source
+  alias Hierbautberlin.Repo
+  alias Hierbautberlin.GeoData.{GeoItem, GeoPosition, GeoMapItem, Source}
 
   @states [
     "intended",
@@ -25,7 +27,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :date_end, :utc_datetime
     field :date_updated, :utc_datetime
     field :geo_point, Geo.PostGIS.Geometry
-    field :geo_geometry, Geo.PostGIS.Geometry
+    field :geometry, Geo.PostGIS.Geometry
     field :participation_open, :boolean, default: false
     field :additional_link, :string
     field :additional_link_name, :string
@@ -48,7 +50,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :date_end,
       :date_updated,
       :geo_point,
-      :geo_geometry,
+      :geometry,
       :source_id,
       :participation_open,
       :additional_link,
@@ -70,5 +72,48 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     |> Enum.filter(&(!is_nil(&1)))
     |> Enum.sort(&(Timex.diff(&1, &2) > 0))
     |> List.first()
+  end
+
+  def get_near(lat, lng, count) do
+    geom = %Geo.Point{
+      coordinates: {lng, lat},
+      properties: %{},
+      srid: 4326
+    }
+
+    query =
+      from item in GeoItem,
+        limit: ^count,
+        order_by:
+          fragment(
+            "ST_Distance(COALESCE(geometry, geo_point), ?)",
+            ^geom
+          )
+
+    query
+    |> Repo.all()
+    |> Repo.preload(:source)
+    |> Enum.map(fn item ->
+      %GeoMapItem{
+        type: :geo_item,
+        id: item.id,
+        title: item.title,
+        subtitle: item.subtitle,
+        description: item.description,
+        positions: [
+          %GeoPosition{
+            type: :geo_item,
+            id: item.id,
+            geopoint: item.geo_point,
+            geometry: item.geometry
+          }
+        ],
+        newest_date: newest_date(item),
+        source: item.source,
+        url: item.url,
+        participation_open: item.participation_open,
+        item: item
+      }
+    end)
   end
 end

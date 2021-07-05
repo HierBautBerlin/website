@@ -13,13 +13,14 @@ type Geometry = {
 
 type GeoItem = {
   id: number
+  type: string,
   title: string,
-  subtitle: string,
-  description: string,
-  url: string,
-  state: string,
-  additional_link: string,
-  additional_link_name: string
+  positions: GeoPosition[]
+};
+
+type GeoPosition = {
+  id: number,
+  type: string,
   point: Geometry
   geometry: Geometry
 };
@@ -70,25 +71,25 @@ const removeUneededMapItems = (mapIds: number[]) => {
   });
 };
 
-const addMarkerForPoint = (hook: ViewHook, item: GeoItem) => {
+const addMarkerForPoint = (hook: ViewHook, position: GeoPosition) => {
   const marker = new mapboxgl.Marker()
-    .setLngLat(item.point.coordinates as LngLatLike)
+    .setLngLat(position.point.coordinates as LngLatLike)
     .addTo(map);
 
   marker.getElement().addEventListener('click', (event) => {
-    hook.pushEvent('showDetails', { 'item-id': item.id });
+    hook.pushEvent('showDetails', { 'item-id': position.id, 'item-type': position.type });
     event.preventDefault();
   });
   return marker;
 };
 
-const addLayerForGeometry = (layerName:string, item:GeoItem) => {
+const addLayerForGeometry = (layerName:string, position:GeoPosition) => {
   map.addSource(layerName, {
     type: 'geojson',
-    data: item.geometry as any,
+    data: position.geometry as any,
   });
 
-  if (isLineString(item.geometry)) {
+  if (isLineString(position.geometry)) {
     map.addLayer({
       id: layerName,
       type: 'line',
@@ -140,15 +141,17 @@ const updateMapItems = (hook: ViewHook) => {
       };
       mapObjects[item.id] = mapItem;
 
-      if (item.point) {
-        mapItem.marker = addMarkerForPoint(hook, item);
-      }
+      item.positions.forEach((position) => {
+        if (position.point) {
+          mapItem.marker = addMarkerForPoint(hook, position);
+        }
 
-      if (item.geometry) {
-        const layerName = `map-item-${item.id}`;
-        mapItem.layerName = layerName;
-        addLayerForGeometry(layerName, item);
-      }
+        if (item.type === 'geo_point' && position.geometry) {
+          const layerName = `map-item-${position.id}`;
+          mapItem.layerName = layerName;
+          addLayerForGeometry(layerName, position);
+        }
+      });
     }
   });
 };

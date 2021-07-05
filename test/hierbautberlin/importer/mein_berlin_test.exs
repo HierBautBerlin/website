@@ -64,14 +64,14 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
       assert first.subtitle == "Bezirksamt Treptow-Köpenick"
       assert first.title == "Bürgerhaushalt Treptow-Köpenick"
       assert first.url == "https://mein.berlin.de/projekte/burgerhaushalt-treptow-kopenick/"
-      assert first.geo_geometry == nil
+      assert first.geometry == nil
       assert first.geo_point == nil
       assert first.participation_open == false
 
       last = List.last(result) |> Repo.preload(:source)
 
       assert last.external_id == "/vorhaben/2019-00002/"
-      assert last.geo_geometry == nil
+      assert last.geometry == nil
 
       assert last.geo_point == %Geo.Point{
                coordinates: {13.452748, 52.46358},
