@@ -20,6 +20,12 @@ defmodule Hierbautberlin.Release do
     Mix.Tasks.ImportParks.run(nil)
   end
 
+  def import_daf do
+    Ecto.Migrator.with_repo(Hierbautberlin.Repo, fn _repo ->
+      Hierbautberlin.Importer.DafMap.import()
+    end)
+  end
+
   def rollback(repo, version) do
     load_app()
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))

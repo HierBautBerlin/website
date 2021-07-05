@@ -15,7 +15,7 @@
 </div>
 
 <%= if !is_blank?(@detailItem.description) do %>
-  <p><%= @detailItem.description%></p>
+  <%= text_to_html @detailItem.description%>
 <% end %>
 
 <%= if !is_blank?(@detailItem.url)  do %>

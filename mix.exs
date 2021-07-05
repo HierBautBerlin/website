@@ -95,7 +95,8 @@ defmodule Hierbautberlin.MixProject do
       {:jaxon, "~> 2.0"},
       {:fast_rss, "~> 0.3.4"},
       {:rustler, "~> 0.22.0", override: true},
-      {:ex_unicode, "~> 1.11.2"}
+      {:ex_unicode, "~> 1.11.2"},
+      {:html_entities, "~> 0.5.2"}
     ]
   end
 

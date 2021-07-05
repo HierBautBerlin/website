@@ -5,6 +5,7 @@ defmodule Hierbautberlin.Importer do
     Hierbautberlin.Importer.Infravelo.import()
     Hierbautberlin.Importer.MeinBerlin.import()
     Hierbautberlin.Importer.UVP.import()
+    Hierbautberlin.Importer.DafMap.import()
   end
 
   def import_hourly do
