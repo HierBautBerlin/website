@@ -40,7 +40,7 @@
     "eslint-plugin-import": "^2.23.4",
     "glob": "^7.1.6",
     "hard-source-webpack-plugin": "^0.13.1",
-    "mini-css-extract-plugin": "^2.0.0",
+    "mini-css-extract-plugin": "^2.1.0",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "sass-loader": "^12.1.0",
     "sass": "^1.35.1",
