@@ -26,7 +26,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/phoenix": "^1.5.1",
     "@types/phoenix_live_view": "^0.15.0",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.1",
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
