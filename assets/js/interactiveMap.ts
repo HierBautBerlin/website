@@ -146,7 +146,7 @@ const updateMapItems = (hook: ViewHook) => {
           mapItem.marker = addMarkerForPoint(hook, position);
         }
 
-        if (item.type === 'geo_point' && position.geometry) {
+        if (item.type === 'geo_item' && position.geometry) {
           const layerName = `map-item-${position.id}`;
           mapItem.layerName = layerName;
           addLayerForGeometry(layerName, position);
