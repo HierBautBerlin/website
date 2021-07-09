@@ -42,7 +42,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
       assert first.external_id ==
                "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html"
 
-      assert first.geo_geometry == nil
+      assert first.geometry == nil
 
       assert first.geo_point == %Geo.Point{
                coordinates: {13.3681, 52.5295},

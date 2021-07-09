@@ -13,8 +13,6 @@ defmodule HierbautberlinWeb.MapLive do
   def mount(params, session, socket) do
     coordinates = calculate_coordinates(params)
 
-    items = GeoData.get_items_near(coordinates[:lat], coordinates[:lng], 100)
-
     current_user =
       if session["user_token"] do
         Accounts.get_user_by_session_token(session["user_token"])
@@ -22,15 +20,14 @@ defmodule HierbautberlinWeb.MapLive do
         nil
       end
 
-    {:ok,
-     assign(socket,
-       map_position: coordinates,
-       map_zoom: params["zoom"] || to_string(@zoom_default),
-       map_items: items,
-       current_user: current_user,
-       subscription: Accounts.get_subscription(current_user, coordinates),
-       page_title: "Karte"
-     )}
+    socket =
+      assign(socket,
+        map_zoom: params["zoom"] || to_string(@zoom_default),
+        current_user: current_user,
+        page_title: "Karte"
+      )
+
+    {:ok, update_coordinates(socket, coordinates[:lat], coordinates[:lng])}
   end
 
   @impl true
@@ -39,21 +36,17 @@ defmodule HierbautberlinWeb.MapLive do
     lng = parse_with_default(params["lng"], @lng_default)
     zoom = parse_with_default(params["zoom"], @zoom_default)
 
-    items = GeoData.get_items_near(lat, lng, 100)
-
-    socket =
-      assign(socket,
-        map_position: %{lat: lat, lng: lng},
-        map_items: items,
-        map_zoom: zoom,
-        detailItem: nil
-      )
+    socket = assign(socket, map_zoom: zoom)
+    socket = update_coordinates(socket, lat, lng)
 
     socket =
       if params["details"] do
-        assign(socket, detailItem: GeoData.get_geo_item!(params["details"]))
+        {detail_item, detail_item_type} =
+          get_detail_item(params["details"], params["detailsType"])
+
+        assign(socket, detail_item: detail_item, detail_item_type: detail_item_type)
       else
-        socket
+        assign(socket, detail_item: nil, detail_item_type: nil)
       end
 
     {:noreply, socket}
@@ -61,14 +54,7 @@ defmodule HierbautberlinWeb.MapLive do
 
   @impl true
   def handle_event("updateCoordinates", %{"lat" => lat, "lng" => lng}, socket) do
-    socket = assign(socket, :map_position, %{lat: lat, lng: lng})
-
-    socket =
-      assign(
-        socket,
-        :subscription,
-        Accounts.get_subscription(socket.assigns.current_user, %{lat: lat, lng: lng})
-      )
+    socket = update_coordinates(socket, lat, lng)
 
     {:noreply,
      push_patch(socket,
@@ -88,8 +74,14 @@ defmodule HierbautberlinWeb.MapLive do
      )}
   end
 
-  def handle_event("showDetails", %{"item-id" => item_id}, socket) do
-    socket = assign(socket, detailItem: GeoData.get_geo_item!(item_id))
+  def handle_event("showDetails", %{"item-id" => item_id, "item-type" => item_type}, socket) do
+    {detail_item, detail_item_type} = get_detail_item(item_id, item_type)
+
+    socket =
+      assign(socket, %{
+        detail_item: detail_item,
+        detail_item_type: detail_item_type
+      })
 
     {:noreply,
      push_patch(socket,
@@ -99,7 +91,7 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   def handle_event("hideDetails", _params, socket) do
-    socket = assign(socket, :detailItem, nil)
+    socket = assign(socket, :detail_item, nil)
 
     {:noreply,
      push_patch(socket,
@@ -124,12 +116,78 @@ defmodule HierbautberlinWeb.MapLive do
     {:noreply, socket}
   end
 
+  defp update_coordinates(socket, lat, lng) do
+    socket =
+      if socket.assigns[:map_position] != %{lat: lat, lng: lng} do
+        items = GeoData.get_items_near(lat, lng, 100)
+
+        assign(
+          socket,
+          %{
+            map_items: items,
+            map_position: %{lat: lat, lng: lng}
+          }
+        )
+      else
+        socket
+      end
+
+    assign(
+      socket,
+      :subscription,
+      Accounts.get_subscription(socket.assigns.current_user, %{lat: lat, lng: lng})
+    )
+  end
+
+  defp get_detail_item(item_id, item_type)
+
+  defp get_detail_item(item_id, "geo_item") do
+    {GeoData.get_geo_item!(item_id), "geo_item"}
+  end
+
+  defp get_detail_item(item_id, "news_item") do
+    {GeoData.get_news_item!(item_id), "news_item"}
+  end
+
+  defp get_detail_item(item_id, "geo_street") do
+    {item_id
+     |> GeoData.get_geo_street!()
+     |> GeoData.with_news(), "geo_street"}
+    |> return_news_if_only_one_news_item()
+  end
+
+  defp get_detail_item(item_id, "geo_street_number") do
+    {item_id
+     |> GeoData.get_geo_street_number!()
+     |> GeoData.with_geo_street()
+     |> GeoData.with_news(), "geo_street_number"}
+    |> return_news_if_only_one_news_item()
+  end
+
+  defp get_detail_item(item_id, "geo_place") do
+    {item_id
+     |> GeoData.get_geo_place!()
+     |> GeoData.with_news(), "geo_place"}
+    |> return_news_if_only_one_news_item()
+  end
+
+  def return_news_if_only_one_news_item(value)
+
+  def return_news_if_only_one_news_item({%{news_items: [news_item]}, _type}) do
+    {news_item, "news_item"}
+  end
+
+  def return_news_if_only_one_news_item(value) do
+    value
+  end
+
   defp route_from_socket(socket) do
     MapRouteHelpers.route_to_map(
       socket,
       socket.assigns.map_position,
       socket.assigns.map_zoom,
-      socket.assigns.detailItem
+      socket.assigns.detail_item,
+      socket.assigns.detail_item_type
     )
   end
 

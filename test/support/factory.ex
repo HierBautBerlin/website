@@ -15,11 +15,16 @@ defmodule Hierbautberlin.Factory do
       city: "Berlin",
       district: "Friedrichshain",
       geo_point: %Geo.Point{
-        coordinates: {13, 52},
+        coordinates: {13.0, 52.0},
         properties: %{},
         srid: 4326
       },
-      street_numbers: [build(:street_number, number: "1"), build(:street_number, number: "2A")]
+      street_numbers: fn ->
+        [
+          build(:street_number, number: "1"),
+          build(:street_number, number: "2A")
+        ]
+      end
     }
   end
 
@@ -29,11 +34,20 @@ defmodule Hierbautberlin.Factory do
       number: "1",
       zip: "10249",
       geo_point: %Geo.Point{
-        coordinates: {13, 52},
+        coordinates: {13.0, 52.0},
         properties: %{},
         srid: 4326
       }
     }
+  end
+
+  def street_number_with_street_factory do
+    struct!(
+      street_number_factory(),
+      %{
+        geo_street: fn -> build(:street, street_numbers: []) end
+      }
+    )
   end
 
   def geo_item_factory do
@@ -50,7 +64,34 @@ defmodule Hierbautberlin.Factory do
       name: "Malcom-X-Platz",
       district: "Friedrichshain",
       city: "Berlin",
-      type: "Park"
+      type: "Park",
+      geo_point: %Geo.Point{
+        coordinates: {13.3799820166143, 52.5189643842998},
+        properties: %{},
+        srid: 4326
+      },
+      geometry: %Geo.Polygon{
+        coordinates: [[{13.0, 52.0}, {13.1, 52.1}, {13.1, 52.0}, {13.0, 52.0}]],
+        properties: %{},
+        srid: 4326
+      }
     }
+  end
+
+  def news_item_factory do
+    %Hierbautberlin.GeoData.NewsItem{
+      external_id: sequence(:news_item_external_id, &"ID-#{&1}"),
+      title: "This is a nice title",
+      content: "This is a nice content",
+      url: "https://www.example.com",
+      source: fn -> build(:source) end,
+      published_at: Timex.now(),
+      geo_streets: fn -> [build(:street)] end,
+      geo_street_numbers: fn -> [build(:street_number_with_street)] end,
+      geo_places: fn -> [build(:place)] end
+    }
+    |> evaluate_lazy_attributes()
+    |> Hierbautberlin.GeoData.NewsItem.update_cached_geometries()
+    |> Ecto.Changeset.apply_changes()
   end
 end

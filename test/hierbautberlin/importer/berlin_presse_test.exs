@@ -69,7 +69,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       assert first.content ==
                "* Transaktion ist jetzt formal abgeschlossen  * Gemeinsames Hissen der Berlin-Flagge symbolisiert Rückkehr zum Land Berlin   Die Stromnetz Berlin GmbH ist heute offiziell wieder in das Eigentum des Landes Berlin übergegangen. Mit einem gemeinsamen Hissen der Berlin-Flagge haben Vertreterinnen und Vertreter des Landes sowie der Vattenfall GmbH und der Stromnetz GmbH den Übergang symbolisch vollzogen."
 
-      assert first.link ==
+      assert first.url ==
                "https://www.berlin.de/sen/finanzen/presse/pressemitteilungen/pressemitteilung.1102315.php"
 
       assert first.published_at == ~U[2021-07-01 14:50:00Z]
@@ -89,7 +89,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       assert second.content ==
                "Der Gehweg an der Ostseite der Suarezstraße zwischen Kant- und Pestalozzistraße wird ab Montag, 5. Juni 2021, grundhaft erneuert. Der Gehweg wird neben dem 6,5 Meter breiten Plattenbelag künftig einen schmalen Begleitstreifen aus Mosaikpflaster aufweisen und mit Abstelleinrichtungen für Fahrräder ausgestattet werden. Zeitgleich wird die Bushaltestelle der Linie 209 an der Suarezstraße ausgebaut, so dass diese barrierefrei für Gelenkbusse wird."
 
-      assert second.link ==
+      assert second.url ==
                "https://www.berlin.de/ba-charlottenburg-wilmersdorf/aktuelles/pressemitteilungen/2021/pressemitteilung.1102306.php"
 
       assert second.published_at == ~U[2021-07-01 14:05:00Z]
@@ -103,6 +103,18 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
 
       assert second.geo_street_numbers |> Enum.map(& &1.id) == [street_number.id]
       assert second.geo_places |> Enum.map(& &1.id) == [park.id]
+
+      assert second.geo_points == %Geo.MultiPoint{
+               coordinates: [
+                 {13, 52},
+                 {13, 52},
+                 {13, 52},
+                 {13.0, 52.0},
+                 {13.3799820166143, 52.5189643842998}
+               ],
+               properties: %{},
+               srid: 4326
+             }
 
       # Try to import again
       result = BerlinPresse.import(ImportMock)

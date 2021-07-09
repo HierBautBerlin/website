@@ -1,0 +1,13 @@
+<ul class="details--news-items">
+  <%= for item <- @news_items do %>
+    <li class="details--news-item" id="news-list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-type="news_item" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
+      <h3 class="details--news-item--title"><a id="news-details-<%= item.id %>" href="/map?details=<%= item.id %>&detailsType=news_item" ><%= item.title %></a></h3>
+      <p class="details--news-item--content"><%= item.content %></p>
+
+      <span class="label--published">
+        <%= Timex.format!(item.published_at, "{0D}.{0M}.{YYYY}") %>
+      </span>
+      <span class="label--source"><%= item.source.name %></span>
+    </li>
+  <% end %>
+</ul>

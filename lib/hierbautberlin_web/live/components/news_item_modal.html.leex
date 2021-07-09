@@ -1,0 +1,30 @@
+<h3 class="details--content--title"><%= @detail_item.title %></h3>
+
+<div class="details--labels">
+  <span class="label--source"><%= @detail_item.source.name %></span>
+</div>
+
+<%= if !is_blank?(@detail_item.content) do %>
+  <%= text_to_html @detail_item.content %>
+<% end %>
+
+<%= if !is_blank?(@detail_item.url)  do %>
+  <div class="details--links">
+    <div><a href="<%= @detail_item.url %>" target="_blank" rel="noopener noreferrer">&gt; Details</a></div>
+  </div>
+<% end %>
+
+<%= if @detail_item.published_at do %>
+  <p>
+    Veröffentlicht am: <%= Timex.format!(@detail_item.published_at, "{0D}.{0M}.{YYYY}") %>
+  </p>
+<% end %>
+
+<%= if !is_blank?(@detail_item.source.copyright) do %>
+  <div>
+    &copy;
+    <a href="<%= @detail_item.source.url %>" target="_blank" rel="noopener noreferrer">
+      <%= @detail_item.source.copyright %>
+    </a>
+  </div>
+<% end %>

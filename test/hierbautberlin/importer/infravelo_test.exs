@@ -54,7 +54,7 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
 
       assert first.external_id == "9080026"
 
-      assert first.geo_geometry == %Geo.LineString{
+      assert first.geometry == %Geo.LineString{
                coordinates: [
                  {13.4463152997, 52.4709511995},
                  {13.4478924972, 52.4711337807}

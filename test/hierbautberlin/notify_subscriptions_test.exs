@@ -48,7 +48,7 @@ defmodule Hierbautberlin.NotifySubscriptionTest do
 
       insert(:geo_item,
         title: "Polygon Item",
-        geo_geometry: %Geo.MultiPolygon{
+        geometry: %Geo.MultiPolygon{
           coordinates: [
             [
               [
@@ -69,6 +69,8 @@ defmodule Hierbautberlin.NotifySubscriptionTest do
 
       Accounts.subscribe(user, %{lat: 52.51650032279812, lng: 13.378904717640268})
 
+      insert(:news_item)
+
       %{user: user}
     end
 
@@ -79,6 +81,7 @@ defmodule Hierbautberlin.NotifySubscriptionTest do
       assert user_email == [{nil, user.email}]
       assert text_body =~ "Point Item"
       assert text_body =~ "Polygon Item"
+      assert text_body =~ "This is a nice title"
       refute text_body =~ "Distant Point Item"
       refute text_body =~ "Old Point Item"
     end

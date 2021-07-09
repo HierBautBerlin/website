@@ -61,7 +61,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
         external_id: item["bplanID"],
         title: item["planname"] <> " - " <> item["bereich"],
         url: item["scan_www"] || item["grund_www"],
-        geo_geometry: polygons[item["id"]],
+        geometry: polygons[item["id"]],
         participation_open: Enum.member?(["aul", "bbg", "imVerfahren"], item["status"]),
         state: @state_mapping[item["status"]],
         date_start: List.last(dates),

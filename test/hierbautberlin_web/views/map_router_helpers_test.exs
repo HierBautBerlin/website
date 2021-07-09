@@ -1,11 +1,18 @@
 defmodule HierbautberlinWeb.MapRouteHelpersTest do
   use HierbautberlinWeb.ConnCase, async: true
+
   alias HierbautberlinWeb.MapRouteHelpers
 
-  describe "route_to_maps/4" do
+  describe "route_to_map/4" do
     test "it returns a path with lat, lng, zoom and detail item", %{conn: conn} do
-      assert MapRouteHelpers.route_to_map(conn, %{lat: 12.12, lng: 12.12}, 10, %{id: 1}) ==
-               "/map?lat=12.12&lng=12.12&zoom=10&details=1"
+      assert MapRouteHelpers.route_to_map(
+               conn,
+               %{lat: 12.12, lng: 12.12},
+               10,
+               %{id: 1},
+               "geo_item"
+             ) ==
+               "/map?lat=12.12&lng=12.12&zoom=10&details=1&detailsType=geo_item"
     end
 
     test "it returns a path with lat, lng, zoom and without detail item", %{conn: conn} do
@@ -26,13 +33,13 @@ defmodule HierbautberlinWeb.MapRouteHelpersTest do
         )
 
       assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
-               "http://localhost:4002/map?lat=52.49&lng=13.2677&details=#{item.id}"
+               "http://localhost:4002/map?lat=52.49&lng=13.2677&details=#{item.id}&detailsType=geo_item"
     end
 
     test "it returns a link with a geo polygon" do
       item =
         insert(:geo_item,
-          geo_geometry: %Geo.MultiPolygon{
+          geometry: %Geo.MultiPolygon{
             coordinates: [
               [
                 [
@@ -51,14 +58,28 @@ defmodule HierbautberlinWeb.MapRouteHelpersTest do
         )
 
       assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
-               "http://localhost:4002/map?lat=52.53999676943175&lng=13.436779837728949&details=#{item.id}"
+               "http://localhost:4002/map?lat=52.53999676943175&lng=13.436779837728949&details=#{item.id}&detailsType=geo_item"
+    end
+
+    test "it returns a link to a news item with geo points" do
+      item = insert(:news_item)
+
+      assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
+               "http://localhost:4002/map?lat=52.0&lng=13.0&details=#{item.id}&detailsType=news_item"
+    end
+
+    test "it returns a link to a news item with geometries" do
+      item = Map.merge(insert(:news_item), %{geo_points: nil})
+
+      assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
+               "http://localhost:4002/map?lat=52.05&lng=13.05&details=#{item.id}&detailsType=news_item"
     end
 
     test "it returns a link without any geo information" do
       item = insert(:geo_item)
 
       assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
-               "http://localhost:4002/map?details=#{item.id}"
+               "http://localhost:4002/map?details=#{item.id}&detailsType=geo_item"
     end
   end
 end

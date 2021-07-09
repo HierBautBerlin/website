@@ -1,8 +1,15 @@
 defmodule HierbautberlinWeb.MapRouteHelpers do
   alias HierbautberlinWeb.Router.Helpers, as: Routes
   alias Hierbautberlin.GeoData
+  alias Hierbautberlin.GeoData.{GeoItem, NewsItem}
 
-  def route_to_map(conn_or_endpoint, map_position, map_zoom, detailItem \\ nil) do
+  def route_to_map(
+        conn_or_endpoint,
+        map_position,
+        map_zoom,
+        detail_item \\ nil,
+        detail_item_type \\ nil
+      ) do
     route_params = [
       lat: to_string(map_position.lat),
       lng: to_string(map_position.lng),
@@ -10,10 +17,11 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
     ]
 
     route_params =
-      if detailItem do
+      if detail_item do
         route_params ++
           [
-            details: to_string(detailItem.id)
+            details: to_string(detail_item.id),
+            detailsType: to_string(detail_item_type)
           ]
       else
         route_params
@@ -29,10 +37,19 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
       Routes.map_url(endpoint, :index,
         lat: Float.to_string(lat),
         lng: Float.to_string(lng),
-        details: item.id
+        details: item.id,
+        detailsType: type_of_item(item)
       )
     else
-      Routes.map_url(endpoint, :index, details: item.id)
+      Routes.map_url(endpoint, :index, details: item.id, detailsType: type_of_item(item))
     end
+  end
+
+  defp type_of_item(%GeoItem{}) do
+    "geo_item"
+  end
+
+  defp type_of_item(%NewsItem{}) do
+    "news_item"
   end
 end

@@ -59,7 +59,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
 
       assert first.external_id == "xii-181"
 
-      assert first.geo_geometry == %Geo.MultiPolygon{
+      assert first.geometry == %Geo.MultiPolygon{
                coordinates: [
                  [
                    [

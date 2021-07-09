@@ -5,15 +5,15 @@
     <%= PhoenixInlineSvg.Helpers.svg_image(HierbautberlinWeb.Endpoint, "current-location", alt: "Aktuelle Position finden") %>
   </button>
   <script type="application/json" id="map-data">
-  <%= raw geo_item_to_json(@map_items) %>
+    <%= raw GeoMapItem.to_json(@map_items) %>
   </script>
 </div>
 
 <div class="map--item-list-wrapper">
   <ul class="map--item-list">
     <%= for item <- @map_items do %>
-      <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
-        <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>" ><%= item.title %></a></h3>
+      <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-type="<%= item.type %>" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
+        <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>&detailsType=<%= item.type %>" ><%= item.title %></a></h3>
         <%= cond do %>
           <% !is_blank?(item.subtitle) -> %>
             <p class="map--item-list--item--description"><%= item.subtitle %></p>
@@ -26,8 +26,13 @@
           <%= if item.participation_open do %>
             <span class="label--participation">Beteiligung möglich</span>
           <% end %>
-          <%= if item.state do %>
-            <span class="label--state"><%= state_to_text(item) %></span>
+          <%= if item.type == :geo_item && item.item.state do %>
+            <span class="label--state"><%= state_to_text(item.item) %></span>
+          <% end %>
+          <%= if item.type == :news_item do %>
+            <span class="label--published">
+              <%= Timex.format!(item.item.published_at, "{0D}.{0M}.{YYYY}") %>
+            </span>
           <% end %>
           <span class="label--source"><%= item.source.name %></span>
         </div>
@@ -57,9 +62,33 @@
   </div>
 </div>
 
-<%= if @detailItem != nil do %>
-  <%= live_modal @socket, HierbautberlinWeb.Components.DetailsModal,
-    id: @detailItem.id,
-    detailItem: @detailItem,
-    return_to: route_to_map(@socket, @map_position, @map_zoom, nil) %>
+<%= if @detail_item != nil do %>
+  <%= case @detail_item do
+     %Hierbautberlin.GeoData.GeoItem{} -> live_modal @socket, HierbautberlinWeb.Components.GeoItemModal,
+            id: @detail_item.id,
+            detail_item: @detail_item,
+            return_to: route_to_map(@socket, @map_position, @map_zoom)
+
+     %Hierbautberlin.GeoData.NewsItem{} -> live_modal @socket, HierbautberlinWeb.Components.NewsItemModal,
+            id: @detail_item.id,
+            detail_item: @detail_item,
+            return_to: route_to_map(@socket, @map_position, @map_zoom)
+
+     %Hierbautberlin.GeoData.GeoStreet{} -> live_modal @socket, HierbautberlinWeb.Components.GeoStreetModal,
+            id: @detail_item.id,
+            detail_item: @detail_item,
+            return_to: route_to_map(@socket, @map_position, @map_zoom)
+
+     %Hierbautberlin.GeoData.GeoStreetNumber{} -> live_modal @socket, HierbautberlinWeb.Components.GeoStreetNumberModal,
+            id: @detail_item.id,
+            detail_item: @detail_item,
+            return_to: route_to_map(@socket, @map_position, @map_zoom)
+
+     %Hierbautberlin.GeoData.GeoPlace{} -> live_modal @socket, HierbautberlinWeb.Components.GeoPlaceModal,
+            id: @detail_item.id,
+            detail_item: @detail_item,
+            return_to: route_to_map(@socket, @map_position, @map_zoom)
+
+      _ -> nil
+  end %>
 <% end %>

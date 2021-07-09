@@ -2,7 +2,17 @@ defmodule Hierbautberlin.GeoData do
   import Ecto.Query, warn: false
 
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.GeoData.{Source, GeoItem, AnalyzeText}
+
+  alias Hierbautberlin.GeoData.{
+    AnalyzeText,
+    GeoItem,
+    GeoPlace,
+    GeoPosition,
+    GeoStreet,
+    GeoStreetNumber,
+    NewsItem,
+    Source
+  }
 
   def get_source!(id) do
     Repo.get!(Source, id)
@@ -15,6 +25,23 @@ defmodule Hierbautberlin.GeoData do
       on_conflict: {:replace_all_except, [:id, :inserted_at]},
       conflict_target: :short_name
     )
+  end
+
+  def get_geo_street!(id) do
+    Repo.get!(GeoStreet, id)
+  end
+
+  def get_geo_street_number!(id) do
+    Repo.get!(GeoStreetNumber, id)
+  end
+
+  def get_geo_place!(id) do
+    Repo.get!(GeoPlace, id)
+  end
+
+  def get_news_item!(id) do
+    Repo.get!(NewsItem, id)
+    |> Repo.preload([:source])
   end
 
   def get_geo_item!(id) do
@@ -41,13 +68,35 @@ defmodule Hierbautberlin.GeoData do
 
   def get_point(geo_item)
 
-  def get_point(%{geo_point: item}) when not is_nil(item) do
+  def get_point(%GeoItem{geo_point: item}) when not is_nil(item) do
     %{coordinates: {lng, lat}} = item
     %{lat: lat, lng: lng}
   end
 
-  def get_point(%{geo_geometry: geometry}) when not is_nil(geometry) do
+  def get_point(%GeoItem{geometry: geometry}) when not is_nil(geometry) do
     %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(%GeoPosition{geopoint: item}) when not is_nil(item) do
+    %{coordinates: {lng, lat}} = item
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(%GeoPosition{geometry: geometry}) when not is_nil(geometry) do
+    %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(%NewsItem{geo_points: item}) when not is_nil(item) do
+    %{coordinates: [{lng, lat} | _tail]} = item
+    %{lat: lat, lng: lng}
+  end
+
+  def get_point(%NewsItem{geometries: item}) when not is_nil(item) do
+    %{geometries: [geometry | _tail]} = item
+    %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
+
     %{lat: lat, lng: lng}
   end
 
@@ -56,52 +105,44 @@ defmodule Hierbautberlin.GeoData do
   end
 
   def get_items_near(lat, lng, count \\ 10) do
-    geom = %Geo.Point{
-      coordinates: {lng, lat},
-      properties: %{},
-      srid: 4326
-    }
+    items = GeoItem.get_near(lat, lng, count) ++ NewsItem.get_near(lat, lng, count)
 
-    query =
-      from item in GeoItem,
-        limit: ^count,
-        order_by:
-          fragment(
-            "case when geo_geometry is not null then ST_Distance(geo_geometry,?) else ST_Distance(geo_point, ?) end",
-            ^geom,
-            ^geom
-          )
-
-    query
-    |> Repo.all()
-    |> Repo.preload(:source)
+    items
     |> remove_old_items()
     |> sort_by_relevance(%{lat: lat, lng: lng})
+    |> Enum.take(count)
   end
 
   defp remove_old_items(items) do
-    Enum.filter(items, fn item ->
-      date = GeoItem.newest_date(item)
+    five_years_ago = Timex.shift(Timex.today(), years: -5)
 
-      date == nil || Timex.after?(date, Timex.shift(Timex.today(), years: -5))
+    Enum.filter(items, fn item ->
+      item.newest_date == nil || Timex.after?(item.newest_date, five_years_ago)
     end)
   end
 
   defp sort_by_relevance(items, %{lat: lat, lng: lng}) do
     Enum.sort_by(items, fn item ->
-      date = GeoItem.newest_date(item)
-
       months_difference =
-        Timex.diff(Timex.now(), date || Timex.shift(Timex.today(), months: -3), :months)
-
-      %{lat: item_lat, lng: item_lng} = get_point(item)
+        Timex.diff(
+          Timex.now(),
+          item.newest_date || Timex.shift(Timex.today(), months: -3),
+          :months
+        )
 
       distance =
-        Geo.Turf.Measure.distance(
-          %Geo.Point{coordinates: {lng, lat}},
-          %Geo.Point{coordinates: {item_lng, item_lat}},
-          :meters
-        )
+        item.positions
+        |> Enum.map(fn position ->
+          %{lat: item_lat, lng: item_lng} = get_point(position)
+
+          Geo.Turf.Measure.distance(
+            %Geo.Point{coordinates: {lng, lat}},
+            %Geo.Point{coordinates: {item_lng, item_lat}},
+            :meters
+          )
+        end)
+        |> Enum.sort()
+        |> List.first()
 
       push_factor =
         if item.participation_open do
@@ -112,6 +153,14 @@ defmodule Hierbautberlin.GeoData do
 
       distance / 10 + months_difference - push_factor
     end)
+  end
+
+  def with_news(item) do
+    Repo.preload(item, news_items: [:source])
+  end
+
+  def with_geo_street(item) do
+    Repo.preload(item, :geo_street)
   end
 
   def analyze_text(text, options \\ %{}) do

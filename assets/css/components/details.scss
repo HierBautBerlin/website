@@ -9,3 +9,38 @@
 .details--links {
   margin-bottom: 2rem;
 }
+
+.details--news-items {
+  list-style: none;
+}
+
+.details--news-item {
+  list-style: none;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #c4c4c4;
+   
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.details--news-item--title {
+  font-size: 1.3em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.details--news-item--content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+} 
