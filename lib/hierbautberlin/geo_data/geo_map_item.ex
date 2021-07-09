@@ -19,6 +19,7 @@ defmodule Hierbautberlin.GeoData.GeoMapItem do
         Enum.map(items, fn item ->
           %{
             id: item.id,
+            type: item.type,
             title: item.title,
             subtitle: item.subtitle,
             description: item.description,

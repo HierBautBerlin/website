@@ -128,6 +128,7 @@ defmodule Hierbautberlin.Importer.DafMap do
     |> String.replace("Kein DAF-Beitrag vorhanden.", "")
     |> String.replace("Noch kein DAF-Beitrag vorhanden.", "")
     |> String.replace("Kein DAF-Post vorhanden.", "")
+    |> String.replace("Noch kein DAF-Post vorhanden.", "")
     |> String.replace(~r/\Anv\z/, "")
     |> String.trim()
   end
