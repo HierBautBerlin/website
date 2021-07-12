@@ -22,12 +22,26 @@ jobs:
         with:
           toolchain: stable
 
+
       - uses: huaxk/postgis-action@v1
         with:
           postgresql version: '11'
           postgresql password: 'postgres'
           postgresql user: 'postgres'
           postgresql db: 'hierbautberlin_test'
+
+      - name: Install pdf packages
+        run: sudo apt-get install poppler-utils qpdf -y
+
+      - name: Install pdfminer.six
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' 
+      - name: Install pdfminer
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: |
+            pdfminer.six
 
       - name: Setup elixir
         id: setup-beam

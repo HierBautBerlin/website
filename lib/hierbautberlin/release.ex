@@ -3,6 +3,8 @@ defmodule Hierbautberlin.Release do
 
   def init_data do
     start_app()
+    Hierbautberlin.Importer.import_daily()
+    Hierbautberlin.Importer.import_hourly()
   end
 
   def migrate do
@@ -13,17 +15,20 @@ defmodule Hierbautberlin.Release do
     end
   end
 
-  def import_all do
-    IO.puts("Importing streets..")
-    Mix.Tasks.ImportStreets.run(nil)
-    IO.puts("Importing parks..")
-    Mix.Tasks.ImportParks.run(nil)
+  def import_geo_data do
+    load_app()
+
+    Ecto.Migrator.with_repo(Hierbautberlin.Repo, fn _repo ->
+      IO.puts("Importing streets..")
+      Mix.Tasks.ImportStreets.run(nil)
+      IO.puts("Importing parks..")
+      Mix.Tasks.ImportParks.run(nil)
+    end)
   end
 
   def refresh_news_items do
-    Ecto.Migrator.with_repo(Hierbautberlin.Repo, fn _repo ->
-      Hierbautberlin.GeoData.NewsItem.update_all_geometries()
-    end)
+    start_app()
+    Hierbautberlin.GeoData.NewsItem.update_all_geometries()
   end
 
   def rollback(repo, version) do
@@ -41,7 +46,7 @@ defmodule Hierbautberlin.Release do
 
   defp start_app do
     load_app()
-    Application.put_env(@app, :minimal, true)
+    Application.put_env(@app, :data_importer, true)
     Application.ensure_all_started(@app)
   end
 end

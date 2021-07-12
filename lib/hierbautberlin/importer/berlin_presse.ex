@@ -1,7 +1,5 @@
 defmodule Hierbautberlin.Importer.BerlinPresse do
-  alias Hierbautberlin.Repo
   alias Hierbautberlin.GeoData
-  alias Hierbautberlin.GeoData.NewsItem
   alias Hierbautberlin.Services.Berlin
 
   def import(http_connection \\ HTTPoison) do
@@ -45,32 +43,20 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       |> List.flatten()
 
     text = fetch_text_from_html(entry["link"], http_connection)
+    full_text = title <> "\n" <> content <> "\n" <> text
 
-    result =
-      GeoData.analyze_text(
-        title <> "\n" <> content <> "\n" <> text,
-        %{districts: districts}
-      )
-
-    NewsItem.changeset(%NewsItem{}, %{
-      external_id: url,
-      title: title,
-      url: url,
-      content: content,
-      published_at: published,
-      source_id: source.id
-    })
-    |> Repo.insert!(
-      on_conflict: {:replace_all_except, [:id, :inserted_at]},
-      conflict_target: :external_id
+    GeoData.create_news_item!(
+      %{
+        external_id: url,
+        title: title,
+        url: url,
+        content: content,
+        published_at: published,
+        source_id: source.id
+      },
+      full_text,
+      districts
     )
-    |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
-    |> NewsItem.change_associations(
-      geo_streets: result.streets,
-      geo_street_numbers: result.street_numbers,
-      geo_places: result.places
-    )
-    |> Repo.update!()
   end
 
   defp fetch_text_from_html(url, http_connection) do

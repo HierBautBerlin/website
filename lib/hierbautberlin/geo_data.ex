@@ -166,4 +166,22 @@ defmodule Hierbautberlin.GeoData do
   def analyze_text(text, options \\ %{}) do
     AnalyzeText.analyze_text(text, options)
   end
+
+  def create_news_item!(attrs, full_text, districts) do
+    result = analyze_text(full_text, %{districts: districts})
+
+    %NewsItem{}
+    |> NewsItem.changeset(attrs)
+    |> Repo.insert!(
+      on_conflict: {:replace_all_except, [:id, :inserted_at]},
+      conflict_target: :external_id
+    )
+    |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
+    |> NewsItem.change_associations(
+      geo_streets: result.streets,
+      geo_street_numbers: result.street_numbers,
+      geo_places: result.places
+    )
+    |> Repo.update!()
+  end
 end
