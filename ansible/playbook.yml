@@ -17,24 +17,26 @@
       - gdal-bin
       - imagemagick
       - inotify-tools
+      - libncurses5
       - libncurses5-dev
       - libpng-dev
       - libssh-dev
       - libxml2-utils
       - m4
       - osmctools
+      - poppler-utils
       - postgresql-12
       - postgresql-12-postgis-3
       - postgresql-server-dev-12
       - python3-dev
       - python3-pip
       - python3-setuptools
+      - qpdf
       - tmux
       - ufw
       - unixodbc-dev
       - webp
       - xsltproc
-      - libncurses5
 
   - name: Enable UFW
     become: true
@@ -61,6 +63,7 @@
     pip:
       name:
       - psycopg2
+      - pdfminer.six
 
   - name: Create database user
     become: true

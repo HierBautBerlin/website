@@ -7,13 +7,14 @@ defmodule Hierbautberlin.Application do
 
   def start(_type, _args) do
     children =
-      if Application.get_env(:hierbautberlin, :minimal) do
+      if Application.get_env(:hierbautberlin, :data_importer) do
         [
           # Start the Ecto repository
-          Hierbautberlin.Repo
+          Hierbautberlin.Repo,
+          {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText}
         ]
       else
-        [
+        jobs = [
           # Start the Ecto repository
           Hierbautberlin.Repo,
           # Start the Telemetry supervisor
@@ -21,13 +22,21 @@ defmodule Hierbautberlin.Application do
           # Start the PubSub system
           {Phoenix.PubSub, name: Hierbautberlin.PubSub},
           # Start the Endpoint (http/https)
-          HierbautberlinWeb.Endpoint,
-          # Text parser
-          {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText},
-          # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
-          {Hierbautberlin.Importer.ImporterCronjobDaily, []},
-          {Hierbautberlin.Importer.ImporterCronjobHourly, []}
+          HierbautberlinWeb.Endpoint
         ]
+
+        if Application.get_env(:hierbautberlin, :environment) == :dev do
+          jobs
+        else
+          jobs ++
+            [
+              # Text parser
+              {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText},
+              # Start a worker by calling: Hierbautberlin.Worker.start_link(arg)
+              {Hierbautberlin.Importer.ImporterCronjobDaily, []},
+              {Hierbautberlin.Importer.ImporterCronjobHourly, []}
+            ]
+        end
       end
 
     # See https://hexdocs.pm/elixir/Supervisor.html

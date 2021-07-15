@@ -38,6 +38,16 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     server
   end
 
+  def handle_call({:reset_index}, _from, _state) do
+    {:reply, :ok,
+     %{
+       streets: %{},
+       places: %{},
+       street_graph: AhoCorasick.new([]),
+       place_graph: AhoCorasick.new([])
+     }}
+  end
+
   def handle_call({:add_streets, streets}, _from, state) do
     Enum.each(streets, fn street ->
       AhoCorasick.add_term(state.street_graph, street.name)
@@ -398,5 +408,9 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
 
   def analyze_text(manager \\ __MODULE__, text, options) do
     GenServer.call(manager, {:analyze_text, text, options})
+  end
+
+  def reset_index(manager \\ __MODULE__) do
+    GenServer.call(manager, {:reset_index})
   end
 end

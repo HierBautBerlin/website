@@ -24,6 +24,9 @@ config :hierbautberlin, :generators,
   binary_id: false,
   sample_binary_id: "11111111-1111-1111-1111-111111111111"
 
+config :hierbautberlin, :import_path, "./import"
+config :hierbautberlin, :file_storage_path, "./file_storage"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

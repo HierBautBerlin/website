@@ -8,7 +8,7 @@ build:
     ARG APP_VERSION=0.1.0
     ARG MIX_ENV=prod
     RUN apt-get update
-    RUN apt-get install nodejs build-essential git curl -y
+    RUN apt-get install nodejs build-essential git curl poppler-utils qpdf -y
     RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
     RUN apt-get update
     RUN apt-get install nodejs -y
