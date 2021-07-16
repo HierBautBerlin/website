@@ -23,8 +23,13 @@ defmodule HierbautberlinWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :hierbautberlin,
-    gzip: false,
+    gzip: true,
     only: ~w(css fonts images svg js favicon.ico robots.txt)
+
+  plug Plug.Static,
+    at: "/filestorage/",
+    from: Path.expand(Application.get_env(:hierbautberlin, :file_storage_path)),
+    gzip: false
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

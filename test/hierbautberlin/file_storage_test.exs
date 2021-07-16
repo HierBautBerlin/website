@@ -2,11 +2,10 @@ defmodule Hierbautberlin.FileStorageTest do
   use Hierbautberlin.DataCase
 
   alias Hierbautberlin.FileStorage
+  alias Hierbautberlin.FileStorage.FileItem
 
   describe "files" do
-    alias Hierbautberlin.FileStorage.FileItem
-
-    @valid_attrs %{name: "some name", type: "some type"}
+    @valid_attrs %{name: "some name", type: "some type", title: "My File"}
     @update_attrs %{name: "some updated name", type: "some updated type"}
     @invalid_attrs %{name: nil, type: nil}
 
@@ -65,15 +64,36 @@ defmodule Hierbautberlin.FileStorageTest do
   end
 
   describe "path_for_file" do
+    test "returns a nice filename for a FileItem" do
+      assert FileStorage.path_for_file(%FileItem{
+               name: "amtsblatt/abl_2021_28_2389_2480_online.pdf"
+             }) ==
+               "./file_storage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
+    end
+
     test "returns a nice filename in the storage" do
       assert FileStorage.path_for_file("amtsblatt/abl_2021_28_2389_2480_online.pdf") ==
                "./file_storage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
     end
   end
 
+  describe "url_for_file" do
+    test "returns a nice url for a FileItem" do
+      assert FileStorage.url_for_file(%FileItem{
+               name: "amtsblatt/abl_2021_28_2389_2480_online.pdf"
+             }) ==
+               "/filestorage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
+    end
+
+    test "returns a nice url in the storage" do
+      assert FileStorage.url_for_file("amtsblatt/abl_2021_28_2389_2480_online.pdf") ==
+               "/filestorage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
+    end
+  end
+
   describe "get_file_by_name!/1" do
     test "returns the file with given name" do
-      FileStorage.create_file(%{name: "this_file.pdf", type: "some/type"})
+      FileStorage.create_file(%{name: "this_file.pdf", type: "some/type", title: "My Title"})
 
       file_item = FileStorage.get_file_by_name!("this_file.pdf")
 
@@ -81,15 +101,23 @@ defmodule Hierbautberlin.FileStorageTest do
       assert file_item.type == "some/type"
     end
 
-    test "returns nil if file does not exist" do
-      assert FileStorage.get_file_by_name!("wrong.pdf") == nil
+    test "throws error if file does not exist" do
+      assert_raise Ecto.NoResultsError, fn ->
+        FileStorage.get_file_by_name!("wrong.pdf")
+      end
     end
   end
 
-  describe "store_file/3" do
+  describe "store_file/4" do
     test "stores a file and creates a db entry" do
       File.touch("this_file_exists.pdf")
-      FileStorage.store_file("this_file_exists.pdf", "this_file_exists.pdf", "application/pdf")
+
+      FileStorage.store_file(
+        "this_file_exists.pdf",
+        "this_file_exists.pdf",
+        "application/pdf",
+        "My File"
+      )
 
       assert FileStorage.exists?("this_file_exists.pdf")
 
@@ -101,6 +129,7 @@ defmodule Hierbautberlin.FileStorageTest do
 
       assert file_item.name == "this_file_exists.pdf"
       assert file_item.type == "application/pdf"
+      assert file_item.title == "My File"
 
       File.rm("this_file_exists.pdf")
     end
