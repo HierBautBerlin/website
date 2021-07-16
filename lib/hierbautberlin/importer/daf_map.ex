@@ -16,13 +16,20 @@ defmodule Hierbautberlin.Importer.DafMap do
         "https://www.dafmap.de/d/dafmapgw.py?c=sel&map=berlin"
       )
 
-    items
-    |> Enum.map(&to_geo_item(&1))
-    |> Enum.filter(fn item -> item != nil end)
-    |> Enum.map(fn item ->
-      {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, item))
-      geo_item
-    end)
+    result =
+      items
+      |> Enum.map(&to_geo_item(&1))
+      |> Enum.filter(fn item -> item != nil end)
+      |> Enum.map(fn item ->
+        {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, item))
+        geo_item
+      end)
+
+    {:ok, result}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
   end
 
   defp to_geo_item(item) do

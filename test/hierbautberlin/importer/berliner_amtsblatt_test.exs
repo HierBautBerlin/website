@@ -60,7 +60,8 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
         "import/amtsblatt/abl_2021_28_2389_2480_online.pdf"
       )
 
-      news_items = Hierbautberlin.Importer.BerlinerAmtsblatt.import(EmptyImportMock)
+      {:ok, news_items} = Hierbautberlin.Importer.BerlinerAmtsblatt.import(EmptyImportMock)
+
       assert length(news_items) == 33
 
       refute File.exists?("import/amtsblatt/abl_2021_28_2389_2480_online.pdf")
@@ -70,7 +71,8 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     end
 
     test "downloads a pdf file and parses it" do
-      news_items = Hierbautberlin.Importer.BerlinerAmtsblatt.import(ImportMock, DownloadMock)
+      {:ok, news_items} =
+        Hierbautberlin.Importer.BerlinerAmtsblatt.import(ImportMock, DownloadMock)
 
       assert length(news_items) == 33
 

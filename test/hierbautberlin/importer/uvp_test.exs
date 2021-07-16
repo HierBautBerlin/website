@@ -31,7 +31,7 @@ defmodule Hierbautberlin.Importer.UVPTest do
 
   describe "import/1" do
     test "basic import of infravelo data" do
-      result = UVP.import(ImportMock)
+      {:ok, result} = UVP.import(ImportMock)
       assert length(result) == 3419
 
       first = List.first(result) |> Repo.preload(:source)
@@ -53,13 +53,15 @@ defmodule Hierbautberlin.Importer.UVPTest do
     end
 
     test "Updates an entry" do
-      first = ImportMock |> UVP.import() |> List.first()
+      {:ok, result} = UVP.import(ImportMock)
+
+      first = List.first(result)
 
       assert first.external_id == "294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
       assert first.title == "Beregnung in der Gemarkung Schlenzer"
 
-      second = ImportUpdateMock |> UVP.import() |> List.first()
-      second = GeoData.get_geo_item!(second.id)
+      {:ok, result} = UVP.import(ImportUpdateMock)
+      second = GeoData.get_geo_item!(List.first(result).id)
 
       assert first.id == second.id
 

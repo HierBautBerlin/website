@@ -54,7 +54,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       park = insert(:place, name: "Testpark")
       Hierbautberlin.GeoData.AnalyzeText.add_places([park])
 
-      result = BerlinPresse.import(ImportMock)
+      {:ok, result} = BerlinPresse.import(ImportMock)
 
       assert length(result) == 2
       [first, second] = result
@@ -117,7 +117,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
              }
 
       # Try to import again
-      result = BerlinPresse.import(ImportMock)
+      {:ok, result} = BerlinPresse.import(ImportMock)
 
       assert length(result) == 2
     end
