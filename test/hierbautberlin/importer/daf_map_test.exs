@@ -17,7 +17,7 @@ defmodule Hierbautberlin.Importer.DafMapTest do
 
   describe "import/1" do
     test "basic import of daf map data" do
-      result = DafMap.import(ImportMock)
+      {:ok, result} = DafMap.import(ImportMock)
 
       assert length(result) == 5
       first = List.first(result) |> Repo.preload(:source)

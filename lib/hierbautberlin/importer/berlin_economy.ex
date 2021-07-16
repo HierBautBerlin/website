@@ -16,13 +16,20 @@ defmodule Hierbautberlin.Importer.BerlinEconomy do
         "https://www.berlin.de/wirtschaft/bauprojekte/rubric.geojson?_rnd=448764"
       )
 
-    Enum.map(items, fn item ->
-      attrs = to_geo_item(item)
+    result =
+      Enum.map(items, fn item ->
+        attrs = to_geo_item(item)
 
-      {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
+        {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
 
-      geo_item
-    end)
+        geo_item
+      end)
+
+    {:ok, result}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
   end
 
   defp to_geo_item(item) do

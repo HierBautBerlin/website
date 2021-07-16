@@ -21,7 +21,11 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   ]
 
   def import(http_connection \\ HTTPoison, downloader \\ Downstream) do
-    import_folder() ++ import_webpage(http_connection, downloader)
+    {:ok, import_folder() ++ import_webpage(http_connection, downloader)}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
   end
 
   def import_folder() do

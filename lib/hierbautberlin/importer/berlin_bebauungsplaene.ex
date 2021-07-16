@@ -35,13 +35,20 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
         "https://bplan-prod.liqd.net/api/bplan/data/?format=json"
       )
 
-    Enum.map(plans, fn item ->
-      attrs = to_geo_item(item, polygons)
+    result =
+      Enum.map(plans, fn item ->
+        attrs = to_geo_item(item, polygons)
 
-      {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
+        {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
 
-      geo_item
-    end)
+        geo_item
+      end)
+
+    {:ok, result}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
   end
 
   defp to_geo_item(item, polygons) do

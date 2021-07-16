@@ -31,7 +31,7 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
 
   describe "import/1" do
     test "basic import of infravelo data" do
-      result = BerlinEconomy.import(ImportMock)
+      {:ok, result} = BerlinEconomy.import(ImportMock)
       assert length(result) == 24
 
       first = List.first(result) |> Repo.preload(:source)
@@ -62,7 +62,9 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
     end
 
     test "Updates an entry" do
-      first = ImportMock |> BerlinEconomy.import() |> List.first()
+      {:ok, result} = BerlinEconomy.import(ImportMock)
+
+      first = List.first(result)
 
       assert first.external_id ==
                "https://www.berlin.de/wirtschaft/bauprojekte/6281921-4470362-mix-it-like-berlin-in-der-heidestrasse.html"
@@ -70,8 +72,8 @@ defmodule Hierbautberlin.Importer.BerlinEconomyTest do
       assert first.title == "Mix it like Berlin in der Heidestraße"
       assert first.date_updated == ~U[2021-03-24 13:51:44Z]
 
-      second = ImportUpdateMock |> BerlinEconomy.import() |> List.first()
-      second = GeoData.get_geo_item!(second.id)
+      {:ok, result} = BerlinEconomy.import(ImportUpdateMock)
+      second = GeoData.get_geo_item!(List.first(result).id)
 
       assert first.id == second.id
 

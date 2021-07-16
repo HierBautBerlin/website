@@ -50,7 +50,7 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
 
   describe "import/1" do
     test "basic import of infravelo data" do
-      result = MeinBerlin.import(ImportMock)
+      {:ok, result} = MeinBerlin.import(ImportMock)
       assert length(result) == 465
 
       first = List.first(result) |> Repo.preload(:source)
@@ -88,14 +88,16 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
     end
 
     test "Updates an entry" do
-      first = ImportMock |> MeinBerlin.import() |> List.first()
+      {:ok, result} = MeinBerlin.import(ImportMock)
+
+      first = List.first(result)
 
       assert first.external_id == "/projekte/burgerhaushalt-treptow-kopenick/"
       assert first.title == "Bürgerhaushalt Treptow-Köpenick"
       assert first.date_updated == ~U[2019-02-13 14:40:17Z]
 
-      second = ImportUpdateMock |> MeinBerlin.import() |> List.first()
-      second = GeoData.get_geo_item!(second.id)
+      {:ok, result} = MeinBerlin.import(ImportUpdateMock)
+      second = GeoData.get_geo_item!(List.first(result).id)
 
       assert(first.id == second.id)
       assert second.external_id == "/projekte/burgerhaushalt-treptow-kopenick/"

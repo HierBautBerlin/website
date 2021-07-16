@@ -51,7 +51,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
 
   describe "import/1" do
     test "basic import of Berliner Bebauungspläne" do
-      result = BerlinBebauungsplaene.import(ImportMock)
+      {:ok, result} = BerlinBebauungsplaene.import(ImportMock)
 
       assert length(result) == 1
 
@@ -95,13 +95,15 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
     end
 
     test "Updates an entry" do
-      first = ImportMock |> BerlinBebauungsplaene.import() |> List.first()
+      {:ok, result} = BerlinBebauungsplaene.import(ImportMock)
+
+      first = List.first(result)
 
       assert first.external_id == "xii-181"
       assert first.title == "XII - 181 - Mariannenstr., Pößneckerstr., Georgenstr."
 
-      second = ImportUpdateMock |> BerlinBebauungsplaene.import() |> List.first()
-      second = GeoData.get_geo_item!(second.id)
+      {:ok, result} = BerlinBebauungsplaene.import(ImportUpdateMock)
+      second = GeoData.get_geo_item!(List.first(result).id)
 
       assert first.id == second.id
 
