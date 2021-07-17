@@ -407,7 +407,16 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   end
 
   def analyze_text(manager \\ __MODULE__, text, options) do
-    GenServer.call(manager, {:analyze_text, text, options})
+    GenServer.call(manager, {:analyze_text, text, options}, 300_000)
+  rescue
+    error ->
+      Bugsnag.report(error)
+
+      %{
+        streets: [],
+        street_numbers: [],
+        places: []
+      }
   end
 
   def reset_index(manager \\ __MODULE__) do
