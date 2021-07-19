@@ -1,0 +1,14 @@
+<script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/pdf.viewer.bundle.js") %>"></script>
+
+<h1 class="pdfviewer--name"><%= @file.title %></h1>
+
+<div class="pdfviewer--topbar">
+  <button id="pdf-prev" aria-label="Vorherige Seite">←</button>
+  <div id="pdf-number"></div>
+  <button id="pdf-next" aria-label="Nächste Seite">→</button>
+</div>
+
+<div class="pdfviewer--wrapper">
+  <canvas class="pdfviewer--canvas" id="pdf-canvas" data-pdf-path="<%= Hierbautberlin.FileStorage.url_for_file(@file) %>"></canvas>
+  <div class="pdfviewer--text" id="pdf-text"></div>
+</div>

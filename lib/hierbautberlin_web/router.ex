@@ -67,6 +67,8 @@ defmodule HierbautberlinWeb.Router do
     get "/datenschutz", PrivacyController, :index
     get "/ping", HealthcheckController, :index
 
+    get "/view_pdf/*path", ViewPDFController, :show
+
     live "/map", MapLive, :index
   end
 

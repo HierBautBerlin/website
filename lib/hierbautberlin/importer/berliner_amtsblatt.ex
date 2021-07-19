@@ -84,8 +84,20 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       )
 
     System.cmd("qpdf", ["--empty", "--pages", file, "1-#{last_page}", "--", target_file])
-    FileStorage.store_file(storage_name, target_file, "application/pdf")
+    FileStorage.store_file(storage_name, target_file, "application/pdf", title_for_file(file))
     File.rm(target_file)
+  end
+
+  def title_for_file(file) do
+    capture =
+      Regex.named_captures(
+        ~r/abl_(?<year>\d{4})_(?<number>\d*).*/,
+        file
+      )
+
+    volume = String.to_integer(capture["year"]) - 1950
+
+    "Amtsblatt für Berlin, #{volume}. Jahrgang Nr. #{capture["number"]}"
   end
 
   def get_latest_amtsblatt(http_connection) do

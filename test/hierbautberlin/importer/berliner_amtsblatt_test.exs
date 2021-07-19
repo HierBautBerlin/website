@@ -38,22 +38,22 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     end
   end
 
+  setup do
+    clean_storage()
+
+    :ok
+  end
+
+  def clean_storage() do
+    "amtsblatt/abl_2021_28_2389_2480_online.pdf"
+    |> FileStorage.path_for_file()
+    |> File.rm()
+
+    File.mkdir_p("import/amtsblatt")
+    File.rm_rf("import/amtsblatt/*")
+  end
+
   describe "import/1" do
-    setup do
-      clean_storage()
-
-      :ok
-    end
-
-    def clean_storage() do
-      "amtsblatt/abl_2021_28_2389_2480_online.pdf"
-      |> FileStorage.path_for_file()
-      |> File.rm()
-
-      File.mkdir_p("import/amtsblatt")
-      File.rm_rf("import/amtsblatt/*")
-    end
-
     test "checks the import folder and parses all files in it" do
       File.cp(
         "test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
@@ -94,7 +94,10 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
 
       assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
 
-      filename = FileStorage.path_for_file("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      file = FileStorage.get_file_by_name!("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      assert file.title == "Amtsblatt für Berlin, 71. Jahrgang Nr. 28"
+
+      filename = FileStorage.path_for_file(file)
 
       assert BerlinerAmtsblatt.get_number_of_pages(filename) == 61
 

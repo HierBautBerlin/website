@@ -1,5 +1,4 @@
 const path = require('path');
-const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -7,16 +6,19 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (_env, _options) => ({
   optimization: {
+    minimize: true,
     minimizer: [
       new TerserPlugin(),
       new OptimizeCSSAssetsPlugin({}),
     ],
   },
   entry: {
-    app: glob.sync('./vendor/**/*.js').concat(['./js/app.js']),
+    app: './js/app.js',
+    'pdf.viewer': './js/pdfViewer.js',
+    'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry',
   },
   output: {
-    filename: '[name].js',
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, '../priv/static/js'),
     publicPath: '/js/',
   },

@@ -19,7 +19,6 @@ const Hooks = {
   InteractiveMap,
   PreventDefaultOnClick,
 };
-
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
 const liveSocket = new LiveSocket('/live', Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } });
 

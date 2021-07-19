@@ -42,9 +42,7 @@ defmodule Hierbautberlin.FileStorage do
       from file in FileItem,
         where: file.name == ^name
 
-    with {:ok, file} <- Repo.one(query) do
-      file
-    end
+    Repo.one!(query)
   end
 
   @doc """
@@ -118,7 +116,7 @@ defmodule Hierbautberlin.FileStorage do
     |> File.exists?()
   end
 
-  def store_file(filename, file, file_type) do
+  def store_file(filename, file, file_type, title) do
     storage_filename = path_for_file(filename)
     storage_path = Path.dirname(storage_filename)
     File.mkdir_p(storage_path)
@@ -126,20 +124,34 @@ defmodule Hierbautberlin.FileStorage do
 
     create_file(%{
       name: filename,
-      type: file_type
+      type: file_type,
+      title: title
     })
+  end
+
+  def path_for_file(%FileItem{name: name}) do
+    base_path = Application.get_env(:hierbautberlin, :file_storage_path)
+    Path.join([base_path, calculate_path(name), Path.basename(name)])
   end
 
   def path_for_file(filename) do
     base_path = Application.get_env(:hierbautberlin, :file_storage_path)
+    Path.join([base_path, calculate_path(filename), Path.basename(filename)])
+  end
 
-    path =
-      :crypto.mac(:hmac, :sha256, "key", filename)
-      |> Base.encode16()
-      |> Stream.unfold(&String.split_at(&1, 20))
-      |> Enum.take_while(&(&1 != ""))
-      |> Path.join()
+  def url_for_file(%FileItem{name: filename}) do
+    Path.join(["/filestorage", calculate_path(filename), Path.basename(filename)])
+  end
 
-    Path.join([base_path, path, Path.basename(filename)])
+  def url_for_file(filename) do
+    Path.join(["/filestorage", calculate_path(filename), Path.basename(filename)])
+  end
+
+  defp calculate_path(filename) do
+    :crypto.mac(:hmac, :sha256, "key", filename)
+    |> Base.encode16()
+    |> Stream.unfold(&String.split_at(&1, 20))
+    |> Enum.take_while(&(&1 != ""))
+    |> Path.join()
   end
 end
