@@ -43,3 +43,5 @@ npm-debug.log
 /ingest
 
 /file_storage
+
+/import
