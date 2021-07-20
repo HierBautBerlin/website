@@ -30,13 +30,13 @@ url.searchParams.get('c');
 
 let map:Map;
 interface MapObject {
-  marker?: Marker,
-  layerName?: string
+  markers: Marker[],
+  layerNames: string[],
   item: GeoItem
 }
 
 const mapObjects: {
-  [key: number] : MapObject
+  [key: string] : MapObject
 } = {};
 
 const centerMarkerElement = document.createElement('div');
@@ -54,21 +54,24 @@ const isLineString = (item: Geometry) => {
 };
 
 const removeUneededMapItems = (mapIds: number[]) => {
-  difference<number>(Object.keys(mapObjects).map(Number), mapIds).forEach((itemId: number) => {
-    if (mapObjects[itemId].marker) {
-      mapObjects[itemId].marker?.remove();
-    }
-    if (mapObjects[itemId].layerName) {
-      const name = mapObjects[itemId].layerName || '';
-      map.removeLayer(name);
-      if (map.getLayer(`${name}-outline`)) {
-        map.removeLayer(`${name}-outline`);
-      }
-      map.removeSource(name);
-    }
+  const mapIdStrings = mapIds.map((id) => id.toString());
+  difference<string>(Object.keys(mapObjects), mapIdStrings).forEach(
+    (itemId: string) => {
+      mapObjects[itemId].markers.forEach((marker) => {
+        marker.remove();
+      });
 
-    delete mapObjects[itemId];
-  });
+      mapObjects[itemId].layerNames.forEach((layerName) => {
+        map.removeLayer(layerName);
+        if (map.getLayer(`${layerName}-outline`)) {
+          map.removeLayer(`${layerName}-outline`);
+        }
+        map.removeSource(layerName);
+      });
+
+      delete mapObjects[itemId];
+    },
+  );
 };
 
 const addMarkerForPoint = (hook: ViewHook, position: GeoPosition) => {
@@ -138,17 +141,19 @@ const updateMapItems = (hook: ViewHook) => {
     if (!mapObjects[item.id]) {
       const mapItem:MapObject = {
         item,
+        markers: [],
+        layerNames: [],
       };
       mapObjects[item.id] = mapItem;
 
       item.positions.forEach((position) => {
         if (position.point) {
-          mapItem.marker = addMarkerForPoint(hook, position);
+          mapItem.markers.push(addMarkerForPoint(hook, position));
         }
 
         if (item.type === 'geo_item' && position.geometry) {
           const layerName = `map-item-${position.id}`;
-          mapItem.layerName = layerName;
+          mapItem.layerNames.push(layerName);
           addLayerForGeometry(layerName, position);
         }
       });

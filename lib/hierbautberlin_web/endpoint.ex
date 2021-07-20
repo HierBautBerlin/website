@@ -11,7 +11,7 @@ defmodule HierbautberlinWeb.Endpoint do
   ]
 
   socket "/socket", HierbautberlinWeb.UserSocket,
-    websocket: true,
+    websocket: [connect_info: [session: @session_options]],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

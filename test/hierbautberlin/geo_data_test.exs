@@ -211,7 +211,7 @@ defmodule Hierbautberlin.GeoDataTest do
       insert(:geo_item,
         title: "One",
         geo_point: %Geo.Point{
-          coordinates: {13.2677, 52.49},
+          coordinates: {13.26789, 52.509},
           properties: %{},
           srid: 4326
         }
@@ -233,12 +233,10 @@ defmodule Hierbautberlin.GeoDataTest do
           coordinates: [
             [
               [
-                {13.4343272619011, 52.5405861405958},
-                {13.4371221660038, 52.5396388337848},
-                {13.4376794632698, 52.5401260460066},
-                {13.4392118915391, 52.5394073982677},
-                {13.4392324135568, 52.5395221795781},
-                {13.4343272619011, 52.5405861405958}
+                {13.2679, 52.51},
+                {13.2679, 52.55},
+                {13.2680, 52.55},
+                {13.2679, 52.51}
               ]
             ]
           ],
@@ -266,7 +264,7 @@ defmodule Hierbautberlin.GeoDataTest do
         title: "Five, too old",
         date_end: Timex.parse!("2001-01-01", "{YYYY}-{0M}-{0D}"),
         geo_point: %Geo.Point{
-          coordinates: {13.2689, 52.61},
+          coordinates: {13.2678, 52.515},
           properties: %{},
           srid: 4326
         }
@@ -284,7 +282,7 @@ defmodule Hierbautberlin.GeoDataTest do
       items = GeoData.get_items_near(52.51, 13.2679)
       assert 5 == length(items)
 
-      assert ["Four", "Two", "One", "This is a nice title", "Three"] ==
+      assert ["Four", "This is a nice title", "Two", "One", "Three"] ==
                Enum.map(items, & &1.title)
 
       first = List.first(items)
@@ -319,7 +317,7 @@ defmodule Hierbautberlin.GeoDataTest do
                ]
              } = first
 
-      third_item = Enum.at(items, 3)
+      second_item = Enum.at(items, 1)
 
       news_id = news_item.id
       news_source_id = news_item.source_id
@@ -362,14 +360,14 @@ defmodule Hierbautberlin.GeoDataTest do
                      srid: 4326
                    },
                    geopoint: %Geo.Point{
-                     coordinates: {13.3799820166143, 52.5189643842998},
+                     coordinates: {13.2679, 52.51},
                      properties: %{},
                      srid: 4326
                    },
                    type: :geo_place
                  }
                ]
-             } = third_item
+             } = second_item
     end
 
     test "it returns 3 items if count is 3" do
