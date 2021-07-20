@@ -62,7 +62,12 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
 
       {:ok, news_items} = Hierbautberlin.Importer.BerlinerAmtsblatt.import(EmptyImportMock)
 
-      assert length(news_items) == 33
+      assert length(news_items) == 28
+
+      titles = Enum.map(news_items, & &1.title)
+
+      refute Enum.member?(titles, "Beitragsordnung")
+      refute Enum.member?(titles, "Gebührenordnung")
 
       refute File.exists?("import/amtsblatt/abl_2021_28_2389_2480_online.pdf")
       assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
@@ -74,7 +79,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       {:ok, news_items} =
         Hierbautberlin.Importer.BerlinerAmtsblatt.import(ImportMock, DownloadMock)
 
-      assert length(news_items) == 33
+      assert length(news_items) == 28
 
       first = List.first(news_items)
 
@@ -546,6 +551,38 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
                  title: "Hier ist der Titel des Eintrages"
                }
              ]
+    end
+  end
+
+  describe "find_section/3" do
+    test "it finds a simple title" do
+      page = ["Line 1", "This is a title", "Content"]
+      assert {1, 1} = BerlinerAmtsblatt.find_section(page, "This is a title", 0)
+    end
+
+    test "it finds a title with a different starting position" do
+      page = ["Line 1", "This is a title", "Content", "This is a title", "Another Content"]
+      assert {3, 3} = BerlinerAmtsblatt.find_section(page, "This is a title", 2)
+    end
+
+    test "it finds a multi line title with a different starting position" do
+      page = ["Line 1", "This is a title", "Content", "This is", "a", "title", "Another Content"]
+      assert {3, 5} = BerlinerAmtsblatt.find_section(page, "This is a title", 2)
+    end
+
+    test "it finds a multi line title with a different starting position and tons of whitespace" do
+      page = [
+        "Line 1",
+        "This is a title",
+        "Content",
+        "  This is   ",
+        " a ",
+        "",
+        "title",
+        "Another Content"
+      ]
+
+      assert {3, 6} = BerlinerAmtsblatt.find_section(page, "This is a title", 2)
     end
   end
 end

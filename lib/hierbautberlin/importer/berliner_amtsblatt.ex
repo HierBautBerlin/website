@@ -22,10 +22,10 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
   def import(http_connection \\ HTTPoison, downloader \\ Downstream) do
     {:ok, import_folder() ++ import_webpage(http_connection, downloader)}
-  rescue
-    error ->
-      Bugsnag.report(error)
-      {:error, error}
+    # rescue
+    #   error ->
+    #     Bugsnag.report(error)
+    #     {:error, error}
   end
 
   def import_folder() do
@@ -205,7 +205,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     |> xpath(
       ~x"//outlines/outline"l,
       level: ~x"@level"s |> transform_by(&to_integer/1),
-      title: ~x"@title"s |> transform_by(&clean_title/1),
+      title: ~x"@title"s |> transform_by(&clean_structure_title/1),
       page_number: ~x"./pageno/text()"s |> transform_by(&to_integer/1)
     )
   end
@@ -222,7 +222,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     String.to_integer(string)
   end
 
-  defp clean_title(string) do
+  defp clean_structure_title(string) do
     if String.match?(string, ~r/b'(.*)'/) do
       String.replace(string, ~r/b'(.*)'/, "\\1")
     else
@@ -320,7 +320,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   def get_date_from_page(page) do
     capture =
       Regex.named_captures(
-        ~r/Ausgegeben zu Berlin am (?<day>\d{1,2}). (?<month>\w*) (?<year>\d{4})/,
+        ~r/Ausgegeben zu Berlin am (?<day>\d{1,2}). (?<month>\w*) (?<year>\d{4})/u,
         page
       )
 
@@ -353,7 +353,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       filtered_structure
       |> Stream.with_index()
       |> Enum.reduce(%{last_page: 0, last_line: 0, items: []}, fn {item, index}, acc ->
-        if item.page_number <= number_of_pages do
+        if item.page_number <= number_of_pages && should_import_topic?(item) do
           page = Enum.at(pages, item.page_number - 1)
           next_item = Enum.at(filtered_structure, index + 1)
 
@@ -364,36 +364,49 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
               next_item
             end
 
-          start_line =
+          {_, content_start_line} =
             if item.page_number == acc.last_page do
-              find_title(page, item.title, acc.last_line) + 1
+              find_section(page, item.title, acc.last_line)
             else
-              find_title(page, item.title) + 1
+              find_section(page, item.title)
             end
 
-          {end_line, text} = extract_text_for_item(item, next_item, page, pages, start_line)
-          text = join_and_trim_lines(text)
+          if content_start_line do
+            {end_line, text} =
+              extract_text_for_item(item, next_item, page, pages, content_start_line + 1)
 
-          %{
-            last_page: if(next_item, do: next_item.page_number, else: item.page_number),
-            last_line: end_line,
-            items:
-              acc.items ++
-                [
-                  %{
-                    full_text: text,
-                    item: item,
-                    title: extract_title(text),
-                    description: extract_description(text)
-                  }
-                ]
-          }
+            text = trim_and_join_lines(text)
+
+            %{
+              last_page: if(next_item, do: next_item.page_number, else: item.page_number),
+              last_line: end_line,
+              items:
+                acc.items ++
+                  [
+                    %{
+                      full_text: text,
+                      item: item,
+                      title: extract_title(text),
+                      description: extract_description(text)
+                    }
+                  ]
+            }
+          else
+            acc
+          end
         else
           acc
         end
       end)
 
     result.items
+  end
+
+  defp should_import_topic?(item) do
+    !String.match?(
+      item.title,
+      ~r/\wkammer (zu )?Berlin|Apothekerversorgung Berlin|Lette-Verein|Versorgungswerk|\WInnung\W/
+    )
   end
 
   def extract_text_for_item(item, next_item, page, pages, start_line)
@@ -423,8 +436,14 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
         start_line
       )
       when page_number == next_page_number do
-    end_line = find_title(page, next_item.title, start_line + 1)
-    {end_line, Enum.slice(page, start_line, end_line - start_line)}
+    {end_line, _} = find_section(page, next_item.title, start_line + 1)
+
+    if end_line do
+      {end_line, Enum.slice(page, start_line, end_line - start_line)}
+    else
+      page_length = length(page)
+      {page_length, Enum.slice(page, start_line, page_length - start_line)}
+    end
   end
 
   # Find the next item and grab all text till it's start
@@ -436,9 +455,9 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
         nil
       end
 
-    end_line = length(page)
-    text = Enum.slice(page, start_line, end_line - start_line)
-    end_line = find_title(next_item_page, next_item.title) || length(next_item_page)
+    text = Enum.slice(page, start_line, length(page) - start_line)
+
+    {next_title_start, _} = find_section(next_item_page, next_item.title)
 
     text =
       (text ++
@@ -450,32 +469,94 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       |> List.flatten()
 
     text =
-      if end_line == 0 do
+      if next_title_start == nil do
         text
       else
-        text ++ Enum.slice(next_item_page, 0, end_line - 1)
+        text ++ Enum.slice(next_item_page, 0, next_title_start)
       end
 
-    {end_line, text}
+    {next_title_start, text}
   end
 
-  def join_and_trim_lines(lines) do
+  def trim_and_join_lines(lines) do
     lines
     |> Enum.map(&String.trim(&1))
     |> Enum.join("\n")
     |> String.trim()
   end
 
-  defp find_title(page, title, start \\ 0) do
-    page
-    |> Stream.with_index()
-    |> Enum.find_index(fn {line, index} ->
-      previous_line = Enum.at(page, index - 1) || ""
-      with_previous_line = String.trim(previous_line) <> " " <> String.trim(line || "")
+  def find_section(page, title, start \\ 0) do
+    title = clean_title(title)
 
-      index >= start &&
-        (line == title || with_previous_line == title)
-    end)
+    %{start: line_start, end: line_end} =
+      page
+      |> Stream.with_index()
+      |> Enum.reduce_while(
+        %{
+          start: 0,
+          previous_lines: ""
+        },
+        fn {line, index},
+           %{
+             start: line_start,
+             previous_lines: previous_lines
+           } ->
+          line_with_previous_lines = clean_title(previous_lines <> " " <> line)
+          line = clean_title(line)
+
+          cond do
+            index < start ->
+              {:cont,
+               %{
+                 start: index,
+                 end: nil,
+                 previous_lines: ""
+               }}
+
+            title == line ->
+              {:halt,
+               %{
+                 start: index,
+                 end: index
+               }}
+
+            title == line_with_previous_lines ->
+              {:halt,
+               %{
+                 start: line_start,
+                 end: index
+               }}
+
+            String.starts_with?(title, line_with_previous_lines) ->
+              {:cont,
+               %{
+                 start: line_start,
+                 end: nil,
+                 previous_lines: line_with_previous_lines
+               }}
+
+            true ->
+              {:cont,
+               %{
+                 start: index,
+                 end: nil,
+                 previous_lines: line
+               }}
+          end
+        end
+      )
+
+    if line_start && line_end do
+      {line_start, line_end}
+    else
+      {nil, nil}
+    end
+  end
+
+  defp clean_title(title) do
+    title
+    |> String.replace(~r/\s+/, " ")
+    |> String.trim()
   end
 
   defp extract_title(text) do
