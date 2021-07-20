@@ -218,7 +218,8 @@ const InteractiveMap = {
           const match = layers[0].source.match(/map-item-(\d*)/);
           if (match) {
             const itemId = parseInt(match[1], 10);
-            hook.pushEvent('showDetails', { 'item-id': itemId });
+            const mapItem = mapObjects[itemId];
+            hook.pushEvent('showDetails', { 'item-id': itemId, 'item-type': mapItem.item.type });
           }
         }
       }
