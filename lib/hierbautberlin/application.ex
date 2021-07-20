@@ -25,7 +25,7 @@ defmodule Hierbautberlin.Application do
           HierbautberlinWeb.Endpoint
         ]
 
-        if false && Application.get_env(:hierbautberlin, :environment) == :dev do
+        if Application.get_env(:hierbautberlin, :environment) == :dev do
           jobs
         else
           jobs ++

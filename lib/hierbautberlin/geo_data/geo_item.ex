@@ -84,6 +84,12 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     query =
       from item in GeoItem,
         limit: ^count,
+        where:
+          fragment(
+            "(geometry is not null and ST_DWithin(geometry, ?, 0.015 )) or (geo_point is not null and ST_DWithin(geo_point, ?, 0.015 ))",
+            ^geom,
+            ^geom
+          ),
         order_by:
           fragment(
             "ST_Distance(COALESCE(geometry, geo_point), ?)",

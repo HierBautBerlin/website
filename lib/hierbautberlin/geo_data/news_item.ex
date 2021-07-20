@@ -124,6 +124,12 @@ defmodule Hierbautberlin.GeoData.NewsItem do
       from item in NewsItem,
         where: not (is_nil(item.geometries) and is_nil(item.geo_points)),
         limit: ^count,
+        where:
+          fragment(
+            "ST_DWithin(geometries, ?, 0.015 ) or  ST_DWithin(geo_points, ?, 0.015 )",
+            ^geom,
+            ^geom
+          ),
         order_by:
           fragment(
             "LEAST(ST_Distance(geometries, ?),ST_Distance(geo_points, ?))",

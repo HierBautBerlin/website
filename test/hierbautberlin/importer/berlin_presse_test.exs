@@ -110,7 +110,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
                  {13, 52},
                  {13, 52},
                  {13.0, 52.0},
-                 {13.3799820166143, 52.5189643842998}
+                 {13.2679, 52.51}
                ],
                properties: %{},
                srid: 4326

@@ -66,7 +66,7 @@ defmodule Hierbautberlin.Factory do
       city: "Berlin",
       type: "Park",
       geo_point: %Geo.Point{
-        coordinates: {13.3799820166143, 52.5189643842998},
+        coordinates: {13.2679, 52.51},
         properties: %{},
         srid: 4326
       },
