@@ -22,7 +22,7 @@
     "topbar": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.6",
+    "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "@types/lodash-es": "^4.17.4",
     "@types/mapbox-gl": "^2.3.3",
