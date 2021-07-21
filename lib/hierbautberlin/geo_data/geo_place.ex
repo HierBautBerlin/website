@@ -14,7 +14,7 @@ defmodule Hierbautberlin.GeoData.GeoPlace do
     field :geometry, Geometry
     field :geo_point, Geometry
 
-    many_to_many :news_items, NewsItem, join_through: "geo_places_news_items"
+    many_to_many :news_items, NewsItem, join_through: "geo_places_news_items", on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
