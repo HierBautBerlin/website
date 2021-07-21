@@ -21,14 +21,30 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   ]
 
   def import(http_connection \\ HTTPoison, downloader \\ Downstream) do
-    {:ok, import_folder() ++ import_webpage(http_connection, downloader)}
-    # rescue
-    #   error ->
-    #     Bugsnag.report(error)
-    #     {:error, error}
+    {:ok, do_import_folder() ++ do_import_webpage(http_connection, downloader)}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
   end
 
   def import_folder() do
+    {:ok, do_import_folder()}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
+  end
+
+  def import_webpage(http_connection \\ HTTPoison, downloader \\ Downstream) do
+    {:ok, do_import_webpage(http_connection, downloader)}
+  rescue
+    error ->
+      Bugsnag.report(error)
+      {:error, error}
+  end
+
+  def do_import_folder() do
     import_path = Path.join(Application.get_env(:hierbautberlin, :import_path), "amtsblatt")
 
     import_path
@@ -47,7 +63,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     |> List.flatten()
   end
 
-  def import_webpage(http_connection, downloader) do
+  def do_import_webpage(http_connection, downloader) do
     pdf_url = get_latest_amtsblatt(http_connection)
 
     if pdf_url && !FileStorage.exists?(get_storage_name(pdf_url)) do

@@ -6,10 +6,11 @@ defmodule Hierbautberlin.Importer do
     Hierbautberlin.Importer.MeinBerlin.import()
     Hierbautberlin.Importer.UVP.import()
     Hierbautberlin.Importer.DafMap.import()
-    Hierbautberlin.Importer.BerlinerAmtsblatt.import()
+    Hierbautberlin.Importer.BerlinerAmtsblatt.import_webpage()
   end
 
   def import_hourly do
     Hierbautberlin.Importer.BerlinPresse.import()
+    Hierbautberlin.Importer.BerlinerAmtsblatt.import_folder()
   end
 end

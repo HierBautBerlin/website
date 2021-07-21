@@ -110,6 +110,65 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     end
   end
 
+  describe "import_folder/0" do
+    test "checks the import folder and parses all files in it" do
+      File.cp(
+        "test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
+        "import/amtsblatt/abl_2021_28_2389_2480_online.pdf"
+      )
+
+      {:ok, news_items} = Hierbautberlin.Importer.BerlinerAmtsblatt.import_folder()
+
+      assert length(news_items) == 28
+
+      titles = Enum.map(news_items, & &1.title)
+
+      refute Enum.member?(titles, "Beitragsordnung")
+      refute Enum.member?(titles, "Gebührenordnung")
+
+      refute File.exists?("import/amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+
+      clean_storage()
+    end
+  end
+
+  describe "import_webpage/2" do
+    test "downloads a pdf file and parses it" do
+      {:ok, news_items} =
+        Hierbautberlin.Importer.BerlinerAmtsblatt.import_webpage(ImportMock, DownloadMock)
+
+      assert length(news_items) == 28
+
+      first = List.first(news_items)
+
+      assert first.title ==
+               "Förderbekanntmachung landesweiter Maßnahmen im Land Berlin zum DigitalPakt Schule 2019 bis 2024"
+
+      assert first.url ==
+               "/view_pdf/amtsblatt/abl_2021_28_2389_2480_online.pdf?page=4&title=F%C3%B6rderbekanntmachung+landesweiter+Ma%C3%9Fnahmen+im+Land+Berlin+zum+DigitalPakt+Schule+2019+bis+2024"
+
+      last = List.last(news_items)
+
+      assert last.title ==
+               "Widmung einer öffentlichen Grün- und Erholungsanlage"
+
+      assert last.url ==
+               "/view_pdf/amtsblatt/abl_2021_28_2389_2480_online.pdf?page=61&title=Widmung+einer+%C3%B6ffentlichen+Gr%C3%BCn-+und+Erholungsanlage"
+
+      assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+
+      file = FileStorage.get_file_by_name!("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      assert file.title == "Amtsblatt für Berlin, 71. Jahrgang Nr. 28"
+
+      filename = FileStorage.path_for_file(file)
+
+      assert BerlinerAmtsblatt.get_number_of_pages(filename) == 61
+
+      clean_storage()
+    end
+  end
+
   describe "import_amtsblatt/1" do
     test "imports a complete pdf" do
       park = insert(:place, name: "Lernmanagementsysteme")
