@@ -48,7 +48,7 @@
               <input type="checkbox" name="subscribe" <%= if @subscription, do: "checked" %>/>
               <div class="toggle-switch"></div>
             </div>
-            Sende E-Mail bei neuen Einträgen im <%= if @subscription, do: "#{trunc(@subscription.radius / 1000)} KM", else: "2 KM" %> Radius.
+            Sende E-Mail bei neuen Einträgen im <%= if @subscription, do: "#{if @subscription.radius > 1000, do: "#{trunc(@subscription.radius / 1000)} KM", else: "#{@subscription.radius} M"}", else: "2 KM" %> Radius.
           </label>
         </form>
       </div>
@@ -61,6 +61,12 @@
     </div>
   </div>
 </div>
+
+<%= if @show_subscription != nil do %>
+  <%= live_modal @socket, HierbautberlinWeb.Components.EditSubscriptionModal, id: @show_subscription.id,
+            message_on_close: "close_edit_subscription", subscription: @show_subscription,
+            current_user: @current_user %>
+<% end %>
 
 <%= if @detail_item != nil do %>
   <%= case @detail_item do

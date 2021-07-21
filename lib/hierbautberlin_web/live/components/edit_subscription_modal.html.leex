@@ -1,0 +1,20 @@
+<h3 class="details--content--title">Neue Benachrichtigung</h3>
+
+<% {lat, lng} = @subscription.point.coordinates %>
+
+<div class="map-details"
+      data-controller="map-details"
+      data-map-details-lat-value="<%= lat %>"
+      data-map-details-lng-value="<%= lng %>"
+      data-map-details-radius-value="<%= @subscription.radius %>">
+  <div class="map-details--map" data-map-details-target="map"></div>
+
+  <%= form_for Hierbautberlin.Accounts.change_subscription(@subscription, %{id: nil}), "#", [class: "map-details--form", phx_submit: :save, phx_target: @myself], fn f -> %>
+    <p>Sobald ein Eintrag in diesem Radius hinzugefügt wird, wirst du benachrichtigt.</p>
+    <label>
+      Radius
+      <%= select f, :radius, ["500 M": 500, "1 KM": 1000, "2 KM": 2000, "4 KM": 4000, "8 KM": 8000, "10 KM": 10000], ["data-map-details-target": "radius"] %>
+    </label>
+    <%= submit "Aktualisieren", class: "button button--small" %>
+  <% end %>
+</div>
