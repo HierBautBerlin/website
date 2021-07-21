@@ -41,6 +41,9 @@
   color: #aaa;
   font-size: 28px;
   font-weight: bold;
+  border: none;
+  background-color: transparent;
+  padding: 0;
 }
 
 .phx-modal-close:hover,
@@ -48,6 +51,7 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+  background-color: transparent;
 }
 
 @media only screen and (max-width: 50em) {

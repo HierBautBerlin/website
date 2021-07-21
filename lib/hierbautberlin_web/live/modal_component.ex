@@ -12,7 +12,12 @@ defmodule HierbautberlinWeb.ModalComponent do
       phx-page-loading>
 
       <div class="phx-modal-inner">
-        <%= live_patch raw("&times;"), "aria-label": "close", to: @return_to, class: "phx-modal-close" %>
+        <%= if @return_to do %>
+          <%= live_patch raw("&times;"), "aria-label": "close", to: @return_to, class: "phx-modal-close" %>
+        <% end %>
+        <%= if @message_on_close do %>
+          <button phx-click="close" phx-target="<%= @myself %>" class="phx-modal-close">&times;</button>
+        <% end %>
         <div class="phx-modal-content">
           <%= live_component @socket, @component, @opts %>
         </div>
@@ -22,7 +27,14 @@ defmodule HierbautberlinWeb.ModalComponent do
   end
 
   @impl true
-  def handle_event("close", _, socket) do
-    {:noreply, push_patch(socket, to: socket.assigns.return_to)}
+  def handle_event("close", _, %{assigns: %{message_on_close: message_on_close}} = socket)
+      when not is_nil(message_on_close) do
+    send(self(), message_on_close)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("close", _, %{assigns: %{return_to: return_to}} = socket) do
+    {:noreply, push_patch(socket, to: return_to)}
   end
 end

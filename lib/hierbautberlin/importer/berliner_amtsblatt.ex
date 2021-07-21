@@ -608,7 +608,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
     if capture["description"] do
       capture["description"]
-      |> String.split(".\n")
+      |> String.split(~r/[\.:]\n/)
       |> List.first()
       |> String.trim()
     else

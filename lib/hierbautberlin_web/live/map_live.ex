@@ -24,7 +24,8 @@ defmodule HierbautberlinWeb.MapLive do
       assign(socket,
         map_zoom: params["zoom"] || to_string(@zoom_default),
         current_user: current_user,
-        page_title: "Karte"
+        page_title: "Karte",
+        show_subscription: nil
       )
 
     if connected?(socket) do
@@ -105,19 +106,37 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   @impl true
-  def handle_event("subscribe", %{"subscribe" => "on"}, socket) do
-    if Accounts.get_subscription(socket.assigns.current_user, socket.assigns.map_position) == nil do
-      Accounts.subscribe(socket.assigns.current_user, socket.assigns.map_position)
-    end
+  def handle_event(
+        "subscribe",
+        %{"subscribe" => "on"},
+        %{assigns: %{current_user: current_user, map_position: map_position}} = socket
+      ) do
+    socket =
+      if Accounts.get_subscription(current_user, map_position) == nil do
+        {:ok, subscription} = Accounts.subscribe(current_user, map_position)
+        assign(socket, :show_subscription, subscription)
+      else
+        socket
+      end
 
     socket = assign(socket, :subscribed, true)
     {:noreply, socket}
   end
 
+  @impl true
   def handle_event("subscribe", _params, socket) do
     Accounts.unsubscribe(socket.assigns.current_user, socket.assigns.map_position)
     socket = assign(socket, :subscribed, false)
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info("close_edit_subscription", socket) do
+    {:noreply, assign(socket, :show_subscription, nil)}
+  end
+
+  def handle_info({"update_subscription", subscription}, socket) do
+    {:noreply, assign(socket, :subscription, subscription)}
   end
 
   defp update_coordinates(socket, lat, lng) do

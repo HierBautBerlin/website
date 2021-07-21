@@ -16,8 +16,18 @@ defmodule HierbautberlinWeb.LiveHelpers do
         return_to: Routes.user_index_path(@socket, :index) %>
   """
   def live_modal(socket, component, opts) do
-    path = Keyword.fetch!(opts, :return_to)
-    modal_opts = [id: :modal, return_to: path, component: component, opts: opts]
+    path = Keyword.get(opts, :return_to)
+    message_on_close = Keyword.get(opts, :message_on_close)
+
+    modal_opts = [
+      id: :modal,
+      return_to: path,
+      message_on_close: message_on_close,
+      component: component,
+      current_user: Keyword.get(opts, :current_user),
+      opts: opts
+    ]
+
     live_component(socket, HierbautberlinWeb.ModalComponent, modal_opts)
   end
 end
