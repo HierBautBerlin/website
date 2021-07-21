@@ -27,12 +27,15 @@ defmodule Hierbautberlin.GeoData.NewsItem do
 
     belongs_to :source, Source
 
-    many_to_many :geo_streets, GeoStreet, join_through: "geo_streets_news_items"
+    many_to_many :geo_streets, GeoStreet,
+      join_through: "geo_streets_news_items",
+      on_replace: :delete
 
     many_to_many :geo_street_numbers, GeoStreetNumber,
-      join_through: "geo_street_numbers_news_items"
+      join_through: "geo_street_numbers_news_items",
+      on_replace: :delete
 
-    many_to_many :geo_places, GeoPlace, join_through: "geo_places_news_items"
+    many_to_many :geo_places, GeoPlace, join_through: "geo_places_news_items", on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end

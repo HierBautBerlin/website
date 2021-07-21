@@ -12,7 +12,9 @@ defmodule Hierbautberlin.GeoData.GeoStreetNumber do
 
     belongs_to :geo_street, GeoStreet
 
-    many_to_many :news_items, NewsItem, join_through: "geo_street_numbers_news_items"
+    many_to_many :news_items, NewsItem,
+      join_through: "geo_street_numbers_news_items",
+      on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
