@@ -78,10 +78,10 @@ jobs:
         id: plt-cache
         with:
           path: priv/plts
-          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v2-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v3-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v2-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v2-
+            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v3-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-v3-
 
       - name: Create PLTs
         if: steps.plt-cache.outputs.cache-hit != 'true'

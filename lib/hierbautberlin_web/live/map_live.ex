@@ -142,7 +142,7 @@ defmodule HierbautberlinWeb.MapLive do
   defp update_coordinates(socket, lat, lng) do
     socket =
       if socket.assigns[:map_position] != %{lat: lat, lng: lng} do
-        items = GeoData.get_items_near(lat, lng, 30)
+        items = GeoData.get_items_near(lat, lng, 100)
 
         assign(
           socket,
