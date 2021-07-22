@@ -1,6 +1,8 @@
-import mapboxgl, { Map, LngLatLike, Marker } from 'mapbox-gl';
+import mapboxgl, {
+  Map, LngLatLike, GeoJSONSource,
+} from 'mapbox-gl';
 import { ViewHook } from 'phoenix_live_view';
-import { difference, isEqual, uniq } from 'lodash-es';
+import { isEqual, uniq } from 'lodash-es';
 
 type Geometry = {
   type: string,
@@ -25,19 +27,15 @@ type GeoPosition = {
   geometry: Geometry
 };
 
+type ItemProperties = {
+  itemId: number,
+  itemType: string,
+};
+
 const url = new URL(window.location.href);
 url.searchParams.get('c');
 
 let map:Map;
-interface MapObject {
-  markers: Marker[],
-  layerNames: string[],
-  item: GeoItem
-}
-
-const mapObjects: {
-  [key: string] : MapObject
-} = {};
 
 const centerMarkerElement = document.createElement('div');
 centerMarkerElement.className = 'marker';
@@ -53,111 +51,54 @@ const isLineString = (item: Geometry) => {
   return item.type === 'LineString' || isEqual(collectionType, ['LineString']);
 };
 
-const removeUneededMapItems = (mapIds: number[]) => {
-  const mapIdStrings = mapIds.map((id) => id.toString());
-  difference<string>(Object.keys(mapObjects), mapIdStrings).forEach(
-    (itemId: string) => {
-      mapObjects[itemId].markers.forEach((marker) => {
-        marker.remove();
-      });
-
-      mapObjects[itemId].layerNames.forEach((layerName) => {
-        map.removeLayer(layerName);
-        if (map.getLayer(`${layerName}-outline`)) {
-          map.removeLayer(`${layerName}-outline`);
-        }
-        map.removeSource(layerName);
-      });
-
-      delete mapObjects[itemId];
-    },
-  );
-};
-
-const addMarkerForPoint = (hook: ViewHook, position: GeoPosition) => {
-  const marker = new mapboxgl.Marker()
-    .setLngLat(position.point.coordinates as LngLatLike)
-    .addTo(map);
-
-  marker.getElement().addEventListener('click', (event) => {
-    hook.pushEvent('showDetails', { 'item-id': position.id, 'item-type': position.type });
-    event.preventDefault();
-  });
-  return marker;
-};
-
-const addLayerForGeometry = (layerName:string, position:GeoPosition) => {
-  map.addSource(layerName, {
-    type: 'geojson',
-    data: position.geometry as any,
-  });
-
-  if (isLineString(position.geometry)) {
-    map.addLayer({
-      id: layerName,
-      type: 'line',
-      source: layerName, // reference the data source
-      layout: {
-        'line-join': 'round',
-        'line-cap': 'round',
-      },
-      paint: {
-        'line-color': '#888',
-        'line-width': 8,
-      },
-    });
-  } else {
-    map.addLayer({
-      id: layerName,
-      type: 'fill',
-      source: layerName, // reference the data source
-      layout: {},
-      paint: {
-        'fill-color': '#0080ff', // blue color fill
-        'fill-opacity': 0.5,
-      },
-    });
-    // Add a black outline around the polygon.
-    map.addLayer({
-      id: `${layerName}-outline`,
-      type: 'line',
-      source: layerName, // reference the data source
-      layout: {},
-      paint: {
-        'line-color': '#000',
-        'line-width': 2,
-      },
-    });
-  }
-};
-
-const updateMapItems = (hook: ViewHook) => {
+const updateMapItems = () => {
   const mapItems = JSON.parse(document.getElementById('map-data')?.innerHTML || '{}')?.items;
-  const mapIds:number[] = mapItems.map((item:GeoItem) => item.id);
 
-  removeUneededMapItems(mapIds);
+  const mapFeatures:any[] = [];
 
   mapItems.forEach((item:GeoItem) => {
-    if (!mapObjects[item.id]) {
-      const mapItem:MapObject = {
-        item,
-        markers: [],
-        layerNames: [],
-      };
-      mapObjects[item.id] = mapItem;
+    item.positions.forEach((position) => {
+      if (position.point) {
+        mapFeatures.push({
+          type: 'Feature',
+          properties: {
+            itemId: item.id,
+            itemType: item.type,
+            draw: 'circle',
+          },
+          geometry: position.point,
+        });
+      }
 
-      item.positions.forEach((position) => {
-        if (position.point) {
-          mapItem.markers.push(addMarkerForPoint(hook, position));
+      if (item.type === 'geo_item' && position.geometry) {
+        if (isLineString(position.geometry)) {
+          mapFeatures.push({
+            type: 'Feature',
+            properties: {
+              itemId: item.id,
+              itemType: item.type,
+              draw: 'line',
+            },
+            geometry: position.geometry,
+          });
+        } else {
+          mapFeatures.push({
+            type: 'Feature',
+            properties: {
+              itemId: item.id,
+              itemType: item.type,
+              draw: 'polygon',
+            },
+            geometry: position.geometry,
+          });
         }
-
-        if (item.type === 'geo_item' && position.geometry) {
-          const layerName = `map-item-${position.id}`;
-          mapItem.layerNames.push(layerName);
-          addLayerForGeometry(layerName, position);
-        }
-      });
-    }
+      }
+    });
+  });
+  const source = map.getSource('items') as GeoJSONSource;
+  source.setData({
+    type: 'FeatureCollection',
+    features: mapFeatures,
   });
 };
 
@@ -197,37 +138,112 @@ const InteractiveMap = {
     });
 
     map.on('load', () => {
-      updateMapItems(hook);
-    });
+      map.addSource('items', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      updateMapItems();
 
-    resetMapPadding();
-    window.addEventListener('resize', resetMapPadding);
+      map.addLayer({
+        id: 'lines',
+        type: 'line',
+        source: 'items',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': 'rgba(68, 100, 251, 0.4)',
+          'line-width': 6,
+        },
+        filter: ['==', 'draw', 'line'],
+      });
 
-    map.on('zoomend', () => {
-      hook.pushEvent('updateZoom', { zoom: map.getZoom() });
-    });
-    map.on('moveend', () => {
-      hook.pushEvent('updateCoordinates', map.getCenter());
-    });
+      map.on('mouseenter', 'lines', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
 
-    centerMarker.setLngLat(map.getCenter()).addTo(map);
-    map.on('move', () => {
-      centerMarker.setLngLat(map.getCenter()).addTo(map);
-    });
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'lines', () => {
+        map.getCanvas().style.cursor = '';
+      });
 
-    map.on('click', (e) => {
-      if (!e.originalEvent.defaultPrevented) {
-        const layers = map.queryRenderedFeatures(e.point);
-
-        if (layers[0]) {
-          const match = layers[0].source.match(/map-item-(\d*)/);
-          if (match) {
-            const itemId = parseInt(match[1], 10);
-            const mapItem = mapObjects[itemId];
-            hook.pushEvent('showDetails', { 'item-id': itemId, 'item-type': mapItem.item.type });
-          }
+      map.on('click', 'lines', (e) => {
+        if (e.features) {
+          const properties = e.features[0].properties as ItemProperties;
+          hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
+          e.preventDefault();
         }
-      }
+      });
+
+      map.addLayer({
+        id: 'polygons',
+        type: 'fill',
+        source: 'items',
+        paint: {
+          'fill-color': 'rgba(68, 100, 251, 0.4)',
+          'fill-outline-color': 'rgba(34, 52, 131, 1)',
+        },
+        filter: ['==', 'draw', 'polygon'],
+      });
+
+      map.on('mouseenter', 'polygons', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'polygons', () => {
+        map.getCanvas().style.cursor = '';
+      });
+
+      map.on('click', 'polygons', (e) => {
+        if (e.features) {
+          const properties = e.features[0].properties as ItemProperties;
+          hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
+          e.preventDefault();
+        }
+      });
+
+      map.addLayer({
+        id: 'circle',
+        type: 'circle',
+        source: 'items',
+        paint: {
+          'circle-color': '#4264fb',
+          'circle-radius': 8,
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff',
+        },
+        filter: ['==', 'draw', 'circle'],
+      });
+      map.on('mouseenter', 'circle', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'circle', () => {
+        map.getCanvas().style.cursor = '';
+      });
+
+      map.on('click', 'circle', (e) => {
+        if (e.features) {
+          const properties = e.features[0].properties as ItemProperties;
+          hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
+          e.preventDefault();
+        }
+      });
+
+      centerMarker.setLngLat(map.getCenter()).addTo(map);
+      map.on('move', () => {
+        centerMarker.setLngLat(map.getCenter()).addTo(map);
+      });
+
+      resetMapPadding();
+      window.addEventListener('resize', resetMapPadding);
+
+      map.on('zoomend', () => {
+        hook.pushEvent('updateZoom', { zoom: map.getZoom() });
+      });
+      map.on('moveend', () => {
+        hook.pushEvent('updateCoordinates', map.getCenter());
+      });
     });
 
     const locationButton = document.getElementById('map-location-button');
@@ -244,9 +260,9 @@ const InteractiveMap = {
       }
     });
   },
+
   updated() {
-    const hook = this as unknown as ViewHook;
-    updateMapItems(hook);
+    updateMapItems();
   },
 };
 
