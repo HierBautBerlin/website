@@ -89,7 +89,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
         where: item.hidden == false,
         where:
           fragment(
-            "(geometry is not null and ST_DWithin(geometry, ?, 0.015 )) or (geo_point is not null and ST_DWithin(geo_point, ?, 0.015 ))",
+            "(geometry is not null and ST_DWithin(geometry, ?, 0.05 )) or (geo_point is not null and ST_DWithin(geo_point, ?, 0.05 ))",
             ^geom,
             ^geom
           ),

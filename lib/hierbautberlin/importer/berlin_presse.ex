@@ -85,7 +85,10 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
     |> Floki.find(".article[role='main']")
     |> Floki.raw_html()
     |> Floki.text()
-    |> String.replace(~r/^\s*(Kontakt(e)?|Pressekontakt(e)?):.*\z/sm, "")
+    |> String.replace(
+      ~r/^\s*(Kontakt(e)?|Ansprechpartner(\*innen)?|Pressekontakt(e)?):.*\z/sm,
+      ""
+    )
   end
 
   defp fetch_rss(http_connection, url) do

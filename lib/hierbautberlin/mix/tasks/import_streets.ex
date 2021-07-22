@@ -75,6 +75,8 @@ defmodule Mix.Tasks.ImportStreets do
         end
       end)
 
+    numbers_count = Enum.count(numbers)
+
     middle = Enum.at(numbers, div(length(numbers), 2))
 
     coordinates =
@@ -83,7 +85,7 @@ defmodule Mix.Tasks.ImportStreets do
       end)
 
     geometry =
-      if Enum.count_until(numbers, 2) > 1 do
+      if numbers_count > 1 do
         %Geo.LineString{
           coordinates: coordinates,
           srid: 4326
@@ -99,6 +101,7 @@ defmodule Mix.Tasks.ImportStreets do
         district: item.district,
         geometry: geometry,
         geo_point: middle.geo_point,
+        street_number_count: numbers_count,
         inserted_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second),
         updated_at: DateTime.truncate(DateTime.now!("Etc/UTC"), :second)
       })

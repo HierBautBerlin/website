@@ -131,7 +131,7 @@ defmodule Hierbautberlin.GeoData.NewsItem do
         where: item.hidden == false,
         where:
           fragment(
-            "ST_DWithin(geometries, ?, 0.015 ) or  ST_DWithin(geo_points, ?, 0.015 )",
+            "ST_DWithin(geometries, ?, 0.05 ) or ST_DWithin(geo_points, ?, 0.05 )",
             ^geom,
             ^geom
           ),

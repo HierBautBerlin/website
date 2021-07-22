@@ -65,6 +65,7 @@ defmodule HierbautberlinWeb.MapLive do
   @impl true
   def handle_event("updateCoordinates", %{"lat" => lat, "lng" => lng}, socket) do
     socket = update_coordinates(socket, lat, lng)
+    socket = assign(socket, %{search_result_visible: false})
 
     {:noreply,
      push_patch(socket,
@@ -75,7 +76,7 @@ defmodule HierbautberlinWeb.MapLive do
 
   @impl true
   def handle_event("updateZoom", %{"zoom" => zoom}, socket) do
-    socket = assign(socket, :map_zoom, zoom)
+    socket = assign(socket, %{map_zoom: zoom, search_result_visible: false})
 
     {:noreply,
      push_patch(socket,
@@ -138,6 +139,28 @@ defmodule HierbautberlinWeb.MapLive do
     Accounts.unsubscribe(socket.assigns.current_user, socket.assigns.map_position)
     socket = assign(socket, :subscribed, false)
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("search", %{"search_field" => %{"query" => query}}, socket) do
+    socket = assign(socket, %{search_result: nil, search_text: nil, search_result_visible: false})
+
+    if query |> String.trim() |> String.length() > 0 do
+      streets = GeoData.search_street(query)
+
+      if Enum.empty?(streets) do
+        {:noreply, socket}
+      else
+        {:noreply,
+         assign(socket, %{search_result: streets, search_text: query, search_result_visible: true})}
+      end
+    else
+      {:noreply, socket}
+    end
+  end
+
+  def handle_event("show-results", _, socket) do
+    {:noreply, assign(socket, %{search_result_visible: true})}
   end
 
   @impl true

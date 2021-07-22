@@ -127,7 +127,7 @@ defmodule Hierbautberlin.Importer.DafMap do
   defp cleanup_description(description) do
     description
     |> HtmlEntities.decode()
-    |> String.replace(~r/<br>/i, "\n")
+    |> String.replace(~r/<br\/?>/i, "\n")
     |> String.replace(~r/DAF-Beitrag: \S*/i, "")
     |> String.replace(~r/DAF-Post: \S*/i, "")
     |> String.replace(~r/DAF-Thread \([^)]*\)/, "")

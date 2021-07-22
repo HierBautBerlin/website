@@ -1,7 +1,7 @@
 defmodule Hierbautberlin.GeoData do
   import Ecto.Query, warn: false
 
-  alias Hierbautberlin.Repo
+  alias Hierbautberlin.{PostgresQueryHelper, Repo}
 
   alias Hierbautberlin.GeoData.{
     AnalyzeText,
@@ -33,6 +33,47 @@ defmodule Hierbautberlin.GeoData do
 
   def get_geo_street_number!(id) do
     Repo.get!(GeoStreetNumber, id)
+  end
+
+  def search_street(search) do
+    if String.length(search) < 3 do
+      do_simple_street_search(search)
+    else
+      do_complex_street_search(search)
+    end
+    |> Repo.all()
+  end
+
+  defp do_simple_street_search(search) do
+    search_query = "#{search}%"
+
+    from(
+      entry in GeoStreet,
+      where: ilike(entry.name, ^search_query),
+      order_by: [desc: entry.street_number_count],
+      limit: 10
+    )
+  end
+
+  defp do_complex_street_search(search) do
+    downcase_search = String.downcase(search)
+    formatted_search = PostgresQueryHelper.format_search_query(search)
+
+    from(
+      entry in GeoStreet,
+      where:
+        fragment(
+          "? in (select id from geo_streets where (fulltext_search @@ to_tsquery('german', unaccent(?)) or name ilike ?))",
+          entry.id,
+          ^formatted_search,
+          ^"%#{search}%"
+        ),
+      order_by: [
+        desc: entry.street_number_count,
+        asc: fragment("levenshtein(?, lower(?), 1, 10, 20), name", ^downcase_search, entry.name)
+      ],
+      limit: 10
+    )
   end
 
   def get_geo_place!(id) do

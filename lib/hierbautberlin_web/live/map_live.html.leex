@@ -1,9 +1,32 @@
 <div id="mapContainer" class="map--container" phx-hook="InteractiveMap" >
   <div id='map' class="map--container--tiles" phx-update="ignore" data-position-lat="<%= @map_position[:lat]%>" data-position-lng="<%= @map_position[:lng]%>" data-position-zoom="<%= @map_zoom %>">
   </div>
-  <button id="map-location-button" class="map--location-button" phx-update="ignore">
-    <%= PhoenixInlineSvg.Helpers.svg_image(HierbautberlinWeb.Endpoint, "current-location", alt: "Aktuelle Position finden") %>
-  </button>
+
+  <div class="map--controls">
+    <div class="map--controls-top">
+      <form phx-change="search" class="map--search-form">
+        <%= text_input :search_field, :query, value: assigns[:search_text], "phx-focus": "show-results", class: "map--search-input", autofocus: true, "phx-debounce": "100" %>
+      </form>
+
+      <button id="map-location-button" class="map--location-button" phx-update="ignore">
+        <%= PhoenixInlineSvg.Helpers.svg_image(HierbautberlinWeb.Endpoint, "current-location", alt: "Aktuelle Position finden") %>
+      </button>
+    </div>
+
+    <%= if assigns[:search_result] && assigns[:search_result_visible] do %>
+      <div class="map--search-results">
+        <%= for item <- assigns[:search_result] do %>
+          <div>
+            <% {lng, lat} = item.geo_point.coordinates %>
+            <a href="/map?lng=<%= lng%>&lat=<%= lat %>" data-hook="open-position" data-lat="<%= lat %>" data-lng="<%= lng%>" class="map--search-result--item">
+              <%= item.name %> <%= if is_street_duplicate?(item.name, assigns[:search_result]) do %>(<%= item.district %>)<% end %>
+            </a>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <script type="application/json" id="map-data">
     <%= raw GeoMapItem.to_json(@map_items) %>
   </script>
