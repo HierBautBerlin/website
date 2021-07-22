@@ -9,6 +9,7 @@ defmodule Hierbautberlin.GeoData.Source do
     field :name, :string
     field :url, :string
     field :copyright, :string
+    field :color, :string
 
     has_many :geo_items, GeoItem
 
@@ -17,7 +18,7 @@ defmodule Hierbautberlin.GeoData.Source do
 
   def changeset(source, attrs) do
     source
-    |> cast(attrs, [:short_name, :name, :url, :copyright])
+    |> cast(attrs, [:short_name, :name, :url, :copyright, :color])
     |> validate_required([:short_name, :name, :url, :copyright])
     |> unique_constraint([:short_name])
   end

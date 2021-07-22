@@ -270,7 +270,18 @@ defmodule Hierbautberlin.GeoDataTest do
         }
       )
 
+      insert(:geo_item,
+        title: "Six, hidden",
+        geo_point: %Geo.Point{
+          coordinates: {13.26789, 52.509},
+          properties: %{},
+          srid: 4326
+        },
+        hidden: true
+      )
+
       news_item = insert(:news_item)
+      insert(:news_item, title: "Hidden News Item", hidden: true)
 
       %{four: four, news_item: news_item}
     end
