@@ -34,7 +34,7 @@
               <%= Timex.format!(item.item.published_at, "{0D}.{0M}.{YYYY}") %>
             </span>
           <% end %>
-          <span class="label--source"><%= item.source.name %></span>
+          <span class="label--source" style="color:<%= item.source.color %>; border-color: <%= item.source.color %>"><%= item.source.name %></span>
         </div>
       </li>
     <% end %>
@@ -48,7 +48,7 @@
               <input type="checkbox" name="subscribe" <%= if @subscription, do: "checked" %>/>
               <div class="toggle-switch"></div>
             </div>
-            Sende E-Mail bei neuen Einträgen im <%= if @subscription, do: "#{if @subscription.radius > 1000, do: "#{trunc(@subscription.radius / 1000)} KM", else: "#{@subscription.radius} M"}", else: "2 KM" %> Radius.
+            Sende E-Mail bei neuen Einträgen im <%= if @subscription, do: "#{if @subscription.radius >= 1000, do: "#{trunc(@subscription.radius / 1000)} KM", else: "#{@subscription.radius} M"}", else: "2 KM" %> Radius.
           </label>
         </form>
       </div>

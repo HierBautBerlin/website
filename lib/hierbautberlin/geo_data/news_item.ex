@@ -24,6 +24,7 @@ defmodule Hierbautberlin.GeoData.NewsItem do
     field :published_at, :utc_datetime
     field :geometries, Geometry
     field :geo_points, Geometry
+    field :hidden, :boolean, default: false
 
     belongs_to :source, Source
 
@@ -42,7 +43,7 @@ defmodule Hierbautberlin.GeoData.NewsItem do
 
   def changeset(news_item, attrs) do
     news_item
-    |> cast(attrs, [:external_id, :title, :content, :url, :published_at, :source_id])
+    |> cast(attrs, [:external_id, :title, :content, :url, :published_at, :source_id, :hidden])
     |> unique_constraint(:external_id)
   end
 
@@ -127,6 +128,7 @@ defmodule Hierbautberlin.GeoData.NewsItem do
       from item in NewsItem,
         where: not (is_nil(item.geometries) and is_nil(item.geo_points)),
         limit: ^count,
+        where: item.hidden == false,
         where:
           fragment(
             "ST_DWithin(geometries, ?, 0.015 ) or  ST_DWithin(geo_points, ?, 0.015 )",

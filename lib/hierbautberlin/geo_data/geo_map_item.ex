@@ -24,6 +24,8 @@ defmodule Hierbautberlin.GeoData.GeoMapItem do
             subtitle: item.subtitle,
             description: item.description,
             url: item.url,
+            source_color: item.source.color,
+            participation_open: item.participation_open,
             positions:
               Enum.map(item.positions, fn position ->
                 result = %{

@@ -7,7 +7,7 @@
       <span class="label--published">
         <%= Timex.format!(item.published_at, "{0D}.{0M}.{YYYY}") %>
       </span>
-      <span class="label--source"><%= item.source.name %></span>
+      <span class="label--source" style="color:<%= item.source.color %>; border-color: <%= item.source.color %>"><%= item.source.name %></span>
     </li>
   <% end %>
 </ul>

@@ -17,6 +17,7 @@ type GeoItem = {
   id: number
   type: string,
   title: string,
+  source_color: string,
   positions: GeoPosition[]
 };
 
@@ -64,6 +65,7 @@ const updateMapItems = () => {
           properties: {
             itemId: item.id,
             itemType: item.type,
+            color: item.source_color,
             draw: 'circle',
           },
           geometry: position.point,
@@ -77,6 +79,7 @@ const updateMapItems = () => {
             properties: {
               itemId: item.id,
               itemType: item.type,
+              color: item.source_color,
               draw: 'line',
             },
             geometry: position.geometry,
@@ -87,6 +90,7 @@ const updateMapItems = () => {
             properties: {
               itemId: item.id,
               itemType: item.type,
+              color: item.source_color,
               draw: 'polygon',
             },
             geometry: position.geometry,
@@ -135,6 +139,9 @@ const InteractiveMap = {
       style: 'mapbox://styles/mapbox/streets-v11',
       center: position,
       zoom: parseFloat(mapElement?.getAttribute('data-position-zoom') || '14.5'),
+      dragRotate: false,
+      pitchWithRotate: false,
+      touchZoomRotate: false,
     });
 
     map.on('load', () => {
@@ -150,8 +157,9 @@ const InteractiveMap = {
           'line-cap': 'round',
         },
         paint: {
-          'line-color': 'rgba(68, 100, 251, 0.4)',
+          'line-color': ['get', 'color'],
           'line-width': 6,
+          'line-opacity': 0.4,
         },
         filter: ['==', 'draw', 'line'],
       });
@@ -178,8 +186,9 @@ const InteractiveMap = {
         type: 'fill',
         source: 'items',
         paint: {
-          'fill-color': 'rgba(68, 100, 251, 0.4)',
-          'fill-outline-color': 'rgba(34, 52, 131, 1)',
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.4,
+          'fill-outline-color': '#ffffff',
         },
         filter: ['==', 'draw', 'polygon'],
       });
@@ -206,7 +215,7 @@ const InteractiveMap = {
         type: 'circle',
         source: 'items',
         paint: {
-          'circle-color': '#4264fb',
+          'circle-color': ['get', 'color'],
           'circle-radius': 8,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff',

@@ -31,6 +31,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :participation_open, :boolean, default: false
     field :additional_link, :string
     field :additional_link_name, :string
+    field :hidden, :boolean, default: false
 
     belongs_to :source, Source
 
@@ -56,7 +57,8 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :additional_link,
       :additional_link_name,
       :inserted_at,
-      :updated_at
+      :updated_at,
+      :hidden
     ])
     |> validate_inclusion(:state, @states)
     |> validate_required([:source_id, :external_id, :title])
@@ -84,6 +86,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     query =
       from item in GeoItem,
         limit: ^count,
+        where: item.hidden == false,
         where:
           fragment(
             "(geometry is not null and ST_DWithin(geometry, ?, 0.015 )) or (geo_point is not null and ST_DWithin(geo_point, ?, 0.015 ))",

@@ -5,6 +5,7 @@ defmodule HierbautberlinWeb.MapLive do
   alias Hierbautberlin.Accounts
   alias HierbautberlinWeb.MapRouteHelpers
 
+  @default_title "Karte"
   @lat_default 52.5166309
   @lng_default 13.3781537
   @zoom_default 15
@@ -24,7 +25,7 @@ defmodule HierbautberlinWeb.MapLive do
       assign(socket,
         map_zoom: params["zoom"] || to_string(@zoom_default),
         current_user: current_user,
-        page_title: "Karte",
+        page_title: @default_title,
         show_subscription: nil
       )
 
@@ -49,9 +50,13 @@ defmodule HierbautberlinWeb.MapLive do
         {detail_item, detail_item_type} =
           get_detail_item(params["details"], params["detailsType"])
 
-        assign(socket, detail_item: detail_item, detail_item_type: detail_item_type)
+        assign(socket,
+          detail_item: detail_item,
+          detail_item_type: detail_item_type,
+          page_title: detail_item.title
+        )
       else
-        assign(socket, detail_item: nil, detail_item_type: nil)
+        assign(socket, detail_item: nil, detail_item_type: nil, page_title: @default_title)
       end
 
     {:noreply, socket}
@@ -84,6 +89,7 @@ defmodule HierbautberlinWeb.MapLive do
 
     socket =
       assign(socket, %{
+        page_title: detail_item.title,
         detail_item: detail_item,
         detail_item_type: detail_item_type
       })
@@ -96,7 +102,11 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   def handle_event("hideDetails", _params, socket) do
-    socket = assign(socket, :detail_item, nil)
+    socket =
+      assign(socket, %{
+        page_title: nil,
+        detail_item: @default_title
+      })
 
     {:noreply,
      push_patch(socket,

@@ -11,7 +11,7 @@
   <%= if @detail_item.state do %>
     <span class="label--state"><%= state_to_text(@detail_item) %></span>
   <% end %>
-  <span class="label--source"><%= @detail_item.source.name %></span>
+  <span class="label--source" style="color:<%= @detail_item.source.color %>; border-color: <%= @detail_item.source.color %>"><%= @detail_item.source.name %></span>
 </div>
 
 <%= if !is_blank?(@detail_item.description) do %>
