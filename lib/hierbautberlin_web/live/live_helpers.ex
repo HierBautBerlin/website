@@ -30,4 +30,14 @@ defmodule HierbautberlinWeb.LiveHelpers do
 
     live_component(socket, HierbautberlinWeb.ModalComponent, modal_opts)
   end
+
+  def is_street_duplicate?(name, streets) do
+    Enum.count_until(
+      streets,
+      fn street ->
+        street.name == name
+      end,
+      2
+    ) > 1
+  end
 end

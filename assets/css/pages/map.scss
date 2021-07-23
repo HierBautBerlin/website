@@ -8,10 +8,38 @@
   background-color: #E6E4E0;
 }
 
-.map--location-button {
+.map--controls {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  left: 20px;
+  top: 20px;
+  max-height: calc(105vh - 10rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.map--controls-top {
+  display: flex;
+}
+
+.map--search-form {
+  margin: 0 1rem 0 0;
+
+  .map--search-input {
+    margin: 0;
+    background-color: #fff;
+  }
+}
+
+.map--search-results {
+  background-color: white;
+  border: 1px solid rgb(209,209,209);
+  border-radius: .4rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  overflow: scroll;
+}
+
+.map--location-button {
   padding: 0.3rem;
   margin: 0;
   display: flex;
@@ -150,4 +178,9 @@
     height: auto;
     overflow: scroll;
   }
+
+  .map--controls {
+    max-height: calc(34vh);
+  }
+
 }

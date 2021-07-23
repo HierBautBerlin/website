@@ -53,6 +53,17 @@ const isLineString = (item: Geometry) => {
 };
 
 const updateMapItems = () => {
+  document.querySelectorAll("[data-hook='open-position']").forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const lat = parseFloat(link.getAttribute('data-lat') || '');
+      const lng = parseFloat(link.getAttribute('data-lng') || '');
+      map.flyTo({
+        center: { lng, lat }, zoom: 14.5, curve: 0.4, maxDuration: 1400,
+      });
+    });
+  });
+
   const mapItems = JSON.parse(document.getElementById('map-data')?.innerHTML || '{}')?.items;
 
   const mapFeatures:any[] = [];
@@ -141,8 +152,10 @@ const InteractiveMap = {
       zoom: parseFloat(mapElement?.getAttribute('data-position-zoom') || '14.5'),
       dragRotate: false,
       pitchWithRotate: false,
-      touchZoomRotate: false,
     });
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
 
     map.on('load', () => {
       map.addSource('items', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
@@ -260,9 +273,9 @@ const InteractiveMap = {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((item) => {
           const newMapPosition = { lat: item.coords.latitude, lng: item.coords.longitude };
-          hook.pushEvent('updateCoordinates', newMapPosition);
-          map.setCenter(newMapPosition);
-          map.setZoom(14.5);
+          map.flyTo({
+            center: newMapPosition, zoom: 14.5, curve: 0.4, maxDuration: 1400,
+          });
         }, () => {
           locationButton.setAttribute('disabled', 'disabled');
         });

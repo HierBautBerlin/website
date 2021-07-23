@@ -747,4 +747,34 @@ defmodule Hierbautberlin.GeoDataTest do
       assert [place_park.id] == news_item.geo_places |> Enum.map(& &1.id)
     end
   end
+
+  describe "search_street/1" do
+    setup do
+      insert(:street, name: "Richard-Sorge-Straße", street_number_count: 10)
+      insert(:street, name: "Richard Straße", street_number_count: 4)
+      insert(:street, name: "Sorge Straße", street_number_count: 1)
+
+      :ok
+    end
+
+    test "finds streets starting with Ri" do
+      result = GeoData.search_street("Ri")
+      assert Enum.map(result, & &1.name) == ["Richard-Sorge-Straße", "Richard Straße"]
+    end
+
+    test "finds streets starting with orge" do
+      result = GeoData.search_street("orge")
+      assert Enum.map(result, & &1.name) == ["Richard-Sorge-Straße", "Sorge Straße"]
+    end
+
+    test "finds streets starting with ss instead of ß" do
+      result = GeoData.search_street("strasse")
+
+      assert Enum.map(result, & &1.name) == [
+               "Richard-Sorge-Straße",
+               "Richard Straße",
+               "Sorge Straße"
+             ]
+    end
+  end
 end

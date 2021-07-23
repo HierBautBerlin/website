@@ -44,3 +44,13 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
 } 
+
+@media only screen and (max-width: 50em) {
+  .details--subscription-map {
+    flex-direction: column;
+
+    .map-details--map {
+      margin-bottom: 2rem;
+    }
+  }
+}
