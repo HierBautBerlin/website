@@ -417,6 +417,15 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
         street_numbers: [],
         places: []
       }
+  catch
+    :exit, {reason, msg} ->
+      Bugsnag.report("analyze text exit #{reason} - #{msg}")
+
+      %{
+        streets: [],
+        street_numbers: [],
+        places: []
+      }
   end
 
   def reset_index(manager \\ __MODULE__) do

@@ -1,4 +1,5 @@
 FROM hexpm/elixir:1.12.2-erlang-23.3.1-debian-stretch-20210326
+WORKDIR /src/
 
 all:
     BUILD +build
@@ -13,7 +14,6 @@ build:
     RUN apt-get update
     RUN apt-get install nodejs -y
     RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-    WORKDIR /src/
     COPY --dir .git config lib priv assets ./
     COPY mix.exs .
     COPY mix.lock .
