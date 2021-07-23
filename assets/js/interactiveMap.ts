@@ -284,7 +284,9 @@ const InteractiveMap = {
   },
 
   updated() {
-    updateMapItems();
+    if (map && map.loaded()) {
+      updateMapItems();
+    }
   },
 };
 
