@@ -9,15 +9,14 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   @place_sorting ["Park", "School", "LOR"]
 
   def init(%{streets: streets, places: places}) when is_list(streets) and is_list(places) do
-    street_names = Enum.map(streets, & &1.name)
-    place_names = Enum.map(places, & &1.name)
+    send(self(), {:init_graph, streets, places})
 
     {:ok,
      %{
-       streets: geo_map(%{}, streets),
-       places: geo_map(%{}, places),
-       street_graph: AhoCorasick.new(street_names),
-       place_graph: AhoCorasick.new(place_names)
+       streets: %{},
+       places: %{},
+       street_graph: AhoCorasick.new([]),
+       place_graph: AhoCorasick.new([])
      }}
   end
 
@@ -36,6 +35,20 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     server = GenServer.start_link(__MODULE__, %{streets: streets, places: places}, options)
     Logger.debug("Booting street analyzer completed")
     server
+  end
+
+  def handle_info({:init_graph, streets, places}, _state) do
+    street_names = Enum.map(streets, & &1.name)
+    place_names = Enum.map(places, & &1.name)
+
+    result = %{
+      streets: geo_map(%{}, streets),
+      places: geo_map(%{}, places),
+      street_graph: AhoCorasick.new(street_names),
+      place_graph: AhoCorasick.new(place_names)
+    }
+
+    {:noreply, result}
   end
 
   def handle_call({:reset_index}, _from, _state) do
@@ -368,6 +381,8 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     text
     |> String.replace("Strasse", "Straße")
     |> String.replace("Str.", "Straße")
+    |> String.replace("strasse", "straße")
+    |> String.replace("str.", "straße")
     |> street_enumeration()
   end
 
