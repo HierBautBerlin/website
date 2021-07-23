@@ -423,15 +423,16 @@ defmodule Hierbautberlin.GeoDataTest do
     end
 
     test "it should transform Strasse to Straße and find words with it" do
-      street = insert(:street, name: "Annestine-Beyer-Straße")
-      AnalyzeText.add_streets([street])
+      street_one = insert(:street, name: "Annestine-Beyer-Straße")
+      street_two = insert(:street, name: "Bornstraße")
+      AnalyzeText.add_streets([street_one, street_two])
 
       result =
         GeoData.analyze_text(
-          "Wir haben eine neue Baustelle in der Annestine-Beyer-Strasse die..."
+          "Wir haben eine neue Baustelle in der Annestine-Beyer-Strasse und Bornstrasse die..."
         )
 
-      assert [street.id] == Enum.map(result.streets, & &1.id)
+      assert [street_one.id, street_two.id] == Enum.map(result.streets, & &1.id)
     end
 
     test "it should transform Str. to Straße" do
