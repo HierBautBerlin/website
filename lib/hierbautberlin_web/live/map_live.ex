@@ -12,8 +12,6 @@ defmodule HierbautberlinWeb.MapLive do
 
   @impl true
   def mount(params, session, socket) do
-    coordinates = calculate_coordinates(params)
-
     current_user =
       if session["user_token"] do
         Accounts.get_user_by_session_token(session["user_token"])
@@ -24,16 +22,17 @@ defmodule HierbautberlinWeb.MapLive do
     socket =
       assign(socket,
         map_zoom: params["zoom"] || to_string(@zoom_default),
+        map_items: [],
+        map_position: %{lat: nil, lng: nil},
         current_user: current_user,
         page_title: @default_title,
-        show_subscription: nil
+        show_subscription: nil,
+        detail_item: nil,
+        detail_item_type: nil,
+        page_title: @default_title
       )
 
-    if connected?(socket) do
-      {:ok, update_coordinates(socket, coordinates[:lat], coordinates[:lng])}
-    else
-      {:ok, socket}
-    end
+    {:ok, socket}
   end
 
   @impl true
@@ -42,22 +41,11 @@ defmodule HierbautberlinWeb.MapLive do
     lng = parse_with_default(params["lng"], @lng_default)
     zoom = parse_with_default(params["zoom"], @zoom_default)
 
-    socket = assign(socket, map_zoom: zoom)
-    socket = update_coordinates(socket, lat, lng)
-
     socket =
-      if params["details"] do
-        {detail_item, detail_item_type} =
-          get_detail_item(params["details"], params["detailsType"])
-
-        assign(socket,
-          detail_item: detail_item,
-          detail_item_type: detail_item_type,
-          page_title: detail_item.title
-        )
-      else
-        assign(socket, detail_item: nil, detail_item_type: nil, page_title: @default_title)
-      end
+      socket
+      |> assign(map_zoom: zoom)
+      |> update_coordinates(lat, lng)
+      |> prefetch_details(params)
 
     {:noreply, socket}
   end
@@ -195,6 +183,21 @@ defmodule HierbautberlinWeb.MapLive do
     )
   end
 
+  defp prefetch_details(socket, %{"details" => details, "detailsType" => details_type})
+       when not is_nil(details) and not is_nil(details_type) do
+    {detail_item, detail_item_type} = get_detail_item(details, details_type)
+
+    assign(socket,
+      detail_item: detail_item,
+      detail_item_type: detail_item_type,
+      page_title: detail_item.title
+    )
+  end
+
+  defp prefetch_details(socket, _params) do
+    assign(socket, detail_item: nil, detail_item_type: nil, page_title: @default_title)
+  end
+
   defp get_detail_item(item_id, item_type)
 
   defp get_detail_item(item_id, "geo_item") do
@@ -245,13 +248,6 @@ defmodule HierbautberlinWeb.MapLive do
       socket.assigns.detail_item,
       socket.assigns.detail_item_type
     )
-  end
-
-  defp calculate_coordinates(params) do
-    %{
-      lat: parse_with_default(params["lat"], @lat_default),
-      lng: parse_with_default(params["lng"], @lng_default)
-    }
   end
 
   defp parse_with_default(string, default) do

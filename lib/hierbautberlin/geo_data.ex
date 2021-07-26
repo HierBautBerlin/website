@@ -163,10 +163,19 @@ defmodule Hierbautberlin.GeoData do
   end
 
   defp sort_by_relevance(items, coordinates) do
-    {new_items, old_items} = split_items_by_date(items)
+    {new_items, old_items} =
+      items
+      |> remove_empty_positions()
+      |> split_items_by_date()
 
     sort_by_date_and_distance(new_items, coordinates) ++
       sort_by_date_and_distance(old_items, coordinates)
+  end
+
+  defp remove_empty_positions(items) do
+    Enum.filter(items, fn item ->
+      !Enum.empty?(item.positions)
+    end)
   end
 
   defp split_items_by_date(items) do
