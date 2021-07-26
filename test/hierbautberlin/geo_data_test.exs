@@ -280,6 +280,20 @@ defmodule Hierbautberlin.GeoDataTest do
         hidden: true
       )
 
+      insert(:geo_item,
+        title: "Seven - Newest Item",
+        subtitle: "Four Subtitle",
+        description: "Four Description",
+        participation_open: true,
+        date_end: Timex.shift(Timex.now(), days: -7),
+        geo_point: %Geo.Point{
+          coordinates: {13.2679, 52.51},
+          properties: %{},
+          srid: 4326
+        },
+        url: "https://example.com"
+      )
+
       news_item = insert(:news_item)
       insert(:news_item, title: "Hidden News Item", hidden: true)
 
@@ -291,12 +305,12 @@ defmodule Hierbautberlin.GeoDataTest do
       news_item: news_item
     } do
       items = GeoData.get_items_near(52.51, 13.2679)
-      assert 5 == length(items)
+      assert 6 == length(items)
 
-      assert ["Four", "This is a nice title", "Two", "One", "Three"] ==
+      assert ["Seven - Newest Item", "This is a nice title", "Four", "Two", "One", "Three"] ==
                Enum.map(items, & &1.title)
 
-      first = List.first(items)
+      fourth = Enum.at(items, 2)
 
       four_id = four.id
       source_id = four.source_id
@@ -326,7 +340,7 @@ defmodule Hierbautberlin.GeoDataTest do
                    geometry: ^geo_metry
                  }
                ]
-             } = first
+             } = fourth
 
       second_item = Enum.at(items, 1)
 

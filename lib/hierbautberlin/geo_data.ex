@@ -162,7 +162,20 @@ defmodule Hierbautberlin.GeoData do
     end)
   end
 
-  defp sort_by_relevance(items, %{lat: lat, lng: lng}) do
+  defp sort_by_relevance(items, coordinates) do
+    {new_items, old_items} = split_items_by_date(items)
+
+    sort_by_date_and_distance(new_items, coordinates) ++
+      sort_by_date_and_distance(old_items, coordinates)
+  end
+
+  defp split_items_by_date(items) do
+    Enum.split_with(items, fn item ->
+      item.newest_date && abs(Timex.diff(Timex.now(), item.newest_date, :weeks)) < 6
+    end)
+  end
+
+  def sort_by_date_and_distance(items, %{lat: lat, lng: lng}) do
     Enum.sort_by(items, fn item ->
       months_difference =
         Timex.diff(
