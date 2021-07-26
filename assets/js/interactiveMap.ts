@@ -53,6 +53,8 @@ const isLineString = (item: Geometry) => {
   return item.type === 'LineString' || isEqual(collectionType, ['LineString']);
 };
 
+const mapFeatures = {} as { [key: string]: GeoJSON.Feature };
+
 const updateMapItems = () => {
   document.querySelectorAll("[data-hook='open-position']").forEach((link) => {
     link.addEventListener('click', (event) => {
@@ -67,12 +69,10 @@ const updateMapItems = () => {
 
   const mapItems = JSON.parse(document.getElementById('map-data')?.innerHTML || '{}')?.items;
 
-  const mapFeatures:any[] = [];
-
   mapItems.forEach((item:GeoItem) => {
     item.positions.forEach((position) => {
       if (position.point) {
-        mapFeatures.push({
+        mapFeatures[`point-${item.id}`] = {
           type: 'Feature',
           properties: {
             itemId: item.id,
@@ -82,12 +82,12 @@ const updateMapItems = () => {
             draw: 'circle',
           },
           geometry: position.point,
-        });
+        } as GeoJSON.Feature;
       }
 
       if (item.type === 'geo_item' && position.geometry) {
         if (isLineString(position.geometry)) {
-          mapFeatures.push({
+          mapFeatures[`linestring-${item.id}`] = {
             type: 'Feature',
             properties: {
               itemId: item.id,
@@ -96,9 +96,9 @@ const updateMapItems = () => {
               draw: 'line',
             },
             geometry: position.geometry,
-          });
+          } as GeoJSON.Feature;
         } else {
-          mapFeatures.push({
+          mapFeatures[`polygon-${item.id}`] = {
             type: 'Feature',
             properties: {
               itemId: item.id,
@@ -107,7 +107,7 @@ const updateMapItems = () => {
               draw: 'polygon',
             },
             geometry: position.geometry,
-          });
+          } as GeoJSON.Feature;
         }
       }
     });
@@ -115,7 +115,7 @@ const updateMapItems = () => {
   const source = map.getSource('items') as GeoJSONSource;
   source.setData({
     type: 'FeatureCollection',
-    features: mapFeatures,
+    features: Object.values(mapFeatures),
   });
 };
 

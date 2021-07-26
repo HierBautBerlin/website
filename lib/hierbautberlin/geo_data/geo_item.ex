@@ -72,7 +72,7 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       geo_item.date_updated
     ]
     |> Enum.filter(&(!is_nil(&1)))
-    |> Enum.sort(&(Timex.diff(&1, &2) > 0))
+    |> Enum.sort_by(&abs(Timex.diff(&1, Timex.now(), :days)))
     |> List.first()
   end
 
