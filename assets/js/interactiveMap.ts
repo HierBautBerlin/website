@@ -31,6 +31,7 @@ type GeoPosition = {
 type ItemProperties = {
   itemId: number,
   itemType: string,
+  itemTitle: string
 };
 
 const url = new URL(window.location.href);
@@ -76,6 +77,7 @@ const updateMapItems = () => {
           properties: {
             itemId: item.id,
             itemType: item.type,
+            itemTitle: item.title,
             color: item.source_color,
             draw: 'circle',
           },
@@ -235,14 +237,6 @@ const InteractiveMap = {
         },
         filter: ['==', 'draw', 'circle'],
       });
-      map.on('mouseenter', 'circle', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      // Change it back to a pointer when it leaves.
-      map.on('mouseleave', 'circle', () => {
-        map.getCanvas().style.cursor = '';
-      });
 
       map.on('click', 'circle', (e) => {
         if (e.features) {
@@ -250,6 +244,40 @@ const InteractiveMap = {
           hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
           e.preventDefault();
         }
+      });
+
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+      });
+
+      map.on('mouseenter', 'circle', (e) => {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+
+        if (e.features) {
+          const { coordinates } = e.features[0].geometry as GeoJSON.Point;
+          const properties = e.features[0].properties as ItemProperties;
+
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
+          // Populate the popup and set its coordinates
+          // based on the feature found.
+          popup.setLngLat({
+            lat: coordinates[1],
+            lng: coordinates[0],
+          }).setHTML(properties.itemTitle).addTo(map);
+        }
+      });
+
+      map.on('mouseleave', 'circle', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
       });
 
       centerMarker.setLngLat(map.getCenter()).addTo(map);
