@@ -1,3 +1,4 @@
+
 .map--container {
   position: absolute;
   top: 4rem;
@@ -6,6 +7,11 @@
   bottom: 0;
   overflow: hidden;
   background-color: #E6E4E0;
+}
+
+.map--popup {
+  font-family: "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 12px;
 }
 
 .map--controls {
