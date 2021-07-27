@@ -190,7 +190,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
         url = "/view_pdf/amtsblatt/#{Path.basename(file)}?#{URI.encode_query(query)}"
 
-        GeoData.create_news_item!(
+        GeoData.upsert_news_item!(
           %{
             external_id: url,
             title: Truncate.truncate(item.title, length: 250),

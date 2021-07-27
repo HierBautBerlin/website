@@ -54,7 +54,8 @@ defmodule Hierbautberlin.Factory do
     %Hierbautberlin.GeoData.GeoItem{
       title: "This is a nice item",
       description: "This is a description",
-      source: fn -> build(:source) end
+      source: fn -> build(:source) end,
+      external_id: sequence(:geo_item_external_id, &"ID-#{&1}")
     }
   end
 

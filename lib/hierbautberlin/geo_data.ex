@@ -18,13 +18,16 @@ defmodule Hierbautberlin.GeoData do
     Repo.get!(Source, id)
   end
 
+  def get_source_by_short_name(short_name) do
+    Repo.get_by(Source, short_name: short_name)
+  end
+
   def upsert_source(attrs \\ %{}) do
-    %Source{}
+    source = get_source_by_short_name(attrs[:short_name]) || %Source{}
+
+    source
     |> Source.changeset(attrs)
-    |> Repo.insert(
-      on_conflict: {:replace_all_except, [:id, :inserted_at]},
-      conflict_target: :short_name
-    )
+    |> Repo.insert_or_update()
   end
 
   def get_geo_street!(id) do
@@ -85,6 +88,11 @@ defmodule Hierbautberlin.GeoData do
     |> Repo.preload([:source])
   end
 
+  def get_news_item_with_external_id(source_id, external_id) do
+    Repo.get_by(NewsItem, source_id: source_id, external_id: external_id)
+    |> Repo.preload([:source])
+  end
+
   def get_geo_item!(id) do
     Repo.get!(GeoItem, id)
     |> Repo.preload([:source])
@@ -96,15 +104,19 @@ defmodule Hierbautberlin.GeoData do
     |> Repo.insert()
   end
 
+  def get_geo_item_with_external_id(source_id, external_id) do
+    Repo.get_by(GeoItem, source_id: source_id, external_id: external_id)
+    |> Repo.preload(:source)
+  end
+
   def change_geo_item(%GeoItem{} = geo_item), do: GeoItem.changeset(geo_item, %{})
 
   def upsert_geo_item(attrs \\ %{}) do
-    %GeoItem{}
+    item = get_geo_item_with_external_id(attrs[:source_id], attrs[:external_id]) || %GeoItem{}
+
+    item
     |> GeoItem.changeset(attrs)
-    |> Repo.insert(
-      on_conflict: {:replace_all_except, [:id, :inserted_at]},
-      conflict_target: [:source_id, :external_id]
-    )
+    |> Repo.insert_or_update()
   end
 
   def get_point(geo_item)
@@ -230,15 +242,14 @@ defmodule Hierbautberlin.GeoData do
     AnalyzeText.analyze_text(text, options)
   end
 
-  def create_news_item!(attrs, full_text, districts) do
+  def upsert_news_item!(attrs, full_text, districts) do
     result = analyze_text(full_text, %{districts: districts})
 
-    %NewsItem{}
+    item = get_news_item_with_external_id(attrs[:source_id], attrs[:external_id]) || %NewsItem{}
+
+    item
     |> NewsItem.changeset(attrs)
-    |> Repo.insert!(
-      on_conflict: {:replace_all_except, [:id, :inserted_at]},
-      conflict_target: :external_id
-    )
+    |> Repo.insert_or_update!()
     |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
     |> NewsItem.change_associations(
       geo_streets: result.streets,

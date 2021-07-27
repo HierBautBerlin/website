@@ -4,6 +4,22 @@ defmodule Hierbautberlin.GeoDataTest do
   alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.{GeoMapItem, GeoPosition, AnalyzeText}
 
+  describe "get_source_by_short_name/1" do
+    test "gets a source by it's short name" do
+      data = insert(:source)
+
+      geo_data = GeoData.get_source_by_short_name(data.short_name)
+      assert geo_data.short_name =~ ~r/^TEST-/
+      assert geo_data.name == "City Source"
+      assert geo_data.url == "https://city.example.com"
+      assert geo_data.copyright == "Example"
+    end
+
+    test "returns nil if source not found" do
+      assert nil == GeoData.get_source_by_short_name("wow")
+    end
+  end
+
   describe "get_source/1" do
     test "gets a source by it's id" do
       data = insert(:source)
@@ -27,13 +43,15 @@ defmodule Hierbautberlin.GeoDataTest do
           short_name: "TEST",
           name: "City Source",
           url: "https://city.example.com",
-          copyright: "Example"
+          copyright: "Example",
+          color: "#aabbcc"
         })
 
       assert insert.short_name == "TEST"
       assert insert.name == "City Source"
       assert insert.url == "https://city.example.com"
       assert insert.copyright == "Example"
+      assert insert.color == "#aabbcc"
 
       {:ok, upsert} =
         GeoData.upsert_source(%{
@@ -50,6 +68,7 @@ defmodule Hierbautberlin.GeoDataTest do
       assert geo_data.name == "Village Source"
       assert geo_data.url == "https://village.example.com"
       assert geo_data.copyright == "MIT"
+      assert geo_data.color == "#aabbcc"
     end
   end
 
@@ -73,10 +92,36 @@ defmodule Hierbautberlin.GeoDataTest do
     end
   end
 
+  describe "get_geo_item_by_short_name/2" do
+    test "it returns a news item" do
+      geo_item = insert(:geo_item)
+
+      assert GeoData.get_geo_item_with_external_id(geo_item.source_id, geo_item.external_id).id ==
+               geo_item.id
+    end
+
+    test "it returns nil if not found" do
+      assert GeoData.get_geo_item_with_external_id(1, "not found") == nil
+    end
+  end
+
   describe "get_news_item!/1" do
     test "it returns a news item" do
       news = insert(:news_item)
       assert GeoData.get_news_item!(news.id).id == news.id
+    end
+  end
+
+  describe "get_news_item_by_short_name/2" do
+    test "it returns a news item" do
+      news = insert(:news_item)
+
+      assert GeoData.get_news_item_with_external_id(news.source_id, news.external_id).id ==
+               news.id
+    end
+
+    test "it returns nil if not found" do
+      assert GeoData.get_news_item_with_external_id(1, "not found") == nil
     end
   end
 
@@ -725,9 +770,34 @@ defmodule Hierbautberlin.GeoDataTest do
 
       assert [place_buch.id] == result.places |> Enum.map(& &1.id)
     end
+
+    test "it should find the best match, not all of them" do
+      street_one = insert(:street, name: "Rachel Cargle Straße", district: "Mitte")
+      street_number = insert(:street_number, number: "10", geo_street_id: street_one.id)
+      street_two = insert(:street, name: "Straße 10", district: "Mitte")
+      AnalyzeText.add_streets([street_one, street_two])
+
+      result =
+        GeoData.analyze_text(
+          "In der Rachel Cargle Straße 10 wird ein neuer ...",
+          %{districts: ["Mitte"]}
+        )
+
+      assert [] == result.streets
+      assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
+
+      result =
+        GeoData.analyze_text(
+          "In Straße 10 wird ein neuer ...",
+          %{districts: ["Mitte"]}
+        )
+
+      assert [street_two.id] == result.streets |> Enum.map(& &1.id)
+      assert [] == result.street_numbers |> Enum.map(& &1.id)
+    end
   end
 
-  describe "create_news_item!/3" do
+  describe "upsert_news_item!/3" do
     test "creates a news item and analyzes the full text" do
       source = insert(:source)
 
@@ -737,7 +807,7 @@ defmodule Hierbautberlin.GeoDataTest do
       time_now = DateTime.now!("Etc/UTC")
 
       news_item =
-        GeoData.create_news_item!(
+        GeoData.upsert_news_item!(
           %{
             external_id: "http://example.com",
             title: "My New Title",
@@ -760,6 +830,20 @@ defmodule Hierbautberlin.GeoDataTest do
       assert Time.diff(news_item.published_at, time_now, :second) == 0
 
       assert [place_park.id] == news_item.geo_places |> Enum.map(& &1.id)
+
+      updated_news_item =
+        GeoData.upsert_news_item!(
+          %{
+            external_id: "http://example.com",
+            title: "My Updated Title",
+            source_id: source.id
+          },
+          "This is the full text of the Rosa Parks Park announcement",
+          districts: []
+        )
+
+      assert updated_news_item.id == news_item.id
+      assert updated_news_item.title == "My Updated Title"
     end
   end
 

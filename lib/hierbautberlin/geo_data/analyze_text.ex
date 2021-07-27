@@ -219,6 +219,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     state.street_graph
     |> do_aho_corasick_search(text)
     |> MapSet.to_list()
+    |> remove_overlapping_results()
     |> Enum.reduce(map, fn {hit, start_pos, length}, acc ->
       number = text |> String.slice(start_pos + length, 10) |> get_street_number()
 
@@ -226,6 +227,30 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
         find_street_number_in(acc, state.streets[hit], number)
       else
         find_street_in(acc, state.streets[hit])
+      end
+    end)
+  end
+
+  defp remove_overlapping_results(map) do
+    Enum.filter(map, fn {_text, start, len} = item ->
+      longest_overlapping_item =
+        Enum.filter(map, fn {_text, other_start, other_len} ->
+          max_pos = max(start, other_start)
+          min_pos = min(start + len, other_start + other_len)
+          min_pos - max_pos > 0
+        end)
+        |> Enum.sort_by(
+          fn {_text, _start, len} ->
+            len
+          end,
+          :desc
+        )
+        |> List.first()
+
+      if longest_overlapping_item == nil do
+        true
+      else
+        item == longest_overlapping_item
       end
     end)
   end

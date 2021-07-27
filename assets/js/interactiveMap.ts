@@ -217,14 +217,6 @@ const InteractiveMap = {
         map.getCanvas().style.cursor = '';
       });
 
-      map.on('click', 'polygons', (e) => {
-        if (e.features) {
-          const properties = e.features[0].properties as ItemProperties;
-          hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
-          e.preventDefault();
-        }
-      });
-
       map.addLayer({
         id: 'circle',
         type: 'circle',
@@ -238,8 +230,25 @@ const InteractiveMap = {
         filter: ['==', 'draw', 'circle'],
       });
 
+      const clickNotProcessedYet = (event:mapboxgl.MapMouseEvent) => {
+        if (event.originalEvent.cancelBubble) {
+          return false;
+        }
+        // eslint-disable-next-line no-param-reassign
+        event.originalEvent.cancelBubble = true;
+        return true;
+      };
+
       map.on('click', 'circle', (e) => {
-        if (e.features) {
+        if (e.features && clickNotProcessedYet(e)) {
+          const properties = e.features[0].properties as ItemProperties;
+          hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
+          e.preventDefault();
+        }
+      });
+
+      map.on('click', 'polygons', (e) => {
+        if (e.features && clickNotProcessedYet(e)) {
           const properties = e.features[0].properties as ItemProperties;
           hook.pushEvent('showDetails', { 'item-id': properties.itemId, 'item-type': properties.itemType });
           e.preventDefault();
