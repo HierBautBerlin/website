@@ -48,7 +48,7 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
     text = fetch_text_from_html(entry["link"], http_connection)
     full_text = title <> "\n" <> content <> "\n" <> text
 
-    GeoData.create_news_item!(
+    GeoData.upsert_news_item!(
       %{
         external_id: url,
         title: title,
