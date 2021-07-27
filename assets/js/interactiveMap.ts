@@ -258,6 +258,7 @@ const InteractiveMap = {
       const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
+        className: 'map--popup',
       });
 
       map.on('mouseenter', 'circle', (e) => {
@@ -302,6 +303,7 @@ const InteractiveMap = {
       });
       map.on('moveend', () => {
         hook.pushEvent('updateCoordinates', map.getCenter());
+        window.dispatchEvent(new Event('phx:page-loading-start'));
       });
     });
 
@@ -323,6 +325,7 @@ const InteractiveMap = {
   updated() {
     if (map && map.loaded()) {
       updateMapItems();
+      window.dispatchEvent(new Event('phx:page-loading-stop'));
     }
   },
 };

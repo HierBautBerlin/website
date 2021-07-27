@@ -1,15 +1,15 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (_env, _options) => ({
   optimization: {
-    minimize: true,
+    minimize: process.env.NODE_ENV === 'production',
     minimizer: [
       new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin({}),
+      new CssMinimizerPlugin(),
     ],
   },
   entry: {
@@ -43,18 +43,6 @@ module.exports = (_env, _options) => ({
           MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
-        ],
-      },
-      {
-        test: /\.(svg|woff|woff2|eot|ttf|json?)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-              outputPath: '../fonts',
-            },
-          },
         ],
       },
     ],
