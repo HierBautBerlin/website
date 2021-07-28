@@ -79,6 +79,8 @@
       <div class="map--item-list-footer--register">Willst du keine neuen Einträge verpassen? <a href="/users/register">Melde dich an!</a></div>
     <% end %>
     <div class="map--item-list-footer--impressum">
+      <%= link "RSS", to: Routes.rss_path(@socket, :show, Float.to_string(@map_position[:lng]), Float.to_string(@map_position[:lat])) %> |
+      <a href="https://github.com/hierbautberlin/website">GitHub</a> |
       <a href="/impressum">Impressum</a> |
       <a href="/datenschutz">Datenschutz</a>
     </div>

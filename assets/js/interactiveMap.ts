@@ -325,6 +325,10 @@ const InteractiveMap = {
   updated() {
     if (map && map.loaded()) {
       updateMapItems();
+      const list = document.querySelector('.map--item-list');
+      if (list) {
+        list.scrollTop = 0;
+      }
       window.dispatchEvent(new Event('phx:page-loading-stop'));
     }
   },

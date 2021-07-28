@@ -14,6 +14,9 @@
       <script src="//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js"></script>
       <script>Bugsnag.start({ apiKey: '68d18513cd64891ed5b4d409575effa0' })</script>
     <% end %>
+    <%= if assigns[:rss_link] do %>
+      <link rel="alternate" type="application/rss+xml" title="Hier Baut Berlin - new items for location" href="<%= assigns[:rss_link] %>" />
+    <% end %>
   </head>
   <body>
     <div class="layout">

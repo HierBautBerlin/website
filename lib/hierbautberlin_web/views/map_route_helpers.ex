@@ -45,11 +45,11 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
     end
   end
 
-  defp type_of_item(%GeoItem{}) do
+  def type_of_item(%GeoItem{}) do
     "geo_item"
   end
 
-  defp type_of_item(%NewsItem{}) do
+  def type_of_item(%NewsItem{}) do
     "news_item"
   end
 end
