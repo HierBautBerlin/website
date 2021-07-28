@@ -1,0 +1,9 @@
+<footer class="footer--small">
+  <div class="footer--right">
+    <p>
+      <a href="https://github.com/hierbautberlin/website">GitHub</a> |
+      <a href="/impressum">Impressum</a> |
+      <a href="/datenschutz">Datenschutz</a>
+    </p>
+  </div>
+</footer>
