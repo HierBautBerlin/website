@@ -1,6 +1,7 @@
 defmodule Hierbautberlin.GeoDataTest do
   use Hierbautberlin.DataCase
 
+  alias Ecto.Adapters.SQL
   alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.{GeoMapItem, GeoPosition, AnalyzeText}
 
@@ -874,6 +875,99 @@ defmodule Hierbautberlin.GeoDataTest do
                "Richard Straße",
                "Sorge Straße"
              ]
+    end
+  end
+
+  describe "get_geo_items_for_locations_since/2" do
+    test "it returns a list of geo items" do
+      insert(:geo_item,
+        title: "Distant Point Item",
+        geo_point: %Geo.Point{
+          coordinates: {13, 52},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      old_item =
+        insert(:geo_item,
+          title: "Old Point Item",
+          geo_point: %Geo.Point{
+            coordinates: {13.3789047176, 52.51650032279},
+            properties: %{},
+            srid: 4326
+          }
+        )
+
+      SQL.query!(
+        Hierbautberlin.Repo,
+        "UPDATE geo_items SET inserted_at = '2010-01-01 4:30' WHERE id= $1",
+        [old_item.id]
+      )
+
+      insert(:geo_item,
+        title: "Point Item",
+        geo_point: %Geo.Point{
+          coordinates: {13.26805, 52.525},
+          properties: %{},
+          srid: 4326
+        }
+      )
+
+      insert(:geo_item,
+        title: "Polygon Item",
+        geometry: %Geo.MultiPolygon{
+          coordinates: [
+            [
+              [
+                {13.26805, 52.525},
+                {13.26805, 52.530},
+                {13.26810, 52.530},
+                {13.26805, 52.525}
+              ]
+            ]
+          ]
+        }
+      )
+
+      result =
+        GeoData.get_geo_items_for_locations_since(
+          [
+            %{
+              location: {52.51, 13.2679},
+              radius: 2000
+            }
+          ],
+          Timex.parse!("2013-03-05", "{YYYY}-{0M}-{0D}")
+        )
+
+      assert ["Point Item", "Polygon Item"] == Enum.map(result, & &1.title)
+    end
+  end
+
+  describe "get_news_items_for_locations_since/2" do
+    test "it returns a list of news items" do
+      insert(:news_item)
+      old_news = insert(:news_item, title: "Old News")
+
+      SQL.query!(
+        Hierbautberlin.Repo,
+        "UPDATE news_items SET inserted_at = '2010-01-01 4:30' WHERE id= $1",
+        [old_news.id]
+      )
+
+      result =
+        GeoData.get_news_items_for_locations_since(
+          [
+            %{
+              location: {52.51, 13.2679},
+              radius: 2000
+            }
+          ],
+          Timex.parse!("2013-03-05", "{YYYY}-{0M}-{0D}")
+        )
+
+      assert ["This is a nice title"] == Enum.map(result, & &1.title)
     end
   end
 end

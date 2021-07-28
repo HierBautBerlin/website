@@ -70,6 +70,8 @@ defmodule HierbautberlinWeb.Router do
     get "/filestorage/*path", FileStorageController, :show
     get "/view_pdf/*path", ViewPDFController, :show
 
+    get "/feed/:lng/:lat", RSSController, :show
+
     live "/map", MapLive, :index
   end
 

@@ -65,6 +65,13 @@ defmodule Hierbautberlin.NotifySubscriptionTest do
       Accounts.subscribe(user, %{lat: 52.51, lng: 13.2679})
 
       insert(:news_item)
+      old_news = insert(:news_item, title: "Old News")
+
+      SQL.query!(
+        Hierbautberlin.Repo,
+        "UPDATE news_items SET inserted_at = '2010-01-01 4:30' WHERE id= $1",
+        [old_news.id]
+      )
 
       %{user: user}
     end
@@ -79,6 +86,7 @@ defmodule Hierbautberlin.NotifySubscriptionTest do
       assert text_body =~ "This is a nice title"
       refute text_body =~ "Distant Point Item"
       refute text_body =~ "Old Point Item"
+      refute text_body =~ "Old News"
     end
   end
 end

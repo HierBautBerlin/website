@@ -169,7 +169,14 @@ defmodule HierbautberlinWeb.MapLive do
           socket,
           %{
             map_items: items,
-            map_position: %{lat: lat, lng: lng}
+            map_position: %{lat: lat, lng: lng},
+            rss_link:
+              Routes.rss_path(
+                socket,
+                :show,
+                Float.to_string(lng),
+                Float.to_string(lat)
+              )
           }
         )
       else

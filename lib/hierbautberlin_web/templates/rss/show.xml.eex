@@ -1,0 +1,23 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[HierBautBerlin]]></title>
+  <link href="https://hierbautberlin.de/lng/lat/atom.xml" rel="self"/>
+  <link href="https://hierbautberlin.de/"/>
+  <updated><%= Timex.format!(Timex.now(), "{ISO:Extended}")%></updated>
+  <id>https://hierbautberlin.de/</id>
+
+  <author>
+    <name>HierBautBerlin</name>
+  </author>
+
+  <%= for item <- @items do %>
+    <entry>
+      <id><%= String.replace(HierbautberlinWeb.MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item), "&", "&amp;") %></id>
+      <link href="<%= String.replace(HierbautberlinWeb.MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item), "&", "&amp;") %>"/>
+      <title type="html"><![CDATA[<%= item.title %>]]></title>
+      <updated><%= Timex.format!(item.inserted_at, "{ISO:Extended}") %></updated>
+      <content type="html">
+      <![CDATA[<%= if MapRouteHelpers.type_of_item(item)  == "geo_item", do: text_to_html(item.description || "") |> safe_to_string(), else: text_to_html(item.content || "") |> safe_to_string %>]]>
+      </content>
+    </entry>
+  <% end %>
+</feed>

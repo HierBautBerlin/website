@@ -258,4 +258,71 @@ defmodule Hierbautberlin.GeoData do
     )
     |> Repo.update!()
   end
+
+  def get_geo_items_for_locations_since(locations, since) do
+    conditions = false
+
+    conditions =
+      Enum.reduce(locations, conditions, fn %{location: {lat, lng}, radius: radius}, conditions ->
+        filter_conditions =
+          dynamic(
+            [item],
+            fragment(
+              "ST_DWITHIN(COALESCE(geometry, geo_point), ST_MakePoint(?, ?)::geography, ?)",
+              ^lng,
+              ^lat,
+              ^radius
+            )
+          )
+
+        if conditions do
+          dynamic([item], ^filter_conditions or ^conditions)
+        else
+          dynamic([item], ^filter_conditions)
+        end
+      end)
+
+    query =
+      from item in GeoItem,
+        where: item.inserted_at >= ^since,
+        where: ^conditions,
+        order_by: :inserted_at
+
+    Repo.all(query)
+  end
+
+  def get_news_items_for_locations_since(locations, since) do
+    conditions = false
+
+    conditions =
+      Enum.reduce(locations, conditions, fn %{location: {lat, lng}, radius: radius}, conditions ->
+        filter_conditions =
+          dynamic(
+            [item],
+            fragment(
+              "(ST_DWITHIN(geometries, ST_MakePoint(?, ?)::geography, ?) OR ST_DWITHIN(geo_points, ST_MakePoint(?, ?)::geography, ?))",
+              ^lng,
+              ^lat,
+              ^radius,
+              ^lng,
+              ^lat,
+              ^radius
+            )
+          )
+
+        if conditions do
+          dynamic([item], ^filter_conditions or ^conditions)
+        else
+          dynamic([item], ^filter_conditions)
+        end
+      end)
+
+    query =
+      from item in NewsItem,
+        where: item.inserted_at >= ^since,
+        where: ^conditions,
+        order_by: :inserted_at
+
+    Repo.all(query)
+  end
 end
