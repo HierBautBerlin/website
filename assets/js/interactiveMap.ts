@@ -18,6 +18,7 @@ type GeoItem = {
   type: string,
   title: string,
   source_color: string,
+  source_background_color: string,
   positions: GeoPosition[]
 };
 
@@ -92,7 +93,7 @@ const updateMapItems = () => {
             properties: {
               itemId: item.id,
               itemType: item.type,
-              color: item.source_color,
+              color: item.source_background_color,
               draw: 'line',
             },
             geometry: position.geometry,
@@ -103,7 +104,7 @@ const updateMapItems = () => {
             properties: {
               itemId: item.id,
               itemType: item.type,
-              color: item.source_color,
+              color: item.source_background_color,
               draw: 'polygon',
             },
             geometry: position.geometry,
@@ -174,7 +175,7 @@ const InteractiveMap = {
         paint: {
           'line-color': ['get', 'color'],
           'line-width': 6,
-          'line-opacity': 0.4,
+          'line-opacity': 0.5,
         },
         filter: ['==', 'draw', 'line'],
       });
@@ -202,7 +203,7 @@ const InteractiveMap = {
         source: 'items',
         paint: {
           'fill-color': ['get', 'color'],
-          'fill-opacity': 0.4,
+          'fill-opacity': 0.5,
           'fill-outline-color': '#ffffff',
         },
         filter: ['==', 'draw', 'polygon'],

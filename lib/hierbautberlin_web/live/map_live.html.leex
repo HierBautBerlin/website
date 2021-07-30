@@ -36,7 +36,7 @@
   <ul class="map--item-list">
     <%= for item <- @map_items do %>
       <li class="map--item-list--item" id="list-item-<%= item.id%>" phx-click="showDetails" phx-value-item-type="<%= item.type %>" phx-value-item-id="<%= item.id %>" phx-hook="PreventDefaultOnClick">
-        <h3 class="map--item-list--item--header"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>&detailsType=<%= item.type %>" ><%= item.title %></a></h3>
+        <h3 class="map--item-list--item--header" style="border-left: 5px solid <%=item.source.color %>"><a id="details-<%= item.id %>" href="/map?details=<%= item.id %>&detailsType=<%= item.type %>" ><%= item.title %></a></h3>
         <%= cond do %>
           <% !is_blank?(item.subtitle) -> %>
             <p class="map--item-list--item--description"><%= item.subtitle %></p>
@@ -57,7 +57,7 @@
               <%= Timex.format!(item.item.published_at, "{0D}.{0M}.{YYYY}") %>
             </span>
           <% end %>
-          <span class="label--source" style="color:<%= item.source.color %>; border-color: <%= item.source.color %>; background-color: <%= item.source.background_color %>"><%= item.source.name %></span>
+          <span class="label--source"><%= item.source.name %></span>
         </div>
       </li>
     <% end %>
