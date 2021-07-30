@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%= render "_head.html", assigns %>
+  <body class="full-width">
+    <%= render "_header.html", assigns %>
+    <main role="main" class="full-width-container">
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= @inner_content %>
+    </main>
+    <%= render "_small_footer.html", assigns %>
+  </body>
+</html>

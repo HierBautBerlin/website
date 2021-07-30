@@ -5,6 +5,11 @@
 @import './pages/index';
 @import 'milligram';
 
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts'; 
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
@@ -17,10 +22,27 @@ body {
   color: var(--text-color)
 }
 
+html {
+  height: -webkit-fill-available;
+}
+body.full-width {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: -webkit-fill-available;
+}
+
 .container {
   grid-area: main;
   margin-top: 4rem;
   margin-bottom: 4rem;
+}
+
+.full-width-container {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  flex: 1;
 }
 
 .live-wrapper {
@@ -117,8 +139,15 @@ textarea {
   min-height: -webkit-fill-available;
 }
 
+button {
+  touch-action: manipulation;
+}
+
 @media screen and (max-width: 50rem) {
   .container {
     margin-top: 6rem;
+  }
+  .full-width-container {
+    margin-top: 3.5rem;
   }
 }

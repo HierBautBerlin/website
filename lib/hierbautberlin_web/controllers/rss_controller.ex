@@ -24,6 +24,6 @@ defmodule HierbautberlinWeb.RSSController do
     conn
     |> put_root_layout(false)
     |> put_resp_content_type("application/rss+xml")
-    |> render("show.xml", items: items)
+    |> render("show.xml", items: items, lat: params["lat"], lng: params["lng"])
   end
 end

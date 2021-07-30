@@ -1,6 +1,6 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title><![CDATA[HierBautBerlin]]></title>
-  <link href="https://hierbautberlin.de/lng/lat/atom.xml" rel="self"/>
+  <link href="https://hierbautberlin.de/feed/<%= @lng %>/<%= @lat%>" rel="self"/>
   <link href="https://hierbautberlin.de/"/>
   <updated><%= Timex.format!(Timex.now(), "{ISO:Extended}")%></updated>
   <id>https://hierbautberlin.de/</id>

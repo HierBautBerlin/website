@@ -1,23 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "Hier Baut Berlin", prefix: if assigns[:page_title] != nil, do: "Hier Baut Berlin - ", else: "" %>
-    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css' rel='stylesheet' />
-    <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.bundle.js") %>"></script>
-    <%= ogtags(@conn) %>
-    <%= if Application.get_env(:hierbautberlin, :environment) == :prod do %>
-      <script src="//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js"></script>
-      <script>Bugsnag.start({ apiKey: '68d18513cd64891ed5b4d409575effa0' })</script>
-    <% end %>
-    <%= if assigns[:rss_link] do %>
-      <link rel="alternate" type="application/rss+xml" title="Hier Baut Berlin - new items for location" href="<%= assigns[:rss_link] %>" />
-    <% end %>
-  </head>
+  <%= render "_head.html", assigns %>
   <body>
     <div class="layout">
       <%= render "_header.html", assigns %>

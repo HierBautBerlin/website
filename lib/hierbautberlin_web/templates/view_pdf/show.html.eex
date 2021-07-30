@@ -1,14 +1,22 @@
 <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/pdf.viewer.bundle.js") %>"></script>
 
-<h1 class="pdfviewer--name"><%= @file.title %></h1>
+<div class="view-pdf">
+  <div class="view-pdf--topbar">
+    <h1 class="view-pdf--name"><%= @file.title %></h1>
+    <div class="view-pdf--buttons">
+      <button id="pdf-prev" aria-label="Vorherige Seite">←</button>
+      <div class="view-pdf--number" id="pdf-number"></div>
+      <button id="pdf-next" aria-label="Nächste Seite">→</button>
+      <div class="view-pdf--spacer"></div>
+      <button id="pdf-zoom-in" aria-label="Vergrößern"><i class="fas fa-search-plus"></i></button>
+      <button id="pdf-zoom-out" aria-label="Vergrößern"><i class="fas fa-search-minus"></i></button>
+      <div class="view-pdf--spacer"></div>
+      <button id="pdf-download" aria-label="PDF laden"><i class="fas fa-download"></i></button>
+    </div>
+  </div>
 
-<div class="pdfviewer--topbar">
-  <button id="pdf-prev" aria-label="Vorherige Seite">←</button>
-  <div id="pdf-number"></div>
-  <button id="pdf-next" aria-label="Nächste Seite">→</button>
-</div>
-
-<div class="pdfviewer--wrapper">
-  <canvas class="pdfviewer--canvas" id="pdf-canvas" data-pdf-path="<%= Hierbautberlin.FileStorage.url_for_file(@file) %>"></canvas>
-  <div class="pdfviewer--text" id="pdf-text"></div>
+  <div class="view-pdf--wrapper">
+    <canvas class="view-pdf--canvas" id="pdf-canvas" data-pdf-path="<%= Hierbautberlin.FileStorage.url_for_file(@file) %>"></canvas>
+    <div class="view-pdf--text" id="pdf-text"></div>
+  </div>
 </div>

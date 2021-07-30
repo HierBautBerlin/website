@@ -4,7 +4,11 @@ defmodule HierbautberlinWeb.ViewPDFController do
 
   def show(conn, %{"path" => url_path, "page" => page, "title" => text}) do
     file = url_path |> Path.join() |> FileStorage.get_file_by_name!()
-    render(conn, "show.html", %{file: file, page: page, text: text, page_title: file.title})
+
+    conn
+    |> put_root_layout("full_width.html")
+    |> put_layout(false)
+    |> render("show.html", %{file: file, page: page, text: text, page_title: file.title})
   rescue
     Ecto.NoResultsError ->
       conn

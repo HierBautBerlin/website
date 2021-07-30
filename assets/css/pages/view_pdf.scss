@@ -1,0 +1,167 @@
+@import 'pdfjs-dist/web/pdf_viewer.css';
+
+.view-pdf {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow: scroll;
+}
+
+.view-pdf--name {
+  text-align: center;
+  font-size: 2rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.view-pdf--topbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  margin: 1rem 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.view-pdf--buttons {
+  display: flex;
+  justify-content: space-evenly;
+  button {
+    padding: 0 0.5rem;
+    line-height: 1.5rem;
+    margin: 0 0.5rem;
+    min-width: 4rem;
+    font-size: 1.8rem;
+  }
+}
+
+.view-pdf--wrapper {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  overflow: scroll;
+  background-color: var(--light-background);
+  padding: 1rem;
+  touch-action: pan-x pan-y;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.view-pdf--canvas {
+  width: 100%;
+  box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.32);
+  margin: 0 auto;
+  touch-action: none;
+}
+
+.view-pdf--text {
+  position: absolute;
+  text-align: initial;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  opacity: 0.2;
+  line-height: 1;
+  margin: 1rem auto;
+}
+
+.view-pdf--text span,
+.view-pdf--text br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.view-pdf--text .highlight {
+  margin: -1px;
+  padding: 1px;
+  background-color: rgba(180, 0, 170, 1);
+  border-radius: 4px;
+}
+
+.view-pdf--text .highlight.appended {
+  position: initial;
+}
+
+.view-pdf--text .highlight.begin {
+  border-radius: 4px 0 0 4px;
+}
+
+.view-pdf--text .highlight.end {
+  border-radius: 0 4px 4px 0;
+}
+
+.view-pdf--text .highlight.middle {
+  border-radius: 0;
+}
+
+.view-pdf--text .highlight.selected {
+  background-color: rgba(0, 100, 0, 1);
+}
+
+.view-pdf--text ::selection {
+  background: rgba(0, 0, 255, 1);
+}
+
+.view-pdf--text .endOfContent {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  cursor: default;
+  user-select: none;
+}
+
+.view-pdf--text .endOfContent.active {
+  top: 0;
+}
+
+.view-pdf--number {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  margin: 0 1.5rem;
+
+  select {
+    margin: 0 1rem 0 0;
+    min-width: 7rem;
+  }
+}
+ 
+.view-pdf--spacer {
+  width: 3rem;
+}
+
+@media screen and (max-width: 50rem) {
+  .view-pdf--topbar {
+    flex-direction: column;
+    margin: 0.5rem 0;
+    padding: 0 1rem;
+  }
+
+  .view-pdf--name {
+    width: 100%;
+    margin: 0.2rem 0 0.5rem 0;
+  }
+
+  .view-pdf--buttons {
+    width: 100%;
+    margin: 0.2rem 0;
+  }
+
+  .view-pdf--spacer {
+    flex: 1;
+  }
+}
