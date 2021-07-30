@@ -50,7 +50,7 @@ defmodule Hierbautberlin.GeoData.GeoMapItem do
           }
         end)
     }
-    |> Jason.encode!()
+    |> JiffyEx.encode!()
   end
 end
 

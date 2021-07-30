@@ -99,7 +99,8 @@ defmodule Hierbautberlin.MixProject do
       {:sweet_xml, "~> 0.7.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
-      {:timex, "~> 3.7.2"}
+      {:timex, "~> 3.7.2"},
+      {:jiffy_ex, "~> 1.1.0"}
     ]
   end
 
