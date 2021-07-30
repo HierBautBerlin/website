@@ -10,6 +10,7 @@ defmodule Hierbautberlin.GeoData.Source do
     field :url, :string
     field :copyright, :string
     field :color, :string
+    field :background_color, :string
 
     has_many :geo_items, GeoItem
 
