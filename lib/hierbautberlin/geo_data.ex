@@ -34,8 +34,28 @@ defmodule Hierbautberlin.GeoData do
     Repo.get!(GeoStreet, id)
   end
 
+  def get_geo_streets(ids) do
+    query =
+      from(
+        street in GeoStreet,
+        where: street.id in ^ids
+      )
+
+    Repo.all(query)
+  end
+
   def get_geo_street_number!(id) do
     Repo.get!(GeoStreetNumber, id)
+  end
+
+  def get_geo_street_numbers(ids) do
+    query =
+      from(
+        street_number in GeoStreetNumber,
+        where: street_number.id in ^ids
+      )
+
+    Repo.all(query)
   end
 
   def search_street(search) do
@@ -81,6 +101,16 @@ defmodule Hierbautberlin.GeoData do
 
   def get_geo_place!(id) do
     Repo.get!(GeoPlace, id)
+  end
+
+  def get_geo_places(ids) do
+    query =
+      from(
+        geo_place in GeoPlace,
+        where: geo_place.id in ^ids
+      )
+
+    Repo.all(query)
   end
 
   def get_news_item!(id) do
