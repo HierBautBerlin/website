@@ -4,6 +4,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   import Ecto.Query, warn: false
 
   alias Hierbautberlin.Repo
+  alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.{GeoPlace, GeoStreet, GeoStreetNumber}
 
   @place_sorting ["Park", "School", "LOR"]
@@ -119,6 +120,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     |> remove_street_if_place_exists()
     |> remove_place_if_street_number_exists()
     |> make_items_unique()
+    |> fetch_full_models()
   end
 
   defp make_items_unique(map) do
@@ -126,6 +128,14 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
       streets: Enum.uniq_by(map.streets, & &1.id),
       street_numbers: Enum.uniq_by(map.street_numbers, & &1.id),
       places: Enum.uniq_by(map.places, & &1.id)
+    }
+  end
+
+  defp fetch_full_models(map) do
+    %{
+      streets: GeoData.get_geo_streets(Enum.map(map.streets, & &1.id)),
+      street_numbers: GeoData.get_geo_street_numbers(Enum.map(map.street_numbers, & &1.id)),
+      places: GeoData.get_geo_places(Enum.map(map.places, & &1.id))
     }
   end
 

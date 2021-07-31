@@ -248,7 +248,7 @@ defmodule Hierbautberlin.GeoDataTest do
 
     test "it returns a coordinate for a news item with geometries" do
       item = Map.merge(insert(:news_item), %{geo_points: nil})
-      assert GeoData.get_point(item) == %{lat: 52.05, lng: 13.05}
+      assert GeoData.get_point(item) == %{lat: 51.504999999999995, lng: 13.004999999999999}
     end
   end
 
@@ -411,7 +411,11 @@ defmodule Hierbautberlin.GeoDataTest do
                },
                positions: [
                  %Hierbautberlin.GeoData.GeoPosition{
-                   geometry: nil,
+                   geometry: %Geo.LineString{
+                     coordinates: [{13.0, 52.0}, {13.01, 51.01}],
+                     properties: %{},
+                     srid: 4326
+                   },
                    geopoint: %Geo.Point{
                      coordinates: {13.0, 52.0},
                      properties: %{},
@@ -467,6 +471,8 @@ defmodule Hierbautberlin.GeoDataTest do
         GeoData.analyze_text("Wir haben eine neue Baustelle in der Emma Watson Straße die...")
 
       assert [street.id] == Enum.map(result.streets, & &1.id)
+      first_street = List.first(result.streets)
+      assert street.geometry == first_street.geometry
     end
 
     test "it should return two streets" do
@@ -802,6 +808,9 @@ defmodule Hierbautberlin.GeoDataTest do
     test "creates a news item and analyzes the full text" do
       source = insert(:source)
 
+      street = insert(:street, name: "Karl-Marx-Straße", district: "Mitte")
+      AnalyzeText.add_streets([street])
+
       place_park = insert(:place, name: "Rosa Parks Park", district: "Mitte")
       AnalyzeText.add_places([place_park])
 
@@ -817,7 +826,7 @@ defmodule Hierbautberlin.GeoDataTest do
             published_at: time_now,
             source_id: source.id
           },
-          "This is the full text of the Rosa Parks Park announcement",
+          "This is the full text of the Rosa Parks Park announcement in the Karl-Marx-Straße 20",
           districts: []
         )
 
@@ -831,6 +840,7 @@ defmodule Hierbautberlin.GeoDataTest do
       assert Time.diff(news_item.published_at, time_now, :second) == 0
 
       assert [place_park.id] == news_item.geo_places |> Enum.map(& &1.id)
+      assert [street.id] == news_item.geo_streets |> Enum.map(& &1.id)
 
       updated_news_item =
         GeoData.upsert_news_item!(
@@ -839,7 +849,7 @@ defmodule Hierbautberlin.GeoDataTest do
             title: "My Updated Title",
             source_id: source.id
           },
-          "This is the full text of the Rosa Parks Park announcement",
+          "This is the full text of the Rosa Parks Park announcement in the Karl-Marx-Straße 20",
           districts: []
         )
 

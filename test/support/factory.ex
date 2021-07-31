@@ -14,6 +14,13 @@ defmodule Hierbautberlin.Factory do
     %Hierbautberlin.GeoData.GeoStreet{
       city: "Berlin",
       district: "Friedrichshain",
+      geometry: %Geo.LineString{
+        coordinates: [
+          {13.0, 52.0},
+          {13.01, 51.01}
+        ],
+        srid: 4326
+      },
       geo_point: %Geo.Point{
         coordinates: {13.0, 52.0},
         properties: %{},

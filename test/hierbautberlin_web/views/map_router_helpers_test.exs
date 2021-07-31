@@ -72,7 +72,7 @@ defmodule HierbautberlinWeb.MapRouteHelpersTest do
       item = Map.merge(insert(:news_item), %{geo_points: nil})
 
       assert MapRouteHelpers.link_to_details(HierbautberlinWeb.Endpoint, item) ==
-               "http://localhost:4002/map?lat=52.05&lng=13.05&details=#{item.id}&detailsType=news_item"
+               "http://localhost:4002/map?lat=51.504999999999995&lng=13.004999999999999&details=#{item.id}&detailsType=news_item"
     end
 
     test "it returns a link without any geo information" do

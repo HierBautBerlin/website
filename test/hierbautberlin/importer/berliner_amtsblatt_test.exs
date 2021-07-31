@@ -174,6 +174,9 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       park = insert(:place, name: "Lernmanagementsysteme")
       AnalyzeText.add_places([park])
 
+      street = insert(:street, name: "DigitalPakt Schule")
+      AnalyzeText.add_streets([street])
+
       result =
         BerlinerAmtsblatt.import_amtsblatt(
           "test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
@@ -194,6 +197,24 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
              )
 
       assert List.first(first_news.geo_places).name == "Lernmanagementsysteme"
+      assert List.first(first_news.geo_streets).name == "DigitalPakt Schule"
+
+      assert first_news.geometries == %Geo.GeometryCollection{
+               geometries: [
+                 %Geo.LineString{
+                   coordinates: [{13.0, 52.0}, {13.01, 51.01}],
+                   properties: %{},
+                   srid: 4326
+                 },
+                 %Geo.Polygon{
+                   coordinates: [[{13.0, 52.0}, {13.1, 52.1}, {13.1, 52.0}, {13.0, 52.0}]],
+                   properties: %{},
+                   srid: 4326
+                 }
+               ],
+               properties: %{},
+               srid: 4326
+             }
 
       assert first_news.external_id ==
                "/view_pdf/amtsblatt/abl_2021_28_2389_2480_online.pdf?page=4&title=F%C3%B6rderbekanntmachung+landesweiter+Ma%C3%9Fnahmen+im+Land+Berlin+zum+DigitalPakt+Schule+2019+bis+2024"
