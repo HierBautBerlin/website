@@ -73,7 +73,7 @@ const updateMapItems = () => {
   mapItems.forEach((item:GeoItem) => {
     item.positions.forEach((position) => {
       if (position.point) {
-        mapFeatures[`point-${item.id}`] = {
+        mapFeatures[`point-${item.type}-${item.id}`] = {
           type: 'Feature',
           properties: {
             itemId: item.id,
@@ -88,7 +88,7 @@ const updateMapItems = () => {
 
       if (item.type === 'geo_item' && position.geometry) {
         if (isLineString(position.geometry)) {
-          mapFeatures[`linestring-${item.id}`] = {
+          mapFeatures[`linestring-${item.type}-${item.id}`] = {
             type: 'Feature',
             properties: {
               itemId: item.id,
@@ -99,7 +99,7 @@ const updateMapItems = () => {
             geometry: position.geometry,
           } as GeoJSON.Feature;
         } else {
-          mapFeatures[`polygon-${item.id}`] = {
+          mapFeatures[`polygon-${item.type}-${item.id}`] = {
             type: 'Feature',
             properties: {
               itemId: item.id,
