@@ -1,4 +1,4 @@
-defmodule Hierbautberlin.BerlinTest do
+defmodule Hierbautberlin.Services.BerlinTest do
   use Hierbautberlin.DataCase
 
   alias Hierbautberlin.Services.Berlin

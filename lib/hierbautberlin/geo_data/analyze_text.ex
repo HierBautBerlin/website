@@ -3,9 +3,10 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   use GenServer
   import Ecto.Query, warn: false
 
-  alias Hierbautberlin.Repo
   alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.{GeoPlace, GeoStreet, GeoStreetNumber}
+  alias Hierbautberlin.Repo
+  alias Hierbautberlin.Services.UnicodeHelper
 
   @place_sorting ["Park", "School", "LOR"]
 
@@ -50,6 +51,14 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     }
 
     {:noreply, result}
+  end
+
+  def handle_info(message, state) do
+    Bugsnag.report(%RuntimeError{message: "unknown message in analyze_text: #{inspect(message)}"},
+      severity: "warning"
+    )
+
+    {:ok, state}
   end
 
   def handle_call({:reset_index}, _from, _state) do
@@ -204,11 +213,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
       # which means it is only a partial match or the first character is a "-"
       # hinting to a longer street name like "Example-Street"
       (start_character == nil || start_character != "-") &&
-        (end_character == nil ||
-           !Enum.member?(
-             [:L, :Ll, :Lm, :Lo, :Lt, :Lu, :Nd],
-             end_character |> Unicode.category() |> List.first()
-           ))
+        (end_character == nil || !UnicodeHelper.is_character_letter_or_digit?(end_character))
     end)
     |> MapSet.new()
   end
@@ -423,6 +428,8 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     |> String.replace("Str.", "Straße")
     |> String.replace("strasse", "straße")
     |> String.replace("str.", "straße")
+    |> String.replace("\n", " ")
+    |> String.replace(~r/\s+/, " ")
     |> street_enumeration()
   end
 

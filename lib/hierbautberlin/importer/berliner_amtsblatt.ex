@@ -3,6 +3,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
   alias Hierbautberlin.FileStorage
   alias Hierbautberlin.GeoData
+  alias Hierbautberlin.Services.UnicodeHelper
   alias Phoenix.HTML.SimplifiedHelpers.Truncate
 
   @months [
@@ -497,7 +498,23 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   def trim_and_join_lines(lines) do
     lines
     |> Enum.map(&String.trim(&1))
-    |> Enum.join("\n")
+    |> Enum.reduce("", fn line, acc ->
+      if String.ends_with?(acc, "-") do
+        # If the 2 characters before the - are lower case letters and
+        # the 2 characters after the - are lower case letters, join the line
+        # and remove the "-", otherwise just add the line
+        if UnicodeHelper.is_character_lower_case_letter?(String.at(acc, -3)) &&
+             UnicodeHelper.is_character_lower_case_letter?(String.at(acc, -2)) &&
+             UnicodeHelper.is_character_lower_case_letter?(String.at(line, 0)) &&
+             UnicodeHelper.is_character_lower_case_letter?(String.at(line, 1)) do
+          String.slice(acc, 0, String.length(acc) - 1) <> line
+        else
+          acc <> line
+        end
+      else
+        acc <> "\n" <> line
+      end
+    end)
     |> String.trim()
   end
 
