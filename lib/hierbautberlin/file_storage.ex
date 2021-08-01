@@ -45,6 +45,18 @@ defmodule Hierbautberlin.FileStorage do
     Repo.one!(query)
   end
 
+  def get_file_by_name(nil) do
+    nil
+  end
+
+  def get_file_by_name(name) do
+    query =
+      from file in FileItem,
+        where: file.name == ^name
+
+    Repo.one(query)
+  end
+
   @doc """
   Creates a file.
 
@@ -58,9 +70,9 @@ defmodule Hierbautberlin.FileStorage do
 
   """
   def create_file(attrs \\ %{}) do
-    %FileItem{}
+    (get_file_by_name(attrs[:name]) || %FileItem{})
     |> FileItem.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert_or_update()
   end
 
   @doc """
