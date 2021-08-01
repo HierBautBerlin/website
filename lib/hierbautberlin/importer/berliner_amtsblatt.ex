@@ -200,7 +200,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
             source_id: source.id
           },
           item.full_text,
-          districts: [item.item.title]
+          [item.item.title]
         )
       end)
     end
