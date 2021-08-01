@@ -34,6 +34,17 @@ defmodule Hierbautberlin.FileStorageTest do
       assert file.type == "some type"
     end
 
+    test "create_file/1 run again will overwrite the data" do
+      assert {:ok, %FileItem{} = file} = FileStorage.create_file(@valid_attrs)
+
+      assert {:ok, %FileItem{} = file} =
+               FileStorage.create_file(%{name: "some name", title: "New Title"})
+
+      assert file.name == "some name"
+      assert file.type == "some type"
+      assert file.title == "New Title"
+    end
+
     test "create_file/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = FileStorage.create_file(@invalid_attrs)
     end
@@ -132,6 +143,40 @@ defmodule Hierbautberlin.FileStorageTest do
       assert file_item.title == "My File"
 
       File.rm("this_file_exists.pdf")
+    end
+
+    test "overwrites a already existing file" do
+      File.touch("dublicate.pdf")
+
+      FileStorage.store_file(
+        "dublicate.pdf",
+        "dublicate.pdf",
+        "application/pdf",
+        "Old Title"
+      )
+
+      File.touch("dublicate.pdf")
+
+      FileStorage.store_file(
+        "dublicate.pdf",
+        "dublicate.pdf",
+        "application/pdf",
+        "New Title"
+      )
+
+      assert FileStorage.exists?("dublicate.pdf")
+
+      assert File.exists?(
+               "./file_storage/E32843258ACB50D059D0/24866FBF6EBC275A48B0/9574A0799EF0263055AC/6343/dublicate.pdf"
+             )
+
+      file_item = FileStorage.get_file_by_name!("dublicate.pdf")
+
+      assert file_item.name == "dublicate.pdf"
+      assert file_item.type == "application/pdf"
+      assert file_item.title == "New Title"
+
+      File.rm("dublicate.pdf")
     end
   end
 
