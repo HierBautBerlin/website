@@ -197,13 +197,18 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     |> AhoCorasick.search(text)
     |> MapSet.to_list()
     |> Enum.filter(fn {hit, position, _} ->
-      character = String.at(text, position + String.length(hit) - 1)
+      end_character = String.at(text, position + String.length(hit) - 1)
+      start_character = String.at(text, position - 2)
 
-      character == nil ||
-        !Enum.member?(
-          [:L, :Ll, :Lm, :Lo, :Lt, :Lu],
-          character |> Unicode.category() |> List.first()
-        )
+      # Remove hit when the following character is a number or letter,
+      # which means it is only a partial match or the first character is a "-"
+      # hinting to a longer street name like "Example-Street"
+      (start_character == nil || start_character != "-") &&
+        (end_character == nil ||
+           !Enum.member?(
+             [:L, :Ll, :Lm, :Lo, :Lt, :Lu, :Nd],
+             end_character |> Unicode.category() |> List.first()
+           ))
     end)
     |> MapSet.new()
   end

@@ -802,6 +802,36 @@ defmodule Hierbautberlin.GeoDataTest do
       assert [street_two.id] == result.streets |> Enum.map(& &1.id)
       assert [] == result.street_numbers |> Enum.map(& &1.id)
     end
+
+    test "Match should not be part of another word" do
+      street = insert(:street, name: "Straße 5", district: "Friedrichshain-Kreuzberg")
+
+      AnalyzeText.add_streets([street])
+
+      result =
+        GeoData.analyze_text(
+          "Auf der James Baldwin Strasse 51 ...",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert Enum.empty?(result.streets)
+
+      result =
+        GeoData.analyze_text(
+          "Auf der James-Baldwin-Strasse 5 ...",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert Enum.empty?(result.streets)
+
+      result =
+        GeoData.analyze_text(
+          "Auf der Baldwinstrasse 5 ...",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert Enum.empty?(result.streets)
+    end
   end
 
   describe "upsert_news_item!/3" do
