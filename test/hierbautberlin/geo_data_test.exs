@@ -832,6 +832,21 @@ defmodule Hierbautberlin.GeoDataTest do
 
       assert Enum.empty?(result.streets)
     end
+
+    test "Should ignore newlines" do
+      street =
+        insert(:street, name: "Ruth Bader Ginsburg Straße 5", district: "Friedrichshain-Kreuzberg")
+
+      AnalyzeText.add_streets([street])
+
+      result =
+        GeoData.analyze_text(
+          "Auf der Ruth Bader\nGinsburg Straße 5",
+          %{districts: ["Friedrichshain-Kreuzberg"]}
+        )
+
+      assert [street.id] == result.streets |> Enum.map(& &1.id)
+    end
   end
 
   describe "upsert_news_item!/3" do

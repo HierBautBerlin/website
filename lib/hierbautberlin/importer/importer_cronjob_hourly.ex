@@ -21,6 +21,14 @@ defmodule Hierbautberlin.Importer.ImporterCronjobHourly do
     {:noreply, state}
   end
 
+  def handle_info(message, state) do
+    Bugsnag.report(%RuntimeError{message: "unknown message in analyze_text: #{inspect(message)}"},
+      severity: "warning"
+    )
+
+    {:ok, state}
+  end
+
   defp schedule_work() do
     Process.send_after(self(), :work, 1_000 * 60 * 60)
   end

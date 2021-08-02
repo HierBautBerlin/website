@@ -35,7 +35,7 @@ defmodule Hierbautberlin.FileStorageTest do
     end
 
     test "create_file/1 run again will overwrite the data" do
-      assert {:ok, %FileItem{} = file} = FileStorage.create_file(@valid_attrs)
+      assert {:ok, %FileItem{}} = FileStorage.create_file(@valid_attrs)
 
       assert {:ok, %FileItem{} = file} =
                FileStorage.create_file(%{name: "some name", title: "New Title"})

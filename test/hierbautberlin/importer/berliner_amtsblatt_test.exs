@@ -665,4 +665,25 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       assert {3, 6} = BerlinerAmtsblatt.find_section(page, "This is a title", 2)
     end
   end
+
+  describe "trim_and_join_lines/1" do
+    test "it joins several lines" do
+      assert "Line 1\nLine 2\nLine 3" ==
+               BerlinerAmtsblatt.trim_and_join_lines(["   Line 1", "Line 2     ", " Line 3 "])
+    end
+
+    test "it dehyphens the text" do
+      assert "Diese Zeilenlänge benötigt leider umbrueche.\nWie auch in der Herman-Mueller-Strasse.\nUnd 5-7 ist...\nAber a-z ist..." ==
+               BerlinerAmtsblatt.trim_and_join_lines([
+                 "Diese Zeilen-",
+                 "länge benötigt leider umbrueche.",
+                 "Wie auch in der Herman-",
+                 "Mueller-Strasse.",
+                 "Und 5-",
+                 "7 ist...",
+                 "Aber a-",
+                 "z ist..."
+               ])
+    end
+  end
 end
