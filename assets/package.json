@@ -30,7 +30,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/phoenix": "^1.5.2",
     "@types/phoenix_live_view": "^0.15.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^9.0.1",
