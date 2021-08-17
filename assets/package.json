@@ -43,7 +43,7 @@
     "file-loader": "^6.2.0",
     "hard-source-webpack-plugin": "^0.13.1",
     "mini-css-extract-plugin": "^2.2.0",
-    "sass": "^1.37.5",
+    "sass": "^1.38.0",
     "sass-loader": "^12.1.0",
     "source-map-loader": "^3.0.0",
     "terser-webpack-plugin": "^5.1.4",
