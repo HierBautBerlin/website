@@ -15,7 +15,7 @@
     "lodash-es": "^4.17.21",
     "mapbox-gl": "^2.5.0",
     "milligram": "^1.4.1",
-    "pdfjs-dist": "^2.9.359",
+    "pdfjs-dist": "^2.10.377",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
