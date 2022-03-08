@@ -4763,10 +4763,12 @@ pbf@^3.2.1:
     ieee754 "^1.1.12"
     resolve-protobuf-schema "^2.1.0"
 
-pdfjs-dist@^2.12.313:
-  version "2.12.313"
-  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.12.313.tgz#62f2273737bb956267ae2e02cdfaddcb1099819c"
-  integrity sha512-1x6iXO4Qnv6Eb+YFdN5JdUzt4pAkxSp3aLAYPX93eQCyg/m7QFzXVWJHJVtoW48CI8HCXju4dSkhQZwoheL5mA==
+pdfjs-dist@^2.13.216:
+  version "2.13.216"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-2.13.216.tgz#251a11c9c8c6db19baacd833a4e6986c517d1ab3"
+  integrity sha512-qn/9a/3IHIKZarTK6ajeeFXBkG15Lg1Fx99PxU09PAU2i874X8mTcHJYyDJxu7WDfNhV6hM7bRQBZU384anoqQ==
+  dependencies:
+    web-streams-polyfill "^3.2.0"
 
 "phoenix@file:../deps/phoenix":
   version "1.5.9"
@@ -5871,6 +5873,11 @@ watchpack@^2.3.1:
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
+
+web-streams-polyfill@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.0.tgz#a6b74026b38e4885869fb5c589e90b95ccfc7965"
+  integrity sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==
 
 webpack-bundle-analyzer@^4.5.0:
   version "4.5.0"
