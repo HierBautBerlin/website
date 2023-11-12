@@ -47,7 +47,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
       external_id: item["id"],
       title: item["title"],
       subtitle: item["subtitle"],
-      description: item["description"],
+      description: extract_description(item),
       url: item["link"],
       state: @state_mapping[item["status"]],
       geo_point: point,
@@ -106,5 +106,19 @@ defmodule Hierbautberlin.Importer.Infravelo do
       _ ->
         nil
     end
+  end
+
+
+  defp extract_description(item) do
+    description = "#{item["description"]}"
+
+    #districts = "Bezirke: #{item["districts"] |> Enum.map(&(&1.name)) |> Enum.join(", ") || "-"}"
+    districts = "Bezirke: #{Poison.encode!(Poison.encode!(data))}
+    holder = "Vorhabenträger: #{item["holder"] || "-"}"
+    owner = "Bauherr: #{item["owner"] || "-"}"
+    # year = "Jahr der Umsetzung: #{item["owner"] || "-"}"
+    details = "Projekttyp und Metriken: #{Poison.encode!(Poison.encode!(item["types"]))}
+
+    "#{description}\n#{districts}\n#{holder}\n#{owner}\n#{details}"
   end
 end
