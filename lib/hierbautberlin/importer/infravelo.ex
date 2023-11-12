@@ -109,7 +109,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
   end
 
 
-  defp extract_description(text) do
+  defp extract_description(item) do
     description = "#{item["description"]}"
 
     #districts = "Bezirke: #{item["districts"] |> Enum.map(&(&1.name)) |> Enum.join(", ") || "-"}"
@@ -117,7 +117,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
     holder = "Vorhabenträger: #{item["holder"] || "-"}"
     owner = "Bauherr: #{item["owner"] || "-"}"
     # year = "Jahr der Umsetzung: #{item["owner"] || "-"}"
-    details = "Projekttyp und Metriken: #{Poison.encode!(Poison.encode!(data))}
+    details = "Projekttyp und Metriken: #{Poison.encode!(Poison.encode!(item["types"]))}
 
     "#{description}\n#{districts}\n#{holder}\n#{owner}\n#{details}"
   end
