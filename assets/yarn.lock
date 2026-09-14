@@ -2406,10 +2406,10 @@
   resolved "https://registry.yarnpkg.com/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
   integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
 
-"@types/phoenix@*", "@types/phoenix@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.5.4.tgz#c08a1da6d7b4e365f6a1fe1ff9aada55f5356d24"
-  integrity sha512-L5eZmzw89eXBKkiqVBcJfU1QGx9y+wurRIEgt0cuLH0hwNtVUxtx+6cu0R2STwWj468sjXyBYPYDtGclUd1kjQ==
+"@types/phoenix@*", "@types/phoenix@^1.6.7":
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.6.7.tgz#75137b7ecf732ceaca284cf10c1552071cfff12f"
+  integrity sha512-oN9ive//QSBkf19rfDv45M7eZPi0eEXylht2OLEXicu5b4KoQ1OzXIw+xDSGWxSxe1JmepRR/ZH283vsu518/Q==
 
 "@types/phoenix_live_view@^0.15.1":
   version "0.15.1"
