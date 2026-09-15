@@ -34,7 +34,7 @@ jobs:
       - name: Install pdf and geo packages
         run: sudo apt-get update && sudo apt-get install -y poppler-utils qpdf gdal-bin
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.x"
 
