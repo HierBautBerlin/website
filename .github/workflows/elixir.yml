@@ -29,7 +29,7 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Install pdf and geo packages
         run: sudo apt-get update && sudo apt-get install -y poppler-utils qpdf gdal-bin
