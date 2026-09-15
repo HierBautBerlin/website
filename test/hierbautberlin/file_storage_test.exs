@@ -1,6 +1,8 @@
 defmodule Hierbautberlin.FileStorageTest do
   use Hierbautberlin.DataCase
 
+  @storage_path Application.compile_env(:hierbautberlin, :file_storage_path)
+
   alias Hierbautberlin.FileStorage
   alias Hierbautberlin.FileStorage.FileItem
 
@@ -79,12 +81,12 @@ defmodule Hierbautberlin.FileStorageTest do
       assert FileStorage.path_for_file(%FileItem{
                name: "amtsblatt/abl_2021_28_2389_2480_online.pdf"
              }) ==
-               "./file_storage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
+               "#{@storage_path}/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
     end
 
     test "returns a nice filename in the storage" do
       assert FileStorage.path_for_file("amtsblatt/abl_2021_28_2389_2480_online.pdf") ==
-               "./file_storage/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
+               "#{@storage_path}/C985239A3E93DBAA4CD5/1A6E0C5B979F8BE5E0CE/99633E8697D62BE66481/5337/abl_2021_28_2389_2480_online.pdf"
     end
   end
 
@@ -133,7 +135,7 @@ defmodule Hierbautberlin.FileStorageTest do
       assert FileStorage.exists?("this_file_exists.pdf")
 
       assert File.exists?(
-               "./file_storage/A154C2456073E64CBE2C/C5F68BBA3DB6F113B2E6/77EEBF27B6FBB35E8FC7/018B/this_file_exists.pdf"
+               "#{@storage_path}/A154C2456073E64CBE2C/C5F68BBA3DB6F113B2E6/77EEBF27B6FBB35E8FC7/018B/this_file_exists.pdf"
              )
 
       file_item = FileStorage.get_file_by_name!("this_file_exists.pdf")
@@ -167,7 +169,7 @@ defmodule Hierbautberlin.FileStorageTest do
       assert FileStorage.exists?("dublicate.pdf")
 
       assert File.exists?(
-               "./file_storage/E32843258ACB50D059D0/24866FBF6EBC275A48B0/9574A0799EF0263055AC/6343/dublicate.pdf"
+               "#{@storage_path}/E32843258ACB50D059D0/24866FBF6EBC275A48B0/9574A0799EF0263055AC/6343/dublicate.pdf"
              )
 
       file_item = FileStorage.get_file_by_name!("dublicate.pdf")
@@ -183,11 +185,11 @@ defmodule Hierbautberlin.FileStorageTest do
   describe "exists?/1" do
     test "returns true if file exists" do
       File.mkdir_p(
-        "file_storage/66BDAB382A1B0B067304/0380AE4D395D729A885F/5CF09F2B0ABD552AA123/CF60"
+        "#{@storage_path}/66BDAB382A1B0B067304/0380AE4D395D729A885F/5CF09F2B0ABD552AA123/CF60"
       )
 
       File.touch(
-        "file_storage/66BDAB382A1B0B067304/0380AE4D395D729A885F/5CF09F2B0ABD552AA123/CF60/filename.txt"
+        "#{@storage_path}/66BDAB382A1B0B067304/0380AE4D395D729A885F/5CF09F2B0ABD552AA123/CF60/filename.txt"
       )
 
       assert FileStorage.exists?("filename.txt")

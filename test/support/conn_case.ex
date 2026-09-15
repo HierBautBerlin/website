@@ -25,7 +25,7 @@ defmodule HierbautberlinWeb.ConnCase do
       import HierbautberlinWeb.ConnCase
       import Hierbautberlin.Factory
 
-      alias HierbautberlinWeb.Router.Helpers, as: Routes
+      use HierbautberlinWeb, :verified_routes
 
       # The default endpoint for testing
       @endpoint HierbautberlinWeb.Endpoint

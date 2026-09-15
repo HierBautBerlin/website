@@ -122,4 +122,16 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       assert length(result) == 2
     end
   end
+
+  describe "strip_html/1" do
+    test "extracts the text of the current page layout" do
+      text =
+        "test/support/data/berlin_presse/pressemitteilung_2026.html"
+        |> File.read!()
+        |> BerlinPresse.strip_html()
+
+      assert text =~ "Rund um den World Cleanup Day am 20. September"
+      refute text =~ "Direkt zur Kontaktinformation"
+    end
+  end
 end

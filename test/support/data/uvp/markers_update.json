@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Ausbau de L 401 in der Ortsdurchfahrt Zeuthen - Update",
+    "lat": "52.3477",
+    "lon": "13.61585",
+    "iplug": "ige-ng_igc_bb",
+    "uuid": "0F8A6A66-A2F9-40EE-A426-AD2C013622DB",
+    "bbox": [
+      [
+        52.3183,
+        13.5664
+      ],
+      [
+        52.3771,
+        13.6653
+      ]
+    ],
+    "procedure": "Zulassungsverfahren",
+    "categories": [
+      {
+        "id": "UVPG-14",
+        "name": "Verkehrsvorhaben"
+      }
+    ],
+    "steps": [
+      "Öffentliche Auslegung"
+    ]
+  }
+]

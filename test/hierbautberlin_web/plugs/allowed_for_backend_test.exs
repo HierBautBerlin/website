@@ -9,8 +9,8 @@ defmodule HierbautberlinWeb.Plugs.AllowedForBackendTest do
       |> with_pipeline
       |> HierbautberlinWeb.Plugs.AllowedForBackend.call(%{})
 
-    assert Phoenix.Controller.get_flash(conn, :error) == "Leider musst du ein Admin sein."
-    assert redirected_to(conn) == "/"
+    assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Leider musst du ein Admin sein."
+    assert redirected_to(conn) == ~p"/map"
   end
 
   test "user can open page if admin", %{conn: conn} do
@@ -22,7 +22,7 @@ defmodule HierbautberlinWeb.Plugs.AllowedForBackendTest do
       |> with_pipeline
       |> HierbautberlinWeb.Plugs.AllowedForBackend.call(%{})
 
-    assert Phoenix.Controller.get_flash(conn, :error) == nil
+    assert Phoenix.Flash.get(conn.assigns.flash, :error) == nil
   end
 
   defp with_pipeline(conn) do

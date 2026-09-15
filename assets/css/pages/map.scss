@@ -1,3 +1,5 @@
+// height of the toolbar of the list: button, padding and border
+$list-toolbar-height: 4.9rem;
 
 .map--container {
   position: absolute;
@@ -12,50 +14,141 @@
 .map--popup {
   font-family: "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 12px;
+  line-height: 1.35;
+}
+
+.map--popup--date {
+  margin-top: 2px;
+  font-size: 10.5px;
+  color: #5f5f5f;
 }
 
 .map--controls {
+  z-index: 102;
   position: absolute;
   left: 20px;
   top: 20px;
-  max-height: calc(105vh - 10rem);
+  width: 36rem;
+  max-width: calc(100% - 40px);
+  max-height: calc(100% - 40px);
   display: flex;
   flex-direction: column;
 }
 
 .map--controls-top {
   display: flex;
+  gap: 0.8rem;
 }
 
 .map--search-form {
-  margin: 0 1rem 0 0;
+  position: relative;
+  flex: 1;
+  margin: 0;
 
   .map--search-input {
+    height: 4.4rem;
     margin: 0;
-    background-color: #fff;
+    padding: 0 1.2rem 0 4rem;
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    border: 1px solid #b9b9b9;
+    border-radius: 0.8rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+
+    &::placeholder {
+      color: #6b6b6b;
+    }
+
+    &:focus {
+      border-color: var(--action-color);
+      box-shadow: 0 0 0 3px rgba(77, 188, 154, 0.4), 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
   }
 }
 
+.map--search-icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  width: 2rem;
+  height: 2rem;
+  transform: translateY(-50%);
+  color: #5f5f5f;
+  pointer-events: none;
+}
+
 .map--search-results {
-  background-color: white;
-  border: 1px solid rgb(209,209,209);
-  border-radius: .4rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem;
-  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 0.6rem;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.map--search-results--list {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: min(42rem, calc(100vh - 20rem));
+  margin: 0;
+  padding: 0.4rem 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.map--search-result {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0.8rem 1.4rem 0.8rem 1.2rem;
+  line-height: 1.35;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+}
+
+.map--search-result--active {
+  background-color: rgba(77, 188, 154, 0.16);
+  border-left-color: var(--action-color);
+}
+
+.map--search-result--name {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.map--search-result--area {
+  font-size: 1.3rem;
+  color: #5f5f5f;
+}
+
+.map--search-results--empty {
+  margin: 0;
+  padding: 1.2rem 1.6rem;
+  color: #5f5f5f;
 }
 
 .map--location-button {
-  padding: 0.3rem;
+  flex-shrink: 0;
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: auto;
   line-height: normal;
-
+  color: var(--text-color);
   background-color: var(--bg-color);
-  border-color: var(--deactive);
+  border: 1px solid #b9b9b9;
+  border-radius: 0.8rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
 
   &:hover,
   &:focus {
@@ -64,8 +157,227 @@
   }
 
   svg {
-    width: 2.3rem;
-    height: 2.3rem;
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
+.map--center-marker {
+  font-size: 30px;
+  color: #6f6f6f;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.map--list-toolbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.map--list-tool {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.map--list-tool--button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+  height: 2.8rem;
+  margin: 0;
+  padding: 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border: 1px solid #b9b9b9;
+  border-radius: 1.4rem;
+
+  &:hover,
+  &:focus {
+    color: var(--text-color);
+    background-color: #f2f2f2;
+    border-color: #5f5f5f;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(77, 188, 154, 0.6);
+    outline-offset: 1px;
+  }
+}
+
+// a filter differs from the default
+.map--list-tool--button-active,
+.map--list-tool--button-active:hover,
+.map--list-tool--button-active:focus {
+  background-color: rgba(77, 188, 154, 0.18);
+  border-color: var(--action-color);
+}
+
+.map--list-tool--icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+// only on phones
+.map--list-collapse {
+  display: none;
+}
+
+.map--list-collapse--icon {
+  transition: transform 0.3s ease;
+}
+
+.map--list-tool--count {
+  padding: 0.15rem 0.5rem;
+  font-size: 1.1rem;
+  color: #fff;
+  background-color: #2f7d65;
+  border-radius: 1rem;
+}
+
+.map--list-tool--query {
+  overflow: hidden;
+  max-width: 16rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map--list-tool--clear {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin: 0 0 0 0.2rem;
+  padding: 0;
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+  color: var(--text-color);
+  background: none;
+  border: none;
+  border-radius: 50%;
+
+  &:hover,
+  &:focus {
+    color: var(--text-color);
+    background-color: #f2f2f2;
+  }
+}
+
+.map--list-popup {
+  display: none;
+  z-index: 110;
+  position: absolute;
+  top: calc(100% - 0.4rem);
+  // below the right-aligned tools, at the right edge of the toolbar
+  right: 1.2rem;
+  width: 28rem;
+  max-width: calc(100% - 2.4rem);
+  max-height: 40rem;
+  overflow-y: auto;
+  padding: 1.2rem 1.4rem;
+  background-color: var(--bg-color);
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+
+  form,
+  fieldset {
+    margin: 0;
+  }
+
+  input[type="text"] {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.map--list-popup--title {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+
+.map--list-popup--hint {
+  margin: 0.6rem 0 0;
+  font-size: 1.2rem;
+  color: #5f5f5f;
+}
+
+.map--list-popup--source {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  cursor: pointer;
+
+  input {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin: 0;
+    accent-color: #2f7d65;
+  }
+}
+
+.map--list-popup--swatch {
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+
+.map--list-popup--action {
+  height: auto;
+  margin: 0.8rem 0.8rem 0 0;
+  padding: 0.6rem 1rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #1f5c4a;
+  background-color: rgba(77, 188, 154, 0.18);
+  border: none;
+  border-radius: 0.6rem;
+
+  &:hover,
+  &:focus {
+    color: #1f5c4a;
+    background-color: rgba(77, 188, 154, 0.32);
+  }
+}
+
+// the message about the empty list is shown right below the toolbar
+.map--item-list.map--item-list-without-items {
+  flex: 0 0 auto;
+  height: auto;
+  padding: 0;
+}
+
+.map--item-list--empty {
+  flex: 1 1 auto;
+  padding: 2rem;
+  color: #5f5f5f;
+
+  p {
+    margin-bottom: 0.4rem;
   }
 }
 
@@ -88,8 +400,17 @@
   flex-direction: column;
 }
 
+// list, empty state and footer, hidden when the list is collapsed on phones
+.map--item-list-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .map--item-list {
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   list-style: none;
   margin-bottom: 0;
@@ -97,32 +418,49 @@
 }
 
 .map--item-list-footer {
-  border-top: 1px solid var(--light-text-color);
-  padding: 0.5em 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.3rem;
+  padding: 0.8rem 1.6rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  text-align: center;
+  color: #3a3a3a;
+  border-top: 1px solid #e2e2e2;
+
+  a {
+    color: #1f5c4a;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover,
+    &:focus {
+      color: #000;
+    }
+  }
 }
 
 .map--item-list-footer--subscribe {
-  font-size: 0.8em;
-  padding: 0 1rem;
-  
   form {
     margin: 0;
   }
 }
 
-.map--item-list-footer--register {
-  font-size: 0.8em;
+.map--item-list-footer--short {
+  display: none;
 }
 
 .map--item-list-footer--impressum {
-  text-align: center;
-  font-size: 0.8em;
-  color: var(--light-text-color);
+  // #6b6b6b on white has enough contrast (the old #949494 hadn't)
+  color: #6b6b6b;
+
   a {
-    color: var(--light-text-color);
+    color: #6b6b6b;
+    font-weight: 400;
+    text-decoration: none;
   }
 }
 
@@ -171,7 +509,172 @@
   overflow: hidden;
 }
 
+.map--welcome {
+  z-index: 102;
+  position: absolute;
+  left: 20px;
+  bottom: 3rem;
+  width: 34rem;
+  max-width: calc(100% - 40px - 44rem);
+  min-width: 28rem;
+  padding: 2rem 2.5rem 1rem 2rem;
+  background-color: var(--bg-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+
+  &[hidden] {
+    display: none;
+  }
+
+  p {
+    margin-bottom: 1.2rem;
+  }
+}
+
+.map--welcome--title {
+  font-size: 1.3em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-right: 2rem;
+}
+
+.map--welcome--small {
+  margin-bottom: 0;
+  font-size: 0.8em;
+  color: #6b6b6b;
+}
+
+// only on the full screen version for phones
+.map--welcome--logo {
+  display: none;
+}
+
+.map--welcome--start {
+  height: auto;
+  margin: 0 0 1.4rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #fff;
+  background-color: #2f7d65;
+  border: none;
+  border-radius: 0.6rem;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    background-color: #1f5c4a;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(77, 188, 154, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+.map--welcome--close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  margin: 0;
+  padding: 0;
+  line-height: 3rem;
+  font-size: 2rem;
+  color: var(--text-color);
+  background: none;
+  border: none;
+
+  &:hover,
+  &:focus {
+    color: var(--text-color);
+    background: rgba(0, 0, 0, 0.08) !important;
+  }
+}
+
 @media only screen and (max-width: 50em) {
+  // full screen on phones, above the header (300), below the details dialog (401)
+  .map--welcome {
+    z-index: 360;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 4.4rem 2.4rem 2.4rem;
+    overflow-y: auto;
+    font-size: 1.7rem;
+    line-height: 1.55;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // centered, but scrolls from the top when it is higher than the screen
+  .map--welcome--content {
+    margin: auto 0;
+  }
+
+  .map--welcome--logo {
+    display: block;
+    width: 8rem;
+    height: auto;
+    margin-bottom: 1.6rem;
+  }
+
+  .map--welcome--title {
+    font-size: 2.6rem;
+    line-height: 1.2;
+    margin-bottom: 1.6rem;
+    padding-right: 0;
+  }
+
+  .map--welcome--start {
+    width: 100%;
+    margin: 1rem 0 2rem;
+    padding: 1.4rem 1.6rem;
+    font-size: 1.7rem;
+  }
+
+  .map--welcome--close {
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 3rem;
+    line-height: 4.4rem;
+  }
+}
+
+@media only screen and (max-width: 50em) {
+  // GitHub, Impressum and Datenschutz are in the hamburger menu (same breakpoint)
+  .map--item-list-footer--impressum {
+    display: none;
+  }
+
+  .map--item-list-footer {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .map--item-list-footer--register,
+  .map--item-list-footer--subscribe {
+    white-space: nowrap;
+  }
+
+  .map--item-list-footer--long {
+    display: none;
+  }
+
+  .map--item-list-footer--short {
+    display: inline;
+  }
+
   .map--item-list-wrapper {
     position: absolute;
     left: 2rem;
@@ -179,15 +682,201 @@
     bottom: 1em;
     width: auto;
     height: auto;
+    transition: top 0.35s ease;
+  }
+
+  .map--list-toolbar {
+    flex-wrap: nowrap;
+    padding: 1rem 1.2rem;
+  }
+
+  .map--list-collapse {
+    display: inline-flex;
+    flex-shrink: 0;
+    margin-right: auto;
+  }
+
+  #list-search {
+    max-width: 30rem;
+    transition: max-width 0.35s ease, margin-left 0.35s ease, opacity 0.25s ease, visibility 0.35s;
+  }
+
+  .map--item-list-body {
+    overflow: hidden;
+    transition: opacity 0.25s ease, visibility 0.35s;
   }
 
   .map--item-list {
-    height: auto;
-    overflow: scroll;
+    overflow-y: auto;
+  }
+
+  // collapsed: only the toolbar with the collapse and the sources button is left
+  .map--item-list-wrapper-collapsed {
+    top: calc(100% - 1em - #{$list-toolbar-height});
+
+    .map--list-toolbar {
+      border-bottom-color: transparent;
+    }
+
+    .map--list-collapse--icon {
+      transform: rotate(180deg);
+    }
+
+    #list-search {
+      max-width: 0;
+      // the gap of the toolbar stays, the sources button is flush right
+      margin-left: -0.6rem;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .map--item-list-body {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    // the toolbar is at the bottom of the screen, the popup opens above it
+    .map--list-popup {
+      top: auto;
+      bottom: calc(100% - 0.4rem);
+      max-height: min(40rem, 60vh);
+    }
   }
 
   .map--controls {
-    max-height: calc(34vh);
+    right: 20px;
+    width: auto;
+    // ends above the list, the results dropdown needs a visible edge
+    max-height: calc(45vh - 6rem);
   }
 
+
+}
+
+// details dialog: text, map below it and the share button, map on the left on wide screens
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "text"
+    "map"
+    "share";
+  gap: 1.6rem;
+}
+
+.details--text {
+  grid-area: text;
+  min-width: 0;
+
+  // long German words ("Grundstücksnummerierungen") break instead of overflowing
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  // at least 3 characters before and after the hyphen, no "Aktuel-le"
+  hyphenate-limit-chars: 6 3 3;
+  -webkit-hyphenate-limit-before: 3;
+  -webkit-hyphenate-limit-after: 3;
+}
+
+.details--map {
+  grid-area: map;
+  height: 24rem;
+  overflow: hidden;
+  border-radius: 0.8rem;
+  background-color: #e6e4e0;
+}
+
+.details--share {
+  grid-area: share;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+@media only screen and (min-width: 1400px) {
+  #details-modal .phx-modal-inner {
+    max-width: 120rem;
+  }
+
+  // only the text scrolls, the map stays in the upper left corner and the
+  // share button at the bottom
+  #details-modal .phx-modal-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .details {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: 38rem minmax(0, 1fr);
+    grid-template-areas:
+      "map text"
+      "map share";
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 2.4rem;
+    row-gap: 0;
+  }
+
+  .details--text {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 1.2rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .details--share {
+    padding-top: 1.2rem;
+    border-top: 1px solid #e2e2e2;
+  }
+
+  .details--map {
+    align-self: start;
+    height: 38rem;
+  }
+}
+
+.details--share--status {
+  font-size: 1.3rem;
+  color: #1f5c4a;
+}
+
+.details--share--button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3.2rem;
+  margin: 0;
+  padding: 0 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border: 1px solid #b9b9b9;
+  border-radius: 1.6rem;
+
+  &:hover,
+  &:focus {
+    color: var(--text-color);
+    background-color: #f2f2f2;
+    border-color: #5f5f5f;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(77, 188, 154, 0.6);
+    outline-offset: 1px;
+  }
+}
+
+.details--share--icon {
+  width: 1.6rem;
+  height: 1.6rem;
 }

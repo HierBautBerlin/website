@@ -11,7 +11,7 @@ defmodule HierbautberlinWeb.UserResetPasswordControllerTest do
 
   describe "GET /users/reset_password" do
     test "renders the reset password page", %{conn: conn} do
-      conn = get(conn, Routes.user_reset_password_path(conn, :new))
+      conn = get(conn, ~p"/users/reset_password")
       response = html_response(conn, 200)
       assert response =~ "<h1>Passwort vergessen?</h1>"
     end
@@ -21,23 +21,29 @@ defmodule HierbautberlinWeb.UserResetPasswordControllerTest do
     @tag :capture_log
     test "sends a new reset password token", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.user_reset_password_path(conn, :create), %{
+        post(conn, ~p"/users/reset_password", %{
           "user" => %{"email" => user.email}
         })
 
-      assert redirected_to(conn) == "/"
-      assert get_flash(conn, :info) =~ "Wenn deine Email-Adresse in unserem System"
+      assert redirected_to(conn) == ~p"/map"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
+               "Wenn deine Email-Adresse in unserem System"
+
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "reset_password"
     end
 
     test "does not send reset password token if email is invalid", %{conn: conn} do
       conn =
-        post(conn, Routes.user_reset_password_path(conn, :create), %{
+        post(conn, ~p"/users/reset_password", %{
           "user" => %{"email" => "unknown@example.com"}
         })
 
-      assert redirected_to(conn) == "/"
-      assert get_flash(conn, :info) =~ "Wenn deine Email-Adresse in unserem System"
+      assert redirected_to(conn) == ~p"/map"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
+               "Wenn deine Email-Adresse in unserem System"
+
       assert Repo.all(Accounts.UserToken) == []
     end
   end
@@ -53,14 +59,16 @@ defmodule HierbautberlinWeb.UserResetPasswordControllerTest do
     end
 
     test "renders reset password", %{conn: conn, token: token} do
-      conn = get(conn, Routes.user_reset_password_path(conn, :edit, token))
+      conn = get(conn, ~p"/users/reset_password/#{token}")
       assert html_response(conn, 200) =~ "<h1>Passwort zurücksetzen</h1>"
     end
 
     test "does not render reset password with invalid token", %{conn: conn} do
-      conn = get(conn, Routes.user_reset_password_path(conn, :edit, "oops"))
-      assert redirected_to(conn) == "/"
-      assert get_flash(conn, :error) =~ "Passwort-Link ist nicht korrekt oder veraltet."
+      conn = get(conn, ~p"/users/reset_password/#{"oops"}")
+      assert redirected_to(conn) == ~p"/map"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
+               "Passwort-Link ist nicht korrekt oder veraltet."
     end
   end
 
@@ -76,22 +84,25 @@ defmodule HierbautberlinWeb.UserResetPasswordControllerTest do
 
     test "resets password once", %{conn: conn, user: user, token: token} do
       conn =
-        put(conn, Routes.user_reset_password_path(conn, :update, token), %{
+        put(conn, ~p"/users/reset_password/#{token}", %{
           "user" => %{
             "password" => "new valid password",
             "password_confirmation" => "new valid password"
           }
         })
 
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == ~p"/users/log_in"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Passwort erfolgreich zurück gesetzt."
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
+               "Passwort erfolgreich zurück gesetzt."
+
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end
 
     test "does not reset password on invalid data", %{conn: conn, token: token} do
       conn =
-        put(conn, Routes.user_reset_password_path(conn, :update, token), %{
+        put(conn, ~p"/users/reset_password/#{token}", %{
           "user" => %{
             "password" => "short",
             "password_confirmation" => "does not match"
@@ -105,9 +116,11 @@ defmodule HierbautberlinWeb.UserResetPasswordControllerTest do
     end
 
     test "does not reset password with invalid token", %{conn: conn} do
-      conn = put(conn, Routes.user_reset_password_path(conn, :update, "oops"))
-      assert redirected_to(conn) == "/"
-      assert get_flash(conn, :error) =~ "Passwort-Link ist nicht korrekt oder veraltet."
+      conn = put(conn, ~p"/users/reset_password/#{"oops"}")
+      assert redirected_to(conn) == ~p"/map"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
+               "Passwort-Link ist nicht korrekt oder veraltet."
     end
   end
 end

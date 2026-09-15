@@ -7,14 +7,16 @@ defmodule HierbautberlinWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_hierbautberlin_key",
-    signing_salt: "yJp81blV"
+    signing_salt: "yJp81blV",
+    same_site: "Lax"
   ]
 
-  socket "/socket", HierbautberlinWeb.UserSocket,
+  socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],
-    longpoll: false
+    longpoll: [connect_info: [session: @session_options]]
 
-  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  # Plausible script and events through our domain, before Plug.Parsers
+  plug HierbautberlinWeb.Plugs.PlausibleProxy
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -23,8 +25,8 @@ defmodule HierbautberlinWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :hierbautberlin,
-    gzip: true,
-    only: ~w(css fonts images svg js favicon.ico robots.txt)
+    gzip: not code_reloading?,
+    only: HierbautberlinWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

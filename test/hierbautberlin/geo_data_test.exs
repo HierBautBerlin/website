@@ -3,7 +3,7 @@ defmodule Hierbautberlin.GeoDataTest do
 
   alias Ecto.Adapters.SQL
   alias Hierbautberlin.GeoData
-  alias Hierbautberlin.GeoData.{GeoMapItem, GeoPosition, AnalyzeText}
+  alias Hierbautberlin.GeoData.AnalyzeText
 
   describe "get_source_by_short_name/1" do
     test "gets a source by it's short name" do
@@ -252,202 +252,46 @@ defmodule Hierbautberlin.GeoDataTest do
     end
   end
 
-  describe "get_items_near/3" do
-    setup do
-      insert(:geo_item,
-        title: "One",
-        geo_point: %Geo.Point{
-          coordinates: {13.26789, 52.509},
-          properties: %{},
-          srid: 4326
-        }
-      )
+  describe "hide_geo_items_outside/2" do
+    test "hides the items of the source outside of the bounding box" do
+      source = insert(:source)
+      point = fn lng, lat -> %Geo.Point{coordinates: {lng, lat}, srid: 4326} end
 
-      insert(:geo_item,
-        title: "Two",
-        date_end: Timex.shift(Timex.now(), months: -10),
-        geo_point: %Geo.Point{
-          coordinates: {13.2679, 52.51},
-          properties: %{},
-          srid: 4326
-        }
-      )
+      berlin = insert(:geo_item, source: source, geo_point: point.(13.4, 52.5), geometry: nil)
+      leipzig = insert(:geo_item, source: source, geo_point: point.(12.37, 51.34), geometry: nil)
+      other_source = insert(:geo_item, geo_point: point.(12.37, 51.34), geometry: nil)
 
-      insert(:geo_item,
-        title: "Three",
-        geometry: %Geo.MultiPolygon{
-          coordinates: [
-            [
-              [
-                {13.2679, 52.51},
-                {13.2679, 52.55},
-                {13.2680, 52.55},
-                {13.2679, 52.51}
-              ]
-            ]
-          ],
-          properties: %{},
-          srid: 4326
-        }
-      )
+      assert GeoData.hide_geo_items_outside(source, {13.08, 52.33, 13.77, 52.68}) == 1
 
-      four =
-        insert(:geo_item,
-          title: "Four",
-          subtitle: "Four Subtitle",
-          description: "Four Description",
-          participation_open: true,
-          date_end: Timex.parse!("2021-01-01", "{YYYY}-{0M}-{0D}"),
-          geo_point: %Geo.Point{
-            coordinates: {13.2679, 52.51},
-            properties: %{},
-            srid: 4326
-          },
-          url: "https://example.com"
-        )
+      refute Repo.reload!(berlin).hidden
+      assert Repo.reload!(leipzig).hidden
+      refute Repo.reload!(other_source).hidden
+    end
+  end
 
-      insert(:geo_item,
-        title: "Five, too old",
-        date_end: Timex.parse!("2001-01-01", "{YYYY}-{0M}-{0D}"),
-        geo_point: %Geo.Point{
-          coordinates: {13.2678, 52.515},
-          properties: %{},
-          srid: 4326
-        }
-      )
+  describe "hide_missing_geo_items/2" do
+    test "hides items that are not in the import anymore" do
+      source = insert(:source)
 
-      insert(:geo_item,
-        title: "Six, hidden",
-        geo_point: %Geo.Point{
-          coordinates: {13.26789, 52.509},
-          properties: %{},
-          srid: 4326
-        },
-        hidden: true
-      )
+      [one, two, three] =
+        for i <- 1..3, do: insert(:geo_item, source: source, external_id: "#{i}")
 
-      insert(:geo_item,
-        title: "Seven - Newest Item",
-        subtitle: "Four Subtitle",
-        description: "Four Description",
-        participation_open: true,
-        date_end: Timex.shift(Timex.now(), days: -7),
-        geo_point: %Geo.Point{
-          coordinates: {13.2679, 52.51},
-          properties: %{},
-          srid: 4326
-        },
-        url: "https://example.com"
-      )
+      other_source_item = insert(:geo_item)
 
-      news_item = insert(:news_item)
-      insert(:news_item, title: "Hidden News Item", hidden: true)
+      assert GeoData.hide_missing_geo_items(source, ["1", "2"]) == 1
 
-      %{four: four, news_item: news_item}
+      refute Repo.reload!(one).hidden
+      refute Repo.reload!(two).hidden
+      assert Repo.reload!(three).hidden
+      refute Repo.reload!(other_source_item).hidden
     end
 
-    test "it returns a correctly sorted list without too old items", %{
-      four: four,
-      news_item: news_item
-    } do
-      items = GeoData.get_items_near(52.51, 13.2679)
-      assert 6 == length(items)
+    test "does not hide anything when the import looks incomplete" do
+      source = insert(:source)
+      for i <- 1..3, do: insert(:geo_item, source: source, external_id: "#{i}")
 
-      assert ["Seven - Newest Item", "This is a nice title", "Four", "Two", "One", "Three"] ==
-               Enum.map(items, & &1.title)
-
-      fourth = Enum.at(items, 2)
-
-      four_id = four.id
-      source_id = four.source_id
-      geo_point = four.geo_point
-      geo_metry = four.geometry
-
-      assert %GeoMapItem{
-               title: "Four",
-               subtitle: "Four Subtitle",
-               description: "Four Description",
-               id: ^four_id,
-               type: :geo_item,
-               newest_date: ~U[2021-01-01 00:00:00Z],
-               url: "https://example.com",
-               participation_open: true,
-               source: %{
-                 id: ^source_id
-               },
-               item: %{
-                 id: ^four_id
-               },
-               positions: [
-                 %GeoPosition{
-                   type: :geo_item,
-                   id: ^four_id,
-                   geopoint: ^geo_point,
-                   geometry: ^geo_metry
-                 }
-               ]
-             } = fourth
-
-      second_item = Enum.at(items, 1)
-
-      news_id = news_item.id
-      news_source_id = news_item.source_id
-      news_published_at = news_item.published_at
-
-      assert %GeoMapItem{
-               title: "This is a nice title",
-               subtitle: nil,
-               description: "This is a nice content",
-               id: ^news_id,
-               type: :news_item,
-               newest_date: ^news_published_at,
-               url: "https://www.example.com",
-               participation_open: false,
-               source: %{
-                 id: ^news_source_id
-               },
-               item: %{
-                 id: ^news_id
-               },
-               positions: [
-                 %Hierbautberlin.GeoData.GeoPosition{
-                   geometry: %Geo.LineString{
-                     coordinates: [{13.0, 52.0}, {13.01, 51.01}],
-                     properties: %{},
-                     srid: 4326
-                   },
-                   geopoint: %Geo.Point{
-                     coordinates: {13.0, 52.0},
-                     properties: %{},
-                     srid: 4326
-                   },
-                   type: :geo_street
-                 },
-                 %Hierbautberlin.GeoData.GeoPosition{
-                   geometry: nil,
-                   geopoint: %Geo.Point{coordinates: {13.0, 52.0}, properties: %{}, srid: 4326},
-                   type: :geo_street_number
-                 },
-                 %Hierbautberlin.GeoData.GeoPosition{
-                   geometry: %Geo.Polygon{
-                     coordinates: [[{13.0, 52.0}, {13.1, 52.1}, {13.1, 52.0}, {13.0, 52.0}]],
-                     properties: %{},
-                     srid: 4326
-                   },
-                   geopoint: %Geo.Point{
-                     coordinates: {13.2679, 52.51},
-                     properties: %{},
-                     srid: 4326
-                   },
-                   type: :geo_place
-                 }
-               ]
-             } = second_item
-    end
-
-    test "it returns 3 items if count is 3" do
-      items = GeoData.get_items_near(52.51, 13.2679, 3)
-      assert 3 == length(items)
+      assert GeoData.hide_missing_geo_items(source, []) == 0
+      assert GeoData.hide_missing_geo_items(source, ["1"]) == 0
     end
   end
 
@@ -756,7 +600,7 @@ defmodule Hierbautberlin.GeoDataTest do
       result =
         GeoData.analyze_text(
           "Im Buchungssystem wird ein neuer ...",
-          %{districts: ["Friedrichshain-Kreuzberg"]}
+          %{districts: ["Mitte"]}
         )
 
       assert Enum.empty?(result.places)
@@ -764,7 +608,7 @@ defmodule Hierbautberlin.GeoDataTest do
       result =
         GeoData.analyze_text(
           "Hier in Buch",
-          %{districts: ["Friedrichshain-Kreuzberg"]}
+          %{districts: ["Mitte"]}
         )
 
       assert [place_buch.id] == result.places |> Enum.map(& &1.id)
@@ -772,7 +616,7 @@ defmodule Hierbautberlin.GeoDataTest do
       result =
         GeoData.analyze_text(
           "Hier in Buch.",
-          %{districts: ["Friedrichshain-Kreuzberg"]}
+          %{districts: ["Mitte"]}
         )
 
       assert [place_buch.id] == result.places |> Enum.map(& &1.id)
@@ -835,7 +679,10 @@ defmodule Hierbautberlin.GeoDataTest do
 
     test "Should ignore newlines" do
       street =
-        insert(:street, name: "Ruth Bader Ginsburg Straße 5", district: "Friedrichshain-Kreuzberg")
+        insert(:street,
+          name: "Ruth Bader Ginsburg Straße 5",
+          district: "Friedrichshain-Kreuzberg"
+        )
 
       AnalyzeText.add_streets([street])
 
@@ -859,7 +706,7 @@ defmodule Hierbautberlin.GeoDataTest do
       place_park = insert(:place, name: "Rosa Parks Park", district: "Mitte")
       AnalyzeText.add_places([place_park])
 
-      time_now = DateTime.now!("Etc/UTC")
+      time_now = DateTime.truncate(DateTime.now!("Etc/UTC"), :second)
 
       news_item =
         GeoData.upsert_news_item!(
@@ -905,31 +752,63 @@ defmodule Hierbautberlin.GeoDataTest do
 
   describe "search_street/1" do
     setup do
-      insert(:street, name: "Richard-Sorge-Straße", street_number_count: 10)
-      insert(:street, name: "Richard Straße", street_number_count: 4)
-      insert(:street, name: "Sorge Straße", street_number_count: 1)
+      insert(:street, name: "Rosa-Luxemburg-Straße", street_number_count: 10)
+      insert(:street, name: "Rosa Straße", street_number_count: 4)
+      insert(:street, name: "Luxemburg Straße", street_number_count: 1)
 
       :ok
     end
 
-    test "finds streets starting with Ri" do
-      result = GeoData.search_street("Ri")
-      assert Enum.map(result, & &1.name) == ["Richard-Sorge-Straße", "Richard Straße"]
+    test "finds streets starting with Ro" do
+      result = GeoData.search_street("Ro")
+      assert Enum.map(result, & &1.name) == ["Rosa-Luxemburg-Straße", "Rosa Straße"]
     end
 
-    test "finds streets starting with orge" do
-      result = GeoData.search_street("orge")
-      assert Enum.map(result, & &1.name) == ["Richard-Sorge-Straße", "Sorge Straße"]
+    test "finds words in the name before other matches" do
+      result = GeoData.search_street("luxemburg")
+      assert Enum.map(result, & &1.name) == ["Luxemburg Straße", "Rosa-Luxemburg-Straße"]
+
+      result = GeoData.search_street("uxemburg")
+      assert Enum.map(result, & &1.name) == ["Rosa-Luxemburg-Straße", "Luxemburg Straße"]
     end
 
-    test "finds streets starting with ss instead of ß" do
-      result = GeoData.search_street("strasse")
+    test "finds streets with ss instead of ß and abbreviations" do
+      assert [%{name: "Rosa Straße"} | _] = GeoData.search_street("rosa strasse")
 
-      assert Enum.map(result, & &1.name) == [
-               "Richard-Sorge-Straße",
-               "Richard Straße",
-               "Sorge Straße"
+      assert Enum.map(GeoData.search_street("Luxemburg Str."), & &1.name) == [
+               "Luxemburg Straße",
+               "Rosa-Luxemburg-Straße"
              ]
+
+      assert Enum.map(GeoData.search_street("rosa luxemburg"), & &1.name) == [
+               "Rosa-Luxemburg-Straße"
+             ]
+    end
+
+    test "prefers names starting with the search over more important streets" do
+      insert(:street, name: "Unter den Linden", street_number_count: 70)
+      insert(:street, name: "Linienstraße", street_number_count: 192)
+      insert(:street, name: "Lindenstraße", street_number_count: 188)
+
+      assert [%{name: "Unter den Linden"}] = GeoData.search_street("unter den lin")
+
+      # a word starting with "linden" comes before the typo match "Linienstraße"
+      assert ["Lindenstraße", "Unter den Linden", "Linienstraße"] ==
+               Enum.map(GeoData.search_street("linden"), & &1.name)
+    end
+
+    test "tolerates typos at the start of the name" do
+      insert(:street, name: "Sonnenallee", street_number_count: 275)
+      assert [%{name: "Sonnenallee"}] = GeoData.search_street("Sonenallee")
+    end
+
+    test "keeps the normalized name up to date" do
+      street = insert(:street, name: "Alt-Moabit")
+      assert [%{name: "Alt-Moabit"}] = GeoData.search_street("alt moabit")
+
+      street |> Ecto.Changeset.change(name: "Neu-Moabit") |> Repo.update!()
+      assert [] = GeoData.search_street("alt moabit")
+      assert [%{name: "Neu-Moabit"}] = GeoData.search_street("neu moabit")
     end
   end
 

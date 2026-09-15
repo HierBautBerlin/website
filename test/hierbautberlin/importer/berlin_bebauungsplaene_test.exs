@@ -49,7 +49,46 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaeneTest do
     end
   end
 
+  # plans.json with a public display ("Auslegung") around today
+  defmodule DisplayMock do
+    def get!("https://bplan-prod.liqd.net/api/bplan/multipolygons/?format=json", _, _) do
+      %{
+        body: File.read!("./test/support/data/berlin_bebauungsplaene/polygons.json"),
+        headers: [],
+        status_code: 200
+      }
+    end
+
+    def get!("https://bplan-prod.liqd.net/api/bplan/data/?format=json", _, _) do
+      today = Date.utc_today()
+
+      json =
+        "./test/support/data/berlin_bebauungsplaene/plans.json"
+        |> File.read!()
+        |> Jason.decode!()
+        |> update_in(["results", Access.at(0)], fn plan ->
+          Map.merge(plan, %{
+            "status" => "imVerfahren",
+            "aul_anfang" => Date.to_iso8601(Date.add(today, -3)),
+            "aul_ende" => Date.to_iso8601(Date.add(today, 10))
+          })
+        end)
+
+      %{body: Jason.encode!(json), headers: [], status_code: 200}
+    end
+  end
+
   describe "import/1" do
+    test "a public display is an open participation" do
+      {:ok, [plan]} = BerlinBebauungsplaene.import(DisplayMock)
+      today = Date.utc_today()
+
+      assert plan.participation_open == true
+      assert plan.importance == 3.0
+      assert DateTime.to_date(plan.relevant_from) == Date.add(today, -3)
+      assert DateTime.to_date(plan.relevant_until) == Date.add(today, 10)
+    end
+
     test "basic import of Berliner Bebauungspläne" do
       {:ok, result} = BerlinBebauungsplaene.import(ImportMock)
 

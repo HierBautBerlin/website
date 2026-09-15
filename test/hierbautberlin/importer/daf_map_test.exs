@@ -4,14 +4,16 @@ defmodule Hierbautberlin.Importer.DafMapTest do
   alias Hierbautberlin.Importer.DafMap
 
   defmodule ImportMock do
-    def get!(
-          "https://www.dafmap.de/d/dafmapgw.py?c=sel&map=berlin",
-          ["User-Agent": "hierbautberlin.de", Referer: "https://www.dafmap.de/d/berlin.html"],
-          timeout: 60_000,
-          recv_timeout: 60_000
-        ) do
-      {:ok, html} = File.read("./test/support/data/daf_map/feed.json")
-      %{body: html, headers: [], status_code: 200}
+    def get!(url, ["User-Agent": "hierbautberlin.de", "X-Requested-By": "dafmapV2"], _opts) do
+      send(self(), {:requested, url})
+
+      file =
+        case url do
+          "https://dafmap.de/serve/projects/berlin" -> "projects.json"
+          "https://dafmap.de/serve/project/" <> id -> "project_#{id}.json"
+        end
+
+      %{body: File.read!("test/support/data/daf_map/#{file}"), headers: [], status_code: 200}
     end
   end
 
@@ -20,45 +22,44 @@ defmodule Hierbautberlin.Importer.DafMapTest do
       {:ok, result} = DafMap.import(ImportMock)
 
       assert length(result) == 5
-      first = List.first(result) |> Repo.preload(:source)
 
-      assert first.description == nil
-      assert first.external_id == "7603"
+      area = Enum.find(result, &(&1.external_id == "8386")) |> Repo.preload(:source)
+      assert area.title == "„27 ha Möglichkeiten“ Hohenschönhausen (VISION)"
+      assert area.description == nil
+      assert %Geo.Polygon{srid: 4326} = area.geometry
+      assert area.geo_point == %Geo.Point{coordinates: {13.504522, 52.544105}, srid: 4326}
+      assert area.url == "https://dafmap.de/berlin?id=8386&mt=0&zoom=17"
+      assert area.date_updated == ~U[2022-11-03 13:44:53Z]
+      assert area.state == nil
+      assert area.source.short_name == "DAF_MAP"
 
-      assert first.geometry == %Geo.Polygon{
-               coordinates: [
-                 [
-                   {13.13438, 52.36896},
-                   {13.13152, 52.37064},
-                   {13.1315, 52.37103},
-                   {13.1344, 52.36935},
-                   {13.13686, 52.37099},
-                   {13.13738, 52.37078},
-                   {13.13438, 52.36896}
-                 ]
-               ],
-               properties: %{},
-               srid: 4326
-             }
+      assert area.additional_link ==
+               "https://www.deutsches-architekturforum.de/thread/11397-lichtenberg-kleinere-projekte/?postID=729177#post729177"
 
-      assert first.geo_point == %Geo.Point{
-               coordinates: {13.134411, 52.369165},
-               properties: %{},
-               srid: 4326
-             }
+      assert area.additional_link_name == "Deutsches Architekturforum"
 
-      assert first.date_updated == ~U[2020-08-26 11:46:07Z]
-      assert first.participation_open == false
-      assert first.source.short_name == "DAF_MAP"
-      assert first.state == nil
-      assert first.subtitle == nil
-      assert first.title == "\"Wohnen am Stern\" - Wohnhochhäuser am Stern-Center"
-      assert first.url == "https://www.dafmap.de/d/berlin?id=7603&mt=0&zoom=17"
+      building = Enum.find(result, &(&1.external_id == "8978"))
+      assert building.state == "under_construction"
+      assert building.date_start == ~U[2025-05-31 00:00:00Z]
+      assert building.date_end == ~U[2026-12-30 00:00:00Z]
+      assert building.geometry == nil
 
-      assert first.additional_link ==
-               "https://www.deutsches-architekturforum.de/thread/226-potsdam-aktuelles-sonstige-meldungen-und-projekte/?postID=665941#post665941"
+      # a placeholder image is not a link to the forum
+      finished = Enum.find(result, &(&1.external_id == "7272"))
+      assert finished.state == "finished"
+      assert finished.additional_link == nil
+    end
 
-      assert first.additional_link_name == "Deutsches Architekturforum"
+    test "only loads the details of changed projects" do
+      {:ok, _result} = DafMap.import(ImportMock)
+      assert_received {:requested, "https://dafmap.de/serve/project/8978"}
+
+      {:ok, result} = DafMap.import(ImportMock)
+      refute_received {:requested, "https://dafmap.de/serve/project/8978"}
+
+      # description and links are kept
+      area = Enum.find(result, &(&1.external_id == "8386"))
+      assert area.additional_link_name == "Deutsches Architekturforum"
     end
   end
 end

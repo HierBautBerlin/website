@@ -1,0 +1,94 @@
+<Layouts.app flash={@flash}>
+  <h1>Einstellungen</h1>
+
+  <h2>Orte für Benachrichtigungen</h2>
+
+  <%= if Enum.empty?(@current_user.subscriptions) do %>
+    <p>
+      Gehe auf der Karte zu einem Ort, für den du Benachrichtigungen
+      erhalten willst und drücke auf den "Sende E-Mail bei neuen Einträgen" Knopf.
+      Die so hinzugefügten Orte kannst du dann hier nachträglich bearbeiten.
+    </p>
+  <% else %>
+    <p>
+      Du hast
+      <%= if Enum.count_until(@current_user.subscriptions, 2) == 1 do %>
+        eine Ort, für den du
+      <% else %>
+        {Enum.count(@current_user.subscriptions)} Orte, für die du
+      <% end %>
+      Benachrichtigungen erhalten willst.
+    </p>
+    <p>
+      <.link href={~p"/users/subscriptions"} class="button">Orte editieren</.link>
+    </p>
+  <% end %>
+
+  <h2>Email ändern</h2>
+
+  <.form :let={f} for={@email_changeset} action={~p"/users/settings"} method="put">
+    <div :if={@email_changeset.action} class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+
+    <input type="hidden" name="action" value="update_email" />
+
+    <.input field={f[:email]} type="email" label="Email" required />
+    <.input
+      field={f[:current_password]}
+      type="password"
+      label="Aktuelles Passwort"
+      name="current_password"
+      id="current_password_for_email"
+      value=""
+      required
+    />
+
+    <div>
+      <button type="submit">Email-Adresse ändern</button>
+    </div>
+  </.form>
+
+  <h2>Passwort ändern</h2>
+
+  <.form :let={f} for={@password_changeset} action={~p"/users/settings"} method="put">
+    <div :if={@password_changeset.action} class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+
+    <input type="hidden" name="action" value="update_password" />
+
+    <.input field={f[:password]} type="password" label="Neues Passwort" value="" required />
+    <.input
+      field={f[:password_confirmation]}
+      type="password"
+      label="Neues Passwort bestätigen"
+      value=""
+      required
+    />
+    <.input
+      field={f[:current_password]}
+      type="password"
+      label="Aktuelles Passwort"
+      name="current_password"
+      id="current_password_for_password"
+      value=""
+      required
+    />
+
+    <div>
+      <button type="submit">Passwort ändern</button>
+    </div>
+  </.form>
+
+  <h2>Konto löschen</h2>
+
+  <.link
+    href={~p"/users"}
+    method="delete"
+    data-confirm="Wirklich das Konto löschen?"
+    class="button"
+  >
+    Konto löschen
+  </.link>
+</Layouts.app>

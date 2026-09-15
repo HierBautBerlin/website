@@ -1,6 +1,8 @@
 defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
   use Hierbautberlin.DataCase
 
+  @import_path Path.join(Application.compile_env(:hierbautberlin, :import_path), "amtsblatt")
+
   alias Hierbautberlin.FileStorage
   alias Hierbautberlin.GeoData.AnalyzeText
   alias Hierbautberlin.Importer.BerlinerAmtsblatt
@@ -23,7 +25,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
           timeout: 60_000,
           recv_timeout: 60_000
         ) do
-      {:ok, html} = File.read("test/support/data/amtsblatt/index_page.html")
+      {:ok, html} = File.read("test/support/data/amtsblatt/index_page_single.html")
       %{body: html, headers: [], status_code: 200}
     end
   end
@@ -38,6 +40,10 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     end
   end
 
+  defmodule BrokenDownloadMock do
+    def get(_url, file), do: IO.binwrite(file, "<html>Not found</html>")
+  end
+
   setup do
     clean_storage()
 
@@ -49,15 +55,15 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     |> FileStorage.path_for_file()
     |> File.rm()
 
-    File.mkdir_p("import/amtsblatt")
-    File.rm_rf("import/amtsblatt/*")
+    File.mkdir_p(@import_path)
+    File.rm_rf(Path.join(@import_path, "*"))
   end
 
   describe "import/1" do
     test "checks the import folder and parses all files in it" do
       File.cp(
         "test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
-        "import/amtsblatt/abl_2021_28_2389_2480_online.pdf"
+        Path.join(@import_path, "abl_2021_28_2389_2480_online.pdf")
       )
 
       {:ok, news_items} = Hierbautberlin.Importer.BerlinerAmtsblatt.import(EmptyImportMock)
@@ -69,7 +75,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       refute Enum.member?(titles, "Beitragsordnung")
       refute Enum.member?(titles, "Gebührenordnung")
 
-      refute File.exists?("import/amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      refute File.exists?(Path.join(@import_path, "abl_2021_28_2389_2480_online.pdf"))
       assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
 
       clean_storage()
@@ -110,11 +116,37 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
     end
   end
 
+  describe "find_download_urls/1" do
+    test "finds the pdfs in the current page layout" do
+      urls =
+        "test/support/data/amtsblatt/index_page_2026.html"
+        |> File.read!()
+        |> BerlinerAmtsblatt.find_download_urls()
+
+      assert length(urls) == 6
+
+      assert List.first(urls) ==
+               "https://www.berlin.de/landesverwaltungsamt/_assets/logistikservice/amtsblatt-fuer-berlin/abl_2026_39_2749_2776_online.pdf"
+    end
+
+    test "finds the pdf in the old page layout" do
+      urls =
+        "test/support/data/amtsblatt/index_page.html"
+        |> File.read!()
+        |> BerlinerAmtsblatt.find_download_urls()
+
+      assert length(urls) == 7
+
+      assert List.first(urls) ==
+               "https://www.berlin.de/landesverwaltungsamt/_assets/logistikservice/amtsblatt-fuer-berlin/abl_2021_28_2389_2480_online.pdf"
+    end
+  end
+
   describe "import_folder/0" do
     test "checks the import folder and parses all files in it" do
       File.cp(
         "test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
-        "import/amtsblatt/abl_2021_28_2389_2480_online.pdf"
+        Path.join(@import_path, "abl_2021_28_2389_2480_online.pdf")
       )
 
       {:ok, news_items} = Hierbautberlin.Importer.BerlinerAmtsblatt.import_folder()
@@ -126,14 +158,35 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       refute Enum.member?(titles, "Beitragsordnung")
       refute Enum.member?(titles, "Gebührenordnung")
 
-      refute File.exists?("import/amtsblatt/abl_2021_28_2389_2480_online.pdf")
+      refute File.exists?(Path.join(@import_path, "abl_2021_28_2389_2480_online.pdf"))
       assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
 
       clean_storage()
     end
   end
 
+  describe "warn_if_outdated/1" do
+    test "warns when there was no new issue for three weeks" do
+      source = insert(:source, short_name: "BERLIN_AMTSBLATT")
+      insert(:news_item, source: source, published_at: ~U[2026-09-11 13:26:08Z])
+
+      assert BerlinerAmtsblatt.warn_if_outdated(~U[2026-09-20 00:00:00Z]) == :ok
+      assert BerlinerAmtsblatt.warn_if_outdated(~U[2026-10-10 00:00:00Z]) == :outdated
+    end
+  end
+
   describe "import_webpage/2" do
+    test "does not store the pdf when the import fails, so it is retried" do
+      assert {:error, _error} = BerlinerAmtsblatt.import_webpage(ImportMock, BrokenDownloadMock)
+      refute FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+
+      assert {:ok, news_items} = BerlinerAmtsblatt.import_webpage(ImportMock, DownloadMock)
+      assert length(news_items) == 28
+      assert FileStorage.exists?("amtsblatt/abl_2021_28_2389_2480_online.pdf")
+
+      clean_storage()
+    end
+
     test "downloads a pdf file and parses it" do
       {:ok, news_items} =
         Hierbautberlin.Importer.BerlinerAmtsblatt.import_webpage(ImportMock, DownloadMock)
@@ -663,6 +716,36 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
       ]
 
       assert {3, 6} = BerlinerAmtsblatt.find_section(page, "This is a title", 2)
+    end
+
+    test "it ignores different spacing" do
+      page = ["Line 1", "Vollzug des Gesetzes (IfSG) -", "Isolation von Personen", "Content"]
+
+      assert {1, 2} =
+               BerlinerAmtsblatt.find_section(
+                 page,
+                 "Vollzug des Gesetzes (IfSG) -Isolation von Personen"
+               )
+    end
+
+    test "it finds a truncated title" do
+      page = ["Line 1", "This is a very", "long title", "Content"]
+      assert {1, 2} = BerlinerAmtsblatt.find_section(page, "This is a very lo...")
+    end
+  end
+
+  describe "cut_at_skipped_section/1" do
+    test "cuts the text at the heading of a skipped section" do
+      text =
+        "Einziehung von Straßenland\n\nDie Straße wird eingezogen.\n\nZweiradmechaniker Innung Berlin\n\nNeue Gebühren\nDie Zweiradmechaniker Innung Berlin, Manfred-von-Richthofen-Straße 30"
+
+      assert BerlinerAmtsblatt.cut_at_skipped_section(text) ==
+               "Einziehung von Straßenland\n\nDie Straße wird eingezogen."
+    end
+
+    test "keeps mentions in the text" do
+      text = "Titel\n\nDie Baukammer Berlin hat beschlossen:\nText"
+      assert BerlinerAmtsblatt.cut_at_skipped_section(text) == text
     end
   end
 

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Runs the migrations and starts the app (used as the Docker command)
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+
+# The storage paths live on a mounted volume, which may be empty
+mkdir -p "${HIERBAUT_STORAGE_PATH:-/app/data/file_storage}" "${HIERBAUT_IMPORT_PATH:-/app/data/import}/amtsblatt"
+
+./migrate
+PHX_SERVER=true exec ./hierbautberlin start

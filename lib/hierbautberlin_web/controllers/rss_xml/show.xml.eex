@@ -1,0 +1,23 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[HierBautBerlin]]></title>
+  <link href="https://hierbautberlin.de/feed/<%= @lng %>/<%= @lat %>" rel="self"/>
+  <link href="https://hierbautberlin.de/"/>
+  <updated><%= iso_datetime(DateTime.utc_now()) %></updated>
+  <id>https://hierbautberlin.de/</id>
+
+  <author>
+    <name>HierBautBerlin</name>
+  </author>
+
+  <%= for item <- @items do %>
+    <entry>
+      <id><%= item_link(item) %></id>
+      <link href="<%= item_link(item) %>"/>
+      <title type="html"><![CDATA[<%= item.title %>]]></title>
+      <updated><%= iso_datetime(item.inserted_at) %></updated>
+      <content type="html">
+      <![CDATA[<%= item_content(item) %>]]>
+      </content>
+    </entry>
+  <% end %>
+</feed>

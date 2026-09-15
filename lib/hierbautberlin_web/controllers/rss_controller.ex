@@ -4,13 +4,15 @@ defmodule HierbautberlinWeb.RSSController do
   alias Hierbautberlin.GeoData
 
   def show(conn, params) do
-    locations = [
-      %{
-        location: {String.to_float(params["lat"]), String.to_float(params["lng"])},
-        radius: 2000
-      }
-    ]
+    with {lat, ""} <- Float.parse(params["lat"] || ""),
+         {lng, ""} <- Float.parse(params["lng"] || "") do
+      render_feed(conn, params, [%{location: {lat, lng}, radius: 2000}])
+    else
+      _ -> send_resp(conn, 400, "invalid coordinates")
+    end
+  end
 
+  defp render_feed(conn, params, locations) do
     items =
       GeoData.get_geo_items_for_locations_since(
         locations,
@@ -22,8 +24,10 @@ defmodule HierbautberlinWeb.RSSController do
         )
 
     conn
+    |> put_format("xml")
     |> put_root_layout(false)
+    |> put_view(xml: HierbautberlinWeb.RSSXML)
     |> put_resp_content_type("application/rss+xml")
-    |> render("show.xml", items: items, lat: params["lat"], lng: params["lng"])
+    |> render(:show, items: items, lat: params["lat"], lng: params["lng"])
   end
 end

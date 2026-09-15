@@ -23,21 +23,31 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
+  # Visitor statistics (https://plausible.io), an empty value disables them
+  config :hierbautberlin,
+         :plausible_script,
+         System.get_env("PLAUSIBLE_SCRIPT_ID", "pa-jUoTuYUGVQqtVQra_6Dib")
+
   config :bugsnag,
     release_stage: "production",
     use_logger: true,
     api_key: System.get_env("BUGSNAG_API")
 
+  # The public address, used for links in emails and the websocket origin check.
+  # TLS is terminated by the reverse proxy (e.g. Coolify/Traefik or nginx).
+  host = System.get_env("PHX_HOST") || "hierbautberlin.de"
+
   config :hierbautberlin, HierbautberlinWeb.Endpoint,
+    url: [host: host, port: 443, scheme: "https"],
     http: [
       port: String.to_integer(System.get_env("PORT") || "4000"),
-      transport_options: [socket_opts: [:inet6]]
+      ip: {0, 0, 0, 0, 0, 0, 0, 0}
     ],
     secret_key_base: secret_key_base
 
   config :hierbautberlin, HierbautberlinWeb.Mailer,
-    adapter: Bamboo.MailgunAdapter,
+    adapter: Swoosh.Adapters.Mailgun,
     api_key: System.get_env("MAILGUN_API"),
     domain: System.get_env("MAILGUN_DOMAIN"),
-    base_uri: "https://api.eu.mailgun.net/v3"
+    base_url: "https://api.eu.mailgun.net/v3"
 end

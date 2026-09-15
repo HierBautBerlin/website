@@ -1,10 +1,8 @@
 defmodule Hierbautberlin.GeoData.GeoItem do
   use Ecto.Schema
-  import Ecto.Query, warn: false
   import Ecto.Changeset
 
-  alias Hierbautberlin.Repo
-  alias Hierbautberlin.GeoData.{GeoItem, GeoPosition, GeoMapItem, Source}
+  alias Hierbautberlin.GeoData.Source
 
   @states [
     "intended",
@@ -32,6 +30,11 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     field :additional_link, :string
     field :additional_link_name, :string
     field :hidden, :boolean, default: false
+    # see Hierbautberlin.GeoData.Relevance
+    field :importance, :float, default: 1.0
+    field :relevant_from, :utc_datetime
+    field :relevant_until, :utc_datetime
+    field :relevance_half_life, :integer, default: 30
 
     belongs_to :source, Source
 
@@ -58,7 +61,11 @@ defmodule Hierbautberlin.GeoData.GeoItem do
       :additional_link_name,
       :inserted_at,
       :updated_at,
-      :hidden
+      :hidden,
+      :importance,
+      :relevant_from,
+      :relevant_until,
+      :relevance_half_life
     ])
     |> validate_inclusion(:state, @states)
     |> validate_required([:source_id, :external_id, :title])
@@ -74,55 +81,5 @@ defmodule Hierbautberlin.GeoData.GeoItem do
     |> Enum.filter(&(!is_nil(&1)))
     |> Enum.sort_by(&abs(Timex.diff(&1, Timex.now(), :days)))
     |> List.first()
-  end
-
-  def get_near(lat, lng, count) do
-    geom = %Geo.Point{
-      coordinates: {lng, lat},
-      properties: %{},
-      srid: 4326
-    }
-
-    query =
-      from item in GeoItem,
-        limit: ^count,
-        where: item.hidden == false,
-        where:
-          fragment(
-            "(geometry is not null and ST_DWithin(geometry, ?, 0.05 )) or (geo_point is not null and ST_DWithin(geo_point, ?, 0.05 ))",
-            ^geom,
-            ^geom
-          ),
-        order_by:
-          fragment(
-            "ST_Distance(COALESCE(geometry, geo_point), ?)",
-            ^geom
-          )
-
-    query
-    |> Repo.all()
-    |> Repo.preload(:source)
-    |> Enum.map(fn item ->
-      %GeoMapItem{
-        type: :geo_item,
-        id: item.id,
-        title: item.title,
-        subtitle: item.subtitle,
-        description: item.description,
-        positions: [
-          %GeoPosition{
-            type: :geo_item,
-            id: item.id,
-            geopoint: item.geo_point,
-            geometry: item.geometry
-          }
-        ],
-        newest_date: newest_date(item),
-        source: item.source,
-        url: item.url,
-        participation_open: item.participation_open,
-        item: item
-      }
-    end)
   end
 end

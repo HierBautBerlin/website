@@ -1,29 +1,58 @@
 defmodule Hierbautberlin.Importer.DafMap do
-  alias Hierbautberlin.GeoData
+  @moduledoc """
+  Imports the construction projects of the DAF-Karte (Deutsches Architekturforum).
 
-  def import(http_connection \\ HTTPoison) do
+  The project list only contains names, positions and dates. Description and
+  links are loaded per project, but only for projects that changed since the
+  last import.
+  """
+  import Ecto.Query, warn: false
+
+  alias Hierbautberlin.GeoData
+  alias Hierbautberlin.GeoData.GeoItem
+  alias Hierbautberlin.Repo
+
+  @base_url "https://dafmap.de"
+  @headers ["User-Agent": "hierbautberlin.de", "X-Requested-By": "dafmapV2"]
+
+  @state_mapping %{
+    "planned" => "in_planning",
+    "uc" => "under_construction",
+    "done" => "finished"
+  }
+
+  def import(http_connection \\ Hierbautberlin.HTTPClient) do
     {:ok, source} =
       GeoData.upsert_source(%{
         short_name: "DAF_MAP",
-        name: "Deutsches Architekturforum Berlin",
-        url: "https://www.dafmap.de/d/berlin",
+        name: "Deutsches Architekturforum",
+        url: "#{@base_url}/berlin",
         copyright: "Deutsches Architekturforum"
       })
 
-    items =
-      fetch_data(
-        http_connection,
-        "https://www.dafmap.de/d/dafmapgw.py?c=sel&map=berlin"
-      )
+    known_updates = known_updates(source)
 
     result =
-      items
-      |> Enum.map(&to_geo_item(&1))
-      |> Enum.filter(fn item -> item != nil end)
-      |> Enum.map(fn item ->
-        {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, item))
+      http_connection
+      |> fetch_json("#{@base_url}/serve/projects/berlin")
+      |> List.wrap()
+      |> Enum.map(fn project ->
+        updated = parse_datetime(project["updated"])
+        id = to_string(project["id"])
+
+        details =
+          if Map.get(known_updates, id) == updated do
+            nil
+          else
+            fetch_json(http_connection, "#{@base_url}/serve/project/#{id}")
+          end
+
+        attrs = to_geo_item(project, details, updated)
+        {:ok, geo_item} = GeoData.upsert_geo_item(Map.merge(%{source_id: source.id}, attrs))
         geo_item
       end)
+
+    GeoData.hide_missing_geo_items(source, Enum.map(result, & &1.external_id))
 
     {:ok, result}
   rescue
@@ -32,97 +61,86 @@ defmodule Hierbautberlin.Importer.DafMap do
       {:error, error}
   end
 
-  defp to_geo_item(item) do
-    [
-      id,
-      _,
-      name,
-      _,
-      description,
-      _,
-      _,
-      _,
-      _,
-      _,
-      _,
-      _,
-      url,
-      _,
-      _,
-      lat,
-      long,
-      area,
-      begin_dt,
-      end_dt,
-      enabled,
-      _,
-      upd_sp,
-      _,
-      _,
-      _,
-      _,
-      _,
-      _
-    ] = item
+  defp known_updates(source) do
+    from(item in GeoItem,
+      where: item.source_id == ^source.id,
+      select: {item.external_id, item.date_updated}
+    )
+    |> Repo.all()
+    |> Map.new()
+  end
 
-    if enabled == 1 do
-      geometry =
-        if area != "" do
-          try do
-            coordinates =
-              area
-              |> String.split(",")
-              |> Enum.chunk_every(2)
-              |> Enum.map(fn [lat, lng] -> {String.to_float(lng), String.to_float(lat)} end)
+  defp to_geo_item(project, details, updated) do
+    id = to_string(project["id"])
 
-            [head | _tail] = coordinates
+    %{
+      external_id: id,
+      title: HtmlEntities.decode(project["name"]),
+      url: "#{@base_url}/berlin?id=#{id}&mt=0&zoom=17",
+      state: @state_mapping[project["status"]],
+      geo_point: to_point(project["location"]),
+      geometry: to_polygon(project["area"]),
+      date_start: parse_date(project["cBegin"]),
+      date_end: parse_date(project["cEnd"]),
+      date_updated: updated
+    }
+    |> Map.merge(details_attrs(details))
+  end
 
-            coordinates = coordinates ++ [head]
+  # Without details (unchanged project) the stored description and links are kept
+  defp details_attrs(nil), do: %{}
 
-            %Geo.Polygon{
-              coordinates: [coordinates],
-              srid: 4326
-            }
-          rescue
-            _ -> nil
-          end
-        else
-          nil
-        end
+  defp details_attrs(details) do
+    daf_link =
+      (get_in(details, ["urls", "daf"]) || [])
+      |> Enum.find(&(is_binary(&1) and String.contains?(&1, "/thread/")))
 
-      %{
-        external_id: Integer.to_string(id),
-        title: HtmlEntities.decode(name),
-        description: cleanup_description(description),
-        url: "https://www.dafmap.de/d/berlin?id=#{id}&mt=0&zoom=17",
-        geo_point: %Geo.Point{coordinates: {long, lat}, srid: 4326},
-        geometry: geometry,
-        additional_link: url,
-        additional_link_name: "Deutsches Architekturforum",
-        date_start: if(begin_dt, do: Timex.parse!(begin_dt, "{YYYY}-{0M}-{0D}")),
-        date_end: if(end_dt, do: Timex.parse!(end_dt, "{YYYY}-{0M}-{0D}")),
-        date_updated: if(upd_sp, do: Timex.parse!(upd_sp, "{RFC3339}"))
-      }
-    else
-      nil
+    %{
+      description: cleanup_description(details["description"]),
+      additional_link: daf_link,
+      additional_link_name: if(daf_link, do: "Deutsches Architekturforum")
+    }
+  end
+
+  defp to_point(%{"type" => "Point", "coordinates" => [lng, lat]}) do
+    %Geo.Point{coordinates: {lng, lat}, srid: 4326}
+  end
+
+  defp to_point(_), do: nil
+
+  defp to_polygon(%{"type" => type} = geometry) when type in ["Polygon", "MultiPolygon"] do
+    geometry |> Geo.JSON.decode!() |> Map.put(:srid, 4326)
+  end
+
+  defp to_polygon(_), do: nil
+
+  defp fetch_json(http_connection, url) do
+    response = http_connection.get!(url, @headers, timeout: 60_000, recv_timeout: 60_000)
+
+    if response.status_code == 200 do
+      Jason.decode!(response.body)
     end
   end
 
-  defp fetch_data(http_connection, url) do
-    response =
-      http_connection.get!(
-        url,
-        ["User-Agent": "hierbautberlin.de", Referer: "https://www.dafmap.de/d/berlin.html"],
-        timeout: 60_000,
-        recv_timeout: 60_000
-      )
+  defp parse_date(nil), do: nil
 
-    if response.status_code != 200 do
-      []
-    else
-      Jason.decode!(response.body)["rows"]
+  defp parse_date(date) do
+    case Date.from_iso8601(date) do
+      {:ok, date} -> DateTime.new!(date, ~T[00:00:00], "Etc/UTC")
+      _ -> nil
     end
   end
+
+  defp parse_datetime(nil), do: nil
+
+  defp parse_datetime(datetime) do
+    case NaiveDateTime.from_iso8601(datetime) do
+      {:ok, naive} -> naive |> DateTime.from_naive!("Etc/UTC") |> DateTime.truncate(:second)
+      _ -> nil
+    end
+  end
+
+  defp cleanup_description(nil), do: nil
 
   defp cleanup_description(description) do
     description
@@ -138,5 +156,9 @@ defmodule Hierbautberlin.Importer.DafMap do
     |> String.replace("Noch kein DAF-Post vorhanden.", "")
     |> String.replace(~r/\Anv\z/, "")
     |> String.trim()
+    |> case do
+      "" -> nil
+      text -> text
+    end
   end
 end

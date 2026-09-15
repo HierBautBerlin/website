@@ -1,0 +1,16 @@
+<Layouts.app flash={@flash}>
+  <h1>Passwort vergessen?</h1>
+
+  <.form :let={f} for={%{}} as={:user} action={~p"/users/reset_password"}>
+    <.input field={f[:email]} type="email" label="Email" required />
+
+    <div>
+      <button type="submit">Sende Email zum Zurücksetzen des Passwortes</button>
+    </div>
+  </.form>
+
+  <p>
+    <.link href={~p"/users/register"}>Registrieren</.link> |
+    <.link href={~p"/users/log_in"}>Anmelden</.link>
+  </p>
+</Layouts.app>

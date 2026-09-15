@@ -5,7 +5,8 @@ defmodule HierbautberlinWeb.FileStorageController do
     base_path = Application.get_env(:hierbautberlin, :file_storage_path) |> Path.expand()
     file = Path.join(base_path, Path.join(url_path)) |> Path.expand()
 
-    if String.starts_with?(file, base_path) && File.exists?(file) do
+    # the trailing slash keeps sibling directories like "file_storage_old" out
+    if String.starts_with?(file, base_path <> "/") && File.regular?(file) do
       send_file(conn, 200, file)
     else
       conn

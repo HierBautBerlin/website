@@ -12,7 +12,6 @@ config :hierbautberlin, :environment, :prod
 # which you should run after static files are built and
 # before starting your production server.
 config :hierbautberlin, HierbautberlinWeb.Endpoint,
-  url: [host: "hierbautberlin.de", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -56,3 +55,5 @@ config :logger, level: :info
 # and configuration from environment variables.
 
 config :hierbautberlin, HierbautberlinWeb.Endpoint, server: true
+
+config :swoosh, api_client: Swoosh.ApiClient.Req

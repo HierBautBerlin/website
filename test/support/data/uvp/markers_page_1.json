@@ -1,0 +1,115 @@
+[
+  {
+    "title": "Ausbau de L 401 in der Ortsdurchfahrt Zeuthen",
+    "lat": "52.3477",
+    "lon": "13.61585",
+    "iplug": "ige-ng_igc_bb",
+    "uuid": "0F8A6A66-A2F9-40EE-A426-AD2C013622DB",
+    "bbox": [
+      [
+        52.3183,
+        13.5664
+      ],
+      [
+        52.3771,
+        13.6653
+      ]
+    ],
+    "procedure": "Zulassungsverfahren",
+    "categories": [
+      {
+        "id": "UVPG-14",
+        "name": "Verkehrsvorhaben"
+      }
+    ],
+    "steps": [
+      "Öffentliche Auslegung"
+    ]
+  },
+  {
+    "title": "Errichtung und Betrieb einer Bio- und Erdgas-Verflüssigungsanlage in 16356 Ahrensfelde - Reg.-Nr.: G01023",
+    "lat": "52.61108731591356",
+    "lon": "13.594851493835451",
+    "iplug": "ige-ng_igc_bb",
+    "uuid": "160071c4-6385-4c99-a3d1-fc764bbdf3e9",
+    "bbox": [
+      [
+        52.606891781021375,
+        13.58440160751343
+      ],
+      [
+        52.61528285080574,
+        13.605301380157472
+      ]
+    ],
+    "procedure": "Zulassungsverfahren",
+    "categories": [
+      {
+        "id": "UVPG-9",
+        "name": "Lagerung von Stoffen und Gemischen"
+      }
+    ],
+    "steps": [
+      "Öffentliche Auslegung",
+      "Erörterungstermin"
+    ]
+  },
+  {
+    "title": "Errichtung und Betrieb von zwei Windkraftanlagen in 15868 Jamlitz OT Ullersdorf; Vorhaben-ID Süd-G00323",
+    "lat": "52.05702095305594",
+    "lon": "14.349346160888674",
+    "iplug": "ige-ng_igc_bb",
+    "uuid": "007fcec8-ccd0-4601-8a52-b50fda6b801d",
+    "bbox": [
+      [
+        52.02957779580883,
+        14.300079345703127
+      ],
+      [
+        52.084464110303045,
+        14.39861297607422
+      ]
+    ],
+    "procedure": "Zulassungsverfahren",
+    "categories": [
+      {
+        "id": "UVPG-1",
+        "name": "Wärmeerzeugung, Bergbau und Energie"
+      }
+    ],
+    "steps": [
+      "Öffentliche Auslegung",
+      "Erörterungstermin",
+      "Entscheidung über die Zulassung"
+    ]
+  },
+  {
+    "title": "Errichtung und Betrieb einer Windkraftanlage in 15299 Müllrose - Reg.-Nr.: G10718",
+    "lat": null,
+    "lon": null,
+    "iplug": "ige-ng_igc_bb",
+    "uuid": "00A99865-D773-4B1B-8EE4-99D6F1DDFA77",
+    "bbox": [
+      [
+        52.2789,
+        14.3423
+      ],
+      [
+        52.32,
+        14.4336
+      ]
+    ],
+    "procedure": "Zulassungsverfahren",
+    "categories": [
+      {
+        "id": "UVPG-1",
+        "name": "Wärmeerzeugung, Bergbau und Energie"
+      }
+    ],
+    "steps": [
+      "Öffentliche Auslegung",
+      "Erörterungstermin",
+      "Entscheidung über die Zulassung"
+    ]
+  }
+]

@@ -183,7 +183,7 @@ defmodule Hierbautberlin.Accounts do
 
   ## Examples
 
-      iex> deliver_update_email_instructions(user, current_email, &Routes.user_update_email_url(conn, :edit, &1))
+      iex> deliver_update_email_instructions(user, current_email, &url(~p"/users/settings/confirm_email/\#{&1}"))
       {:ok, %{to: ..., text_body: ...}}
 
   """
@@ -270,10 +270,10 @@ defmodule Hierbautberlin.Accounts do
 
   ## Examples
 
-      iex> deliver_user_confirmation_instructions(user, &Routes.user_confirmation_url(conn, :confirm, &1))
+      iex> deliver_user_confirmation_instructions(user, &url(~p"/users/confirm/\#{&1}"))
       {:ok, %{to: ..., body: ...}}
 
-      iex> deliver_user_confirmation_instructions(confirmed_user, &Routes.user_confirmation_url(conn, :confirm, &1))
+      iex> deliver_user_confirmation_instructions(confirmed_user, &url(~p"/users/confirm/\#{&1}"))
       {:error, :already_confirmed}
 
   """
@@ -317,7 +317,7 @@ defmodule Hierbautberlin.Accounts do
 
   ## Examples
 
-      iex> deliver_user_reset_password_instructions(user, &Routes.user_reset_password_url(conn, :edit, &1))
+      iex> deliver_user_reset_password_instructions(user, &url(~p"/users/reset_password/\#{&1}"))
       {:ok, %{to: ..., body: ...}}
 
   """
@@ -384,13 +384,13 @@ defmodule Hierbautberlin.Accounts do
   Returns true if the user is subscribed to this lat long, will
   check in a 100m radius of the given point.
   """
-  def is_subscribed(user, coordinates)
+  def subscribed?(user, coordinates)
 
-  def is_subscribed(nil, _coordinates) do
+  def subscribed?(nil, _coordinates) do
     false
   end
 
-  def is_subscribed(user, coordinates) do
+  def subscribed?(user, coordinates) do
     get_subscription(user, coordinates) != nil
   end
 

@@ -9,7 +9,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
     "festg" => "finished"
   }
 
-  def import(http_connection \\ HTTPoison) do
+  def import(http_connection \\ Hierbautberlin.HTTPClient) do
     {:ok, source} =
       GeoData.upsert_source(%{
         short_name: "BERLIN_BEBAUUNGSPLAENE",
@@ -44,6 +44,8 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
         geo_item
       end)
 
+    GeoData.hide_missing_geo_items(source, Enum.map(result, & &1.external_id))
+
     {:ok, result}
   rescue
     error ->
@@ -55,7 +57,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
     dates =
       [
         parse_date(item["fsg_gvbl_d"]),
-        parse_date(item["aul_start"]),
+        parse_date(item["aul_anfang"]),
         parse_date(item["aul_ende"]),
         parse_date(item["festsg_am"]),
         parse_date(item["afs_beschl"])
@@ -63,19 +65,49 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
       |> Enum.filter(&(!is_nil(&1)))
       |> Enum.sort(&(Timex.diff(&1, &2) > 0))
 
+    display_period = display_period(item)
+
     Map.merge(
       %{
         external_id: item["bplanID"],
         title: item["planname"] <> " - " <> item["bereich"],
         url: item["scan_www"] || item["grund_www"],
         geometry: polygons[item["id"]],
-        participation_open: Enum.member?(["aul", "bbg", "imVerfahren"], item["status"]),
+        participation_open: display_period != nil and display_period.open,
         state: @state_mapping[item["status"]],
         date_start: List.last(dates),
         date_end: List.first(dates)
       },
       get_additional_link(item)
     )
+    |> Map.merge(display_relevance(display_period))
+  end
+
+  # During the public display ("Auslegung") everyone can comment on the plan
+  defp display_period(item) do
+    with %DateTime{} = from <- parse_date(item["aul_anfang"]),
+         %DateTime{} = until <- parse_date(item["aul_ende"]) do
+      until = Timex.end_of_day(until)
+      now = DateTime.utc_now()
+
+      %{
+        from: from,
+        until: until,
+        open: DateTime.compare(from, now) != :gt and DateTime.compare(until, now) != :lt
+      }
+    else
+      _ -> nil
+    end
+  end
+
+  defp display_relevance(nil), do: %{}
+
+  defp display_relevance(%{from: from, until: until}) do
+    if DateTime.compare(until, DateTime.utc_now()) == :lt do
+      %{}
+    else
+      %{importance: 3.0, relevant_from: from, relevant_until: until, relevance_half_life: 14}
+    end
   end
 
   defp get_additional_link(%{"scan_www" => scan, "grund_www" => grund}) do
@@ -94,7 +126,7 @@ defmodule Hierbautberlin.Importer.BerlinBebauungsplaene do
   end
 
   defp parse_date(date) do
-    Timex.parse!(date, "{YYYY}-{0M}-{0D}")
+    date |> Timex.parse!("{YYYY}-{0M}-{0D}") |> DateTime.from_naive!("Etc/UTC")
   rescue
     _ -> nil
   end

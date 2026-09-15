@@ -1,0 +1,204 @@
+[
+  {
+    "id": 8386,
+    "name": "„27 ha Möglichkeiten“ Hohenschönhausen (VISION)",
+    "type": "area",
+    "status": "unknown",
+    "icon": "border-all",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        13.504522,
+        52.544105
+      ]
+    },
+    "area": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            13.50072,
+            52.5437
+          ],
+          [
+            13.4997,
+            52.54407
+          ],
+          [
+            13.49887,
+            52.54454
+          ],
+          [
+            13.49948,
+            52.54514
+          ],
+          [
+            13.50084,
+            52.54477
+          ],
+          [
+            13.50188,
+            52.54674
+          ],
+          [
+            13.50481,
+            52.54645
+          ],
+          [
+            13.50782,
+            52.54638
+          ],
+          [
+            13.50766,
+            52.54564
+          ],
+          [
+            13.50776,
+            52.54489
+          ],
+          [
+            13.50847,
+            52.54292
+          ],
+          [
+            13.50956,
+            52.54134
+          ],
+          [
+            13.50267,
+            52.54128
+          ],
+          [
+            13.50263,
+            52.54216
+          ],
+          [
+            13.50014,
+            52.54225
+          ],
+          [
+            13.50072,
+            52.5437
+          ]
+        ]
+      ]
+    },
+    "cBegin": null,
+    "cEnd": null,
+    "updated": "2022-11-03T13:44:53"
+  },
+  {
+    "id": 3903,
+    "name": "52° Nord (Grünau)",
+    "type": "area",
+    "status": "done",
+    "icon": "border-all",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        13.576402,
+        52.42563
+      ]
+    },
+    "area": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            13.57584,
+            52.42376
+          ],
+          [
+            13.57316,
+            52.42797
+          ],
+          [
+            13.57441,
+            52.42788
+          ],
+          [
+            13.57531,
+            52.42763
+          ],
+          [
+            13.57849,
+            52.42568
+          ],
+          [
+            13.57941,
+            52.42489
+          ],
+          [
+            13.57679,
+            52.4238
+          ],
+          [
+            13.57649,
+            52.424
+          ],
+          [
+            13.57584,
+            52.42376
+          ]
+        ]
+      ]
+    },
+    "cBegin": null,
+    "cEnd": "2024-12-30",
+    "updated": "2024-07-16T11:25:38"
+  },
+  {
+    "id": 8978,
+    "name": "\"Museumspavillon und touristische Wissenspfade\" TU Berlin",
+    "type": "building",
+    "status": "uc",
+    "icon": "masks-theater",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        13.326382,
+        52.511381
+      ]
+    },
+    "area": null,
+    "cBegin": "2025-05-31",
+    "cEnd": "2026-12-30",
+    "updated": "2026-06-23T10:46:02"
+  },
+  {
+    "id": 9084,
+    "name": "3YARDS",
+    "type": "building",
+    "status": "uc",
+    "icon": "offices",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        13.471581406676464,
+        52.507073239731
+      ]
+    },
+    "area": null,
+    "cBegin": "2025-08-01",
+    "cEnd": null,
+    "updated": "2026-05-27T13:12:57"
+  },
+  {
+    "id": 7272,
+    "name": "13353 WDDNG",
+    "type": "building",
+    "status": "done",
+    "icon": "house",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        13.351496,
+        52.548579
+      ]
+    },
+    "area": null,
+    "cBegin": null,
+    "cEnd": "2020-07-30",
+    "updated": "2022-12-19T14:38:07"
+  }
+]

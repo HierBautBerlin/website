@@ -9,15 +9,15 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
 
   describe "GET /users/log_in" do
     test "renders log in page", %{conn: conn} do
-      conn = get(conn, Routes.user_session_path(conn, :new))
+      conn = get(conn, ~p"/users/log_in")
       response = html_response(conn, 200)
       assert response =~ "<h1>Anmelden</h1>"
-      assert response =~ "Anmelden</a>"
-      assert response =~ "Registrieren</a>"
+      assert response =~ ~r/Anmelden\s*<\/a>/
+      assert response =~ ~r/Registrieren\s*<\/a>/
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> get(Routes.user_session_path(conn, :new))
+      conn = conn |> log_in_user(user) |> get(~p"/users/log_in")
       assert redirected_to(conn) == "/map"
     end
   end
@@ -25,7 +25,7 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
   describe "POST /users/log_in" do
     test "logs the user in", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.user_session_path(conn, :create), %{
+        post(conn, ~p"/users/log_in", %{
           "user" => %{"email" => user.email, "password" => valid_user_password()}
         })
 
@@ -33,15 +33,15 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
       assert redirected_to(conn) =~ "/"
 
       # Now do a logged in request and assert on the menu
-      conn = get(conn, "/")
+      conn = get(conn, ~p"/map")
       response = html_response(conn, 200)
-      assert response =~ "Einstellungen</a>"
-      assert response =~ "Abmelden</a>"
+      assert response =~ ~r/Einstellungen\s*<\/a>/
+      assert response =~ ~r/Abmelden\s*<\/a>/
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.user_session_path(conn, :create), %{
+        post(conn, ~p"/users/log_in", %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password(),
@@ -57,7 +57,7 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
       conn =
         conn
         |> init_test_session(user_return_to: "/foo/bar")
-        |> post(Routes.user_session_path(conn, :create), %{
+        |> post(~p"/users/log_in", %{
           "user" => %{
             "email" => user.email,
             "password" => valid_user_password()
@@ -69,7 +69,7 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
 
     test "emits error message with invalid credentials", %{conn: conn, user: user} do
       conn =
-        post(conn, Routes.user_session_path(conn, :create), %{
+        post(conn, ~p"/users/log_in", %{
           "user" => %{"email" => user.email, "password" => "invalid_password"}
         })
 
@@ -81,17 +81,17 @@ defmodule HierbautberlinWeb.UserSessionControllerTest do
 
   describe "DELETE /users/log_out" do
     test "logs the user out", %{conn: conn, user: user} do
-      conn = conn |> log_in_user(user) |> delete(Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      conn = conn |> log_in_user(user) |> delete(~p"/users/log_out")
+      assert redirected_to(conn) == ~p"/map"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Erfolgreich abgemeldet."
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Erfolgreich abgemeldet."
     end
 
     test "succeeds even if the user is not logged in", %{conn: conn} do
-      conn = delete(conn, Routes.user_session_path(conn, :delete))
-      assert redirected_to(conn) == "/"
+      conn = delete(conn, ~p"/users/log_out")
+      assert redirected_to(conn) == ~p"/map"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Erfolgreich abgemeldet."
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Erfolgreich abgemeldet."
     end
   end
 end

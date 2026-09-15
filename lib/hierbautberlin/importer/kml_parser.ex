@@ -1,84 +1,104 @@
 defmodule Hierbautberlin.Importer.KmlParser do
+  @moduledoc """
+  Minimal KML parser that extracts the geometries of all placemarks.
+
+  Only the geometry types used by our data sources are supported:
+  `Point`, `LineString`, `Polygon` (outer boundary only) and `MultiGeometry`.
+  """
+
+  import SweetXml, only: [xpath: 2, sigil_x: 2]
+
+  require Record
+
+  Record.defrecordp(
+    :xml_element,
+    :xmlElement,
+    Record.extract(:xmlElement, from_lib: "xmerl/include/xmerl.hrl")
+  )
+
+  @geometry_tags [~c"Point", ~c"LineString", ~c"Polygon", ~c"MultiGeometry"]
+
+  def parse(kml) when kml in [nil, ""], do: []
+
   def parse(kml) do
-    if kml == nil || String.length(kml) == 0 do
-      []
-    else
-      String.splitter(kml, "\n")
-      |> Exkml.stream!()
-      |> Enum.into([])
-    end
+    kml
+    |> SweetXml.parse(dtd: :none, quiet: true)
+    |> xpath(~x"//*[local-name()='Placemark']"l)
+    |> Enum.map(fn placemark ->
+      %{geoms: placemark |> geometry_children() |> Enum.map(&element_to_geo/1)}
+    end)
   end
 
   def extract_point(kml) do
-    Enum.find(kml, fn item ->
-      geodata = item.geoms |> List.first()
-      is_point(geodata)
-    end)
-    |> item_to_geo()
+    kml
+    |> Enum.find(fn item -> point?(List.first(item.geoms)) end)
+    |> first_geometry()
   end
 
   def extract_polygon(kml) do
-    Enum.find(kml, fn item ->
-      geodata = item.geoms |> List.first()
-      !is_point(geodata)
-    end)
-    |> item_to_geo()
+    kml
+    |> Enum.find(fn item -> !point?(List.first(item.geoms)) end)
+    |> first_geometry()
   end
 
-  defp item_to_geo(%Exkml.Placemark{} = placemark) do
-    placemark.geoms
-    |> List.first()
-    |> kml_to_geo()
+  defp first_geometry(%{geoms: [geom | _]}), do: geom
+  defp first_geometry(_), do: nil
+
+  defp point?(%Geo.Point{}), do: true
+  defp point?(_), do: false
+
+  defp geometry_children(element) do
+    element
+    |> child_elements()
+    |> Enum.filter(&(local_name(&1) in @geometry_tags))
   end
 
-  defp item_to_geo(_) do
-    nil
-  end
+  defp element_to_geo(element) do
+    case local_name(element) do
+      ~c"Point" ->
+        [coordinate | _] = coordinates_of(element)
+        %Geo.Point{coordinates: coordinate, srid: 4326}
 
-  defp is_point(%Exkml.Point{}) do
-    true
-  end
+      ~c"LineString" ->
+        %Geo.LineString{coordinates: coordinates_of(element), srid: 4326}
 
-  defp is_point(_) do
-    false
-  end
+      ~c"Polygon" ->
+        outer = xpath(element, ~x"./*[local-name()='outerBoundaryIs']"e)
+        %Geo.Polygon{coordinates: [coordinates_of(outer)], srid: 4326}
 
-  defp kml_to_geo(%Exkml.Point{} = point) do
-    %Geo.Point{coordinates: {point.x, point.y}, srid: 4326}
-  end
-
-  defp kml_to_geo(%Exkml.Line{} = line) do
-    %Geo.LineString{
-      coordinates:
-        Enum.map(line.points, fn item ->
-          {item.x, item.y}
-        end),
-      srid: 4326
-    }
-  end
-
-  defp kml_to_geo(%Exkml.Multigeometry{} = multi) do
-    if length(multi.geoms) > 1 do
-      %Geo.GeometryCollection{
-        geometries:
-          Enum.map(multi.geoms, fn item ->
-            kml_to_geo(item)
-          end),
-        srid: 4326
-      }
-    else
-      kml_to_geo(List.first(multi.geoms))
+      ~c"MultiGeometry" ->
+        case element |> geometry_children() |> Enum.map(&element_to_geo/1) do
+          [single] -> single
+          geometries -> %Geo.GeometryCollection{geometries: geometries, srid: 4326}
+        end
     end
   end
 
-  defp kml_to_geo(%Exkml.Polygon{} = polygon) do
-    %Geo.Polygon{
-      coordinates: [
-        Enum.map(polygon.outer_boundary.points, fn item ->
-          {item.x, item.y}
-        end)
-      ],
-      srid: 4326
-    }
+  defp coordinates_of(element) do
+    element
+    |> xpath(~x".//*[local-name()='coordinates']/text()"s)
+    |> String.split(~r/\s+/, trim: true)
+    |> Enum.map(fn tuple ->
+      [x, y | _altitude] = String.split(tuple, ",")
+      {parse_float(x), parse_float(y)}
+    end)
+  end
+
+  defp parse_float(value) do
+    {number, _} = Float.parse(value)
+    number
+  end
+
+  defp child_elements(element) do
+    element
+    |> xml_element(:content)
+    |> Enum.filter(&Record.is_record(&1, :xmlElement))
+  end
+
+  defp local_name(element) do
+    case xml_element(element, :nsinfo) do
+      {_prefix, local} -> local
+      _ -> Atom.to_charlist(xml_element(element, :name))
+    end
   end
 end

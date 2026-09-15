@@ -59,7 +59,7 @@ defmodule HierbautberlinWeb.UserAuthTest do
       refute get_session(conn, :user_token)
       refute conn.cookies[@remember_me_cookie]
       assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == ~p"/map"
       refute Accounts.get_user_by_session_token(user_token)
     end
 
@@ -81,7 +81,7 @@ defmodule HierbautberlinWeb.UserAuthTest do
       conn = conn |> fetch_cookies() |> UserAuth.log_out_user()
       refute get_session(conn, :user_token)
       assert %{max_age: 0} = conn.resp_cookies[@remember_me_cookie]
-      assert redirected_to(conn) == "/"
+      assert redirected_to(conn) == ~p"/map"
     end
   end
 
@@ -134,13 +134,15 @@ defmodule HierbautberlinWeb.UserAuthTest do
     test "redirects if user is not authenticated", %{conn: conn} do
       conn = conn |> fetch_flash() |> UserAuth.require_authenticated_user([])
       assert conn.halted
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
-      assert get_flash(conn, :error) == "Du musst angemeldet sein um diese Seite zu sehen."
+      assert redirected_to(conn) == ~p"/users/log_in"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
+               "Du musst angemeldet sein um diese Seite zu sehen."
     end
 
     test "stores the path to redirect to on GET", %{conn: conn} do
       halted_conn =
-        %{conn | request_path: "/foo", query_string: ""}
+        %{conn | path_info: ["foo"], request_path: "/foo", query_string: ""}
         |> fetch_flash()
         |> UserAuth.require_authenticated_user([])
 
@@ -148,7 +150,7 @@ defmodule HierbautberlinWeb.UserAuthTest do
       assert get_session(halted_conn, :user_return_to) == "/foo"
 
       halted_conn =
-        %{conn | request_path: "/foo", query_string: "bar=baz"}
+        %{conn | path_info: ["foo"], request_path: "/foo", query_string: "bar=baz"}
         |> fetch_flash()
         |> UserAuth.require_authenticated_user([])
 

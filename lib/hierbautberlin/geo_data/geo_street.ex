@@ -8,6 +8,7 @@ defmodule Hierbautberlin.GeoData.GeoStreet do
     field :name, :string
     field :city, :string
     field :district, :string
+    field :ortsteil, :string
     field :geometry, Geometry
     field :geo_point, Geometry
     field :street_number_count, :integer

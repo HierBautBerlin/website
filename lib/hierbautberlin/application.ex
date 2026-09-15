@@ -11,12 +11,14 @@ defmodule Hierbautberlin.Application do
         [
           # Start the Ecto repository
           Hierbautberlin.Repo,
+          {Task.Supervisor, name: Hierbautberlin.ImporterTaskSupervisor},
           {Hierbautberlin.GeoData.AnalyzeText, name: Hierbautberlin.GeoData.AnalyzeText}
         ]
       else
         jobs = [
           # Start the Ecto repository
           Hierbautberlin.Repo,
+          {Task.Supervisor, name: Hierbautberlin.ImporterTaskSupervisor},
           # Start the Telemetry supervisor
           HierbautberlinWeb.Telemetry,
           # Start the PubSub system

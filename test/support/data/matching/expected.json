@@ -1,0 +1,811 @@
+{
+  "49": {
+    "places": [
+      "Ludolfingerplatz|Reinickendorf",
+      "Zeltinger Platz|Reinickendorf"
+    ],
+    "street_numbers": [],
+    "streets": []
+  },
+  "75": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "1": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "36": {
+    "places": [
+      "Treptower Park|Treptow-Köpenick"
+    ],
+    "street_numbers": [],
+    "streets": [
+      "Puschkinallee|Treptow-Köpenick"
+    ]
+  },
+  "16": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Wutzkyallee|Neukölln"
+    ]
+  },
+  "55": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Grunerstraße|Mitte",
+      "Gustav-Böß-Straße|Mitte",
+      "Jüdenstraße|Mitte",
+      "Littenstraße|Mitte",
+      "Molkenmarkt|Mitte",
+      "Mühlendamm|Mitte",
+      "Neue Jüdenstraße|Mitte",
+      "Parochialstraße|Mitte",
+      "Spandauer Straße|Mitte",
+      "Stralauer Straße|Mitte",
+      "Waisenstraße|Mitte"
+    ]
+  },
+  "90": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Kaiserstraße|Tempelhof-Schöneberg"
+    ]
+  },
+  "7": {
+    "places": [],
+    "street_numbers": [
+      "Alt-Heiligensee 58|Reinickendorf",
+      "Breitenbachstraße 1|Reinickendorf",
+      "Wilhelmsruher Damm 142|Reinickendorf",
+      "Zabel-Krüger-Damm 155A|Reinickendorf"
+    ],
+    "streets": []
+  },
+  "23": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "44": {
+    "places": [],
+    "street_numbers": [
+      "Waldschulallee 34|Charlottenburg-Wilmersdorf"
+    ],
+    "streets": []
+  },
+  "4": {
+    "places": [],
+    "street_numbers": [
+      "Klosterstraße 3|Spandau",
+      "Obstallee 2|Spandau",
+      "Sakrower Landstraße 3|Spandau"
+    ],
+    "streets": [
+      "Hakenfelder Straße|Spandau",
+      "Heerstraße|Spandau",
+      "Niederneuendorfer Allee|Spandau"
+    ]
+  },
+  "43": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "32": {
+    "places": [],
+    "street_numbers": [
+      "Rudower Straße 132|Treptow-Köpenick"
+    ],
+    "streets": [
+      "Ottomar-Geschke-Straße|Treptow-Köpenick",
+      "Spindlersfelder Straße|Treptow-Köpenick"
+    ]
+  },
+  "14": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "50": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Helene-Weigel-Platz|Marzahn-Hellersdorf"
+    ]
+  },
+  "29": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Liebigstraße|Friedrichshain-Kreuzberg",
+      "Rigaer Straße|Friedrichshain-Kreuzberg",
+      "Weidenweg|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "94": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "42": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Donaustraße|Neukölln",
+      "Flughafenstraße|Neukölln"
+    ]
+  },
+  "107": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "19": {
+    "places": [],
+    "street_numbers": [
+      "Hildburghauser Straße 29|Tempelhof-Schöneberg"
+    ],
+    "streets": [
+      "Tirschenreuther Ring|Tempelhof-Schöneberg"
+    ]
+  },
+  "39": {
+    "places": [],
+    "street_numbers": [
+      "Alter Markt 2|Treptow-Köpenick"
+    ],
+    "streets": []
+  },
+  "33": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Johann-Sigismund-Straße|Charlottenburg-Wilmersdorf",
+      "Kurfürstendamm|Charlottenburg-Wilmersdorf",
+      "Paulsborner Straße|Charlottenburg-Wilmersdorf",
+      "Westfälische Straße|Charlottenburg-Wilmersdorf"
+    ]
+  },
+  "64": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Blankenfelder Chaussee|Pankow",
+      "Buchholzer Straße|Pankow",
+      "Rosenthaler Weg|Pankow"
+    ]
+  },
+  "95": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Leonhardtstraße|Charlottenburg-Wilmersdorf",
+      "Rönnestraße|Charlottenburg-Wilmersdorf",
+      "Stuttgarter Platz|Charlottenburg-Wilmersdorf",
+      "Windscheidstraße|Charlottenburg-Wilmersdorf"
+    ]
+  },
+  "87": {
+    "places": [],
+    "street_numbers": [
+      "Kanalstraße 8|Neukölln"
+    ],
+    "streets": [
+      "Stubenrauchstraße|Neukölln"
+    ]
+  },
+  "48": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "108": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "35": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "91": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "97": {
+    "places": [],
+    "street_numbers": [
+      "Bödikerstraße 25|Friedrichshain-Kreuzberg",
+      "Bödikerstraße 26|Friedrichshain-Kreuzberg",
+      "Laskerstraße 5|Friedrichshain-Kreuzberg",
+      "Markgrafendamm 24|Friedrichshain-Kreuzberg",
+      "Markgrafendamm 25|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 33|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 35|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 37|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 39|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 41|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 43|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 45|Friedrichshain-Kreuzberg",
+      "Modersohnstraße 47|Friedrichshain-Kreuzberg",
+      "Persiusstraße 6|Friedrichshain-Kreuzberg",
+      "Persiusstraße 7|Friedrichshain-Kreuzberg"
+    ],
+    "streets": [
+      "Laskerstraße|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "101": {
+    "places": [],
+    "street_numbers": [
+      "Bahnhofstraße 61|Tempelhof-Schöneberg"
+    ],
+    "streets": []
+  },
+  "73": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "13": {
+    "places": [
+      "Grundschule am Weißen See|Pankow"
+    ],
+    "street_numbers": [
+      "Amalienstraße 6|Pankow"
+    ],
+    "streets": [
+      "Amalienstraße|Pankow",
+      "Falkenberger Straße|Pankow"
+    ]
+  },
+  "104": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "15": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "77": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Bornsdorfer Straße|Neukölln",
+      "Saltykowstraße|Neukölln"
+    ]
+  },
+  "76": {
+    "places": [],
+    "street_numbers": [
+      "Brückenstraße 16|Mitte"
+    ],
+    "streets": [
+      "Brückenstraße|Mitte",
+      "Heinrich-Heine-Straße|Mitte",
+      "Köpenicker Straße|Mitte"
+    ]
+  },
+  "114": {
+    "places": [],
+    "street_numbers": [
+      "Richardstraße 92|Neukölln"
+    ],
+    "streets": [
+      "Richardstraße|Neukölln"
+    ]
+  },
+  "84": {
+    "places": [],
+    "street_numbers": [
+      "Arcostraße 7A|Charlottenburg-Wilmersdorf",
+      "Arcostraße 7|Charlottenburg-Wilmersdorf"
+    ],
+    "streets": []
+  },
+  "8": {
+    "places": [
+      "Tierpark|Lichtenberg"
+    ],
+    "street_numbers": [],
+    "streets": []
+  },
+  "2": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Auguste-Viktoria-Allee|Reinickendorf",
+      "Zobeltitzstraße|Reinickendorf"
+    ]
+  },
+  "80": {
+    "places": [],
+    "street_numbers": [
+      "Wendenschloßstraße 336|Treptow-Köpenick"
+    ],
+    "streets": []
+  },
+  "63": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "102": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Rathausstraße|Tempelhof-Schöneberg"
+    ]
+  },
+  "86": {
+    "places": [],
+    "street_numbers": [
+      "Köpenicker Allee 108|Lichtenberg",
+      "Köpenicker Allee 116|Lichtenberg",
+      "Köpenicker Allee 118|Lichtenberg",
+      "Waldowallee 115|Lichtenberg",
+      "Waldowallee 117|Lichtenberg"
+    ],
+    "streets": [
+      "Eitelstraße|Lichtenberg"
+    ]
+  },
+  "83": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "57": {
+    "places": [],
+    "street_numbers": [
+      "Rhodeländerweg 2|Neukölln"
+    ],
+    "streets": []
+  },
+  "47": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Mehringdamm|Friedrichshain-Kreuzberg",
+      "Obentrautstraße|Friedrichshain-Kreuzberg",
+      "Yorckstraße|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "99": {
+    "places": [],
+    "street_numbers": [
+      "Sieversufer 7|Neukölln",
+      "Sieversufer 9|Neukölln",
+      "Späthstraße 162|Neukölln"
+    ],
+    "streets": []
+  },
+  "25": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Crellestraße|Tempelhof-Schöneberg",
+      "Langenscheidtstraße|Tempelhof-Schöneberg",
+      "Willmanndamm|Tempelhof-Schöneberg"
+    ]
+  },
+  "56": {
+    "places": [],
+    "street_numbers": [
+      "Stuttgarter Straße 39|Neukölln"
+    ],
+    "streets": [
+      "Stuttgarter Straße|Neukölln",
+      "Thiemannstraße|Neukölln",
+      "Treptower Straße|Neukölln"
+    ]
+  },
+  "96": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Alexandrinenstraße|Friedrichshain-Kreuzberg",
+      "Alte Jakobstraße|Friedrichshain-Kreuzberg",
+      "Franz-Künstler-Straße|Friedrichshain-Kreuzberg",
+      "Ritterstraße|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "69": {
+    "places": [],
+    "street_numbers": [
+      "Schulzendorfer Straße 1|Reinickendorf",
+      "Schulzendorfer Straße 3|Reinickendorf"
+    ],
+    "streets": [
+      "Hermsdorfer Straße|Reinickendorf"
+    ]
+  },
+  "21": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "37": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "53": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "6": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "9": {
+    "places": [],
+    "street_numbers": [
+      "Bernhard-Weiß-Straße 6|Mitte"
+    ],
+    "streets": []
+  },
+  "22": {
+    "places": [],
+    "street_numbers": [
+      "Heilmannring 78|Charlottenburg-Wilmersdorf",
+      "Popitzweg 3|Charlottenburg-Wilmersdorf"
+    ],
+    "streets": [
+      "Halemweg|Charlottenburg-Wilmersdorf",
+      "Heilmannring|Charlottenburg-Wilmersdorf",
+      "Popitzweg|Charlottenburg-Wilmersdorf",
+      "Siemensdamm|Charlottenburg-Wilmersdorf"
+    ]
+  },
+  "54": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "60": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "115": {
+    "places": [],
+    "street_numbers": [
+      "Germanenstraße 2|Treptow-Köpenick",
+      "Germanenstraße 6|Treptow-Köpenick",
+      "Teutonenstraße 14|Treptow-Köpenick",
+      "Teutonenstraße 3|Treptow-Köpenick",
+      "Teutonenstraße 8|Treptow-Köpenick",
+      "Teutonenstraße 9|Treptow-Köpenick"
+    ],
+    "streets": []
+  },
+  "38": {
+    "places": [],
+    "street_numbers": [
+      "Passower Straße 35|Lichtenberg"
+    ],
+    "streets": [
+      "Passower Straße|Lichtenberg"
+    ]
+  },
+  "62": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "89": {
+    "places": [],
+    "street_numbers": [
+      "Kirchstraße 88|Tempelhof-Schöneberg"
+    ],
+    "streets": [
+      "Bahnstraße|Tempelhof-Schöneberg"
+    ]
+  },
+  "71": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "58": {
+    "places": [],
+    "street_numbers": [
+      "Alt-Buckow 21|Neukölln",
+      "Gockelweg 14|Neukölln",
+      "Hermannstraße 1|Neukölln",
+      "Hermannstraße 2|Neukölln",
+      "Hermannstraße 3|Neukölln"
+    ],
+    "streets": [
+      "Koppelweg|Neukölln"
+    ]
+  },
+  "34": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Kottbusser Tor|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "79": {
+    "places": [],
+    "street_numbers": [
+      "Bahnhofstraße 17|Tempelhof-Schöneberg",
+      "Bahnhofstraße 22|Tempelhof-Schöneberg",
+      "Rehagener Straße 30|Tempelhof-Schöneberg"
+    ],
+    "streets": []
+  },
+  "10": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Ossietzkystraße|Pankow"
+    ]
+  },
+  "18": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "45": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Alter Schönefelder Weg|Treptow-Köpenick",
+      "Köpenicker Straße|Treptow-Köpenick",
+      "Rudower Straße|Treptow-Köpenick"
+    ]
+  },
+  "51": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "74": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "12": {
+    "places": [
+      "Helle Mitte|Marzahn-Hellersdorf"
+    ],
+    "street_numbers": [],
+    "streets": []
+  },
+  "28": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Gotenburger Straße|Mitte",
+      "Kattegatstraße|Mitte",
+      "Kongostraße|Mitte",
+      "Quitzowstraße|Mitte",
+      "Sternstraße|Mitte"
+    ]
+  },
+  "88": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Hauptstraße|Tempelhof-Schöneberg",
+      "Lauterplatz|Tempelhof-Schöneberg"
+    ]
+  },
+  "81": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "41": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "92": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "40": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "24": {
+    "places": [
+      "Volkspark Rehberge|Mitte"
+    ],
+    "street_numbers": [],
+    "streets": [
+      "Nordufer|Mitte",
+      "Seestraße|Mitte"
+    ]
+  },
+  "65": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "17": {
+    "places": [],
+    "street_numbers": [
+      "Ruschestraße 104|Lichtenberg"
+    ],
+    "streets": [
+      "Magdalenenstraße|Lichtenberg",
+      "Ruschestraße|Lichtenberg"
+    ]
+  },
+  "30": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Gründerstraße|Treptow-Köpenick"
+    ]
+  },
+  "66": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "11": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "20": {
+    "places": [
+      "Gymnasium Steglitz|Steglitz-Zehlendorf"
+    ],
+    "street_numbers": [],
+    "streets": []
+  },
+  "59": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "46": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Mönchstraße|Spandau",
+      "Reformationsplatz|Spandau"
+    ]
+  },
+  "3": {
+    "places": [
+      "Marianne-Cohn-Schule|Tempelhof-Schöneberg"
+    ],
+    "street_numbers": [],
+    "streets": [
+      "Holzmannstraße|Tempelhof-Schöneberg"
+    ]
+  },
+  "93": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "26": {
+    "places": [
+      "Ernst-Reuter-Schule|Mitte"
+    ],
+    "street_numbers": [],
+    "streets": []
+  },
+  "5": {
+    "places": [],
+    "street_numbers": [],
+    "streets": [
+      "Halemweg|Charlottenburg-Wilmersdorf"
+    ]
+  },
+  "103": {
+    "places": [],
+    "street_numbers": [
+      "Am Falkenberg 50|Treptow-Köpenick",
+      "Beelitzer Weg 4|Treptow-Köpenick",
+      "Beutenweg 12|Treptow-Köpenick",
+      "Grauammerpfad 24|Treptow-Köpenick",
+      "Köpenicker Straße 25|Treptow-Köpenick",
+      "Schönefelder Chaussee 69|Treptow-Köpenick",
+      "Wolfgang-Steinitz-Straße 10A|Treptow-Köpenick",
+      "Wolfgang-Steinitz-Straße 10|Treptow-Köpenick"
+    ],
+    "streets": [
+      "Wagner-Régeny-Allee|Treptow-Köpenick"
+    ]
+  },
+  "85": {
+    "places": [],
+    "street_numbers": [
+      "Bethaniendamm 23|Friedrichshain-Kreuzberg",
+      "Bethaniendamm 25|Friedrichshain-Kreuzberg",
+      "Bethaniendamm 27|Friedrichshain-Kreuzberg",
+      "Bethaniendamm 29|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69A|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69B|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69C|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69D|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69E|Friedrichshain-Kreuzberg",
+      "Karl-Marx-Allee 69F|Friedrichshain-Kreuzberg",
+      "Mollstraße 20|Friedrichshain-Kreuzberg",
+      "Mollstraße 21|Friedrichshain-Kreuzberg",
+      "Mollstraße 22|Friedrichshain-Kreuzberg",
+      "Mollstraße 23|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 35A|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 35B|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 35C|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 35D|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 37A|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 37B|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 37C|Friedrichshain-Kreuzberg",
+      "Palisadenstraße 37D|Friedrichshain-Kreuzberg",
+      "Singerstraße 77|Friedrichshain-Kreuzberg",
+      "Singerstraße 78|Friedrichshain-Kreuzberg",
+      "Singerstraße 79|Friedrichshain-Kreuzberg",
+      "Singerstraße 80|Friedrichshain-Kreuzberg",
+      "Tunnelstraße 41|Friedrichshain-Kreuzberg",
+      "Tunnelstraße 42|Friedrichshain-Kreuzberg"
+    ],
+    "streets": [
+      "Krautstraße|Friedrichshain-Kreuzberg",
+      "Lange Straße|Friedrichshain-Kreuzberg"
+    ]
+  },
+  "72": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "78": {
+    "places": [],
+    "street_numbers": [
+      "Alt-Blankenburg 12|Pankow",
+      "Am Sandhaus 6|Pankow",
+      "Asta-Nielsen-Straße 6|Pankow",
+      "Röbellweg 120|Pankow",
+      "Schönhauser Straße 53A|Pankow",
+      "Straße 50 47|Pankow",
+      "Straße 62 100A|Pankow",
+      "Straße 62 100|Pankow",
+      "Straße 62 98|Pankow"
+    ],
+    "streets": [
+      "Bruno-Apitz-Straße|Pankow"
+    ]
+  },
+  "31": {
+    "places": [],
+    "street_numbers": [
+      "Frankfurter Allee 14A|Friedrichshain-Kreuzberg"
+    ],
+    "streets": []
+  },
+  "82": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  },
+  "61": {
+    "places": [],
+    "street_numbers": [],
+    "streets": []
+  }
+}

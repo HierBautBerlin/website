@@ -1,9 +1,3 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
-#
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
-
 # General application configuration
 import Config
 
@@ -15,8 +9,12 @@ config :hierbautberlin, Hierbautberlin.Repo, types: Hierbautberlin.PostgresTypes
 # Configures the endpoint
 config :hierbautberlin, HierbautberlinWeb.Endpoint,
   url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
   secret_key_base: "u8Ixm7iwdet1nKcY8Y4OJ99ojScoem+hizeEQWtFIb0zX22njaT8regTdd33sUJC",
-  render_errors: [view: HierbautberlinWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: HierbautberlinWeb.ErrorHTML, json: HierbautberlinWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: Hierbautberlin.PubSub,
   live_view: [signing_salt: "ocVH8z5c"]
 
@@ -27,8 +25,49 @@ config :hierbautberlin, :generators,
 config :hierbautberlin, :import_path, "./import"
 config :hierbautberlin, :file_storage_path, "./file_storage"
 
+config :hierbautberlin, HierbautberlinWeb.Mailer, adapter: Swoosh.Adapters.Local
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.25.4",
+  app: [
+    args:
+      ~w(js/app.ts --bundle --target=es2022 --outdir=../priv/static/js --entry-names=app.bundle),
+    cd: Path.expand("../assets", __DIR__)
+  ],
+  pdf_viewer: [
+    args:
+      ~w(js/pdfViewer.ts --bundle --target=es2022 --format=esm --outdir=../priv/static/js --entry-names=pdf.viewer.bundle),
+    cd: Path.expand("../assets", __DIR__)
+  ],
+  map_worker: [
+    args:
+      ~w(node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs --bundle --target=es2022 --format=esm --outdir=../priv/static/js --entry-names=maplibre-gl-worker.bundle),
+    cd: Path.expand("../assets", __DIR__)
+  ],
+  pdf_worker: [
+    args:
+      ~w(node_modules/pdfjs-dist/build/pdf.worker.mjs --bundle --target=es2022 --format=esm --outdir=../priv/static/js --entry-names=pdf.worker.bundle),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
+# Configure dart_sass (the version is required)
+config :dart_sass,
+  version: "1.97.3",
+  default: [
+    args:
+      ~w(--load-path=node_modules --silence-deprecation=import css/app.scss ../priv/static/css/app.css),
+    cd: Path.expand("../assets", __DIR__)
+  ],
+  # only for the PDF viewer page, not part of app.css
+  pdf_viewer: [
+    args:
+      ~w(--load-path=node_modules --silence-deprecation=import css/pdf_viewer.scss ../priv/static/css/pdf_viewer.css),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Configures Elixir's Logger
-config :logger, :console,
+config :logger, :default_formatter,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
@@ -38,6 +77,7 @@ config :phoenix, :json_library, Jason
 config :bugsnag,
   release_stage: "development",
   use_logger: false,
+  http_client: Hierbautberlin.BugsnagHTTPClient,
   exception_filter: Hierbautberlin.ExceptionFilter
 
 config :gettext, :default_locale, "de"

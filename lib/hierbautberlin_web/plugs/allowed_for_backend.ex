@@ -1,6 +1,7 @@
 defmodule HierbautberlinWeb.Plugs.AllowedForBackend do
   @behaviour Plug
   import Plug.Conn
+  use HierbautberlinWeb, :verified_routes
   import Phoenix.Controller, only: [redirect: 2, put_flash: 3]
 
   def init(opts), do: opts
@@ -12,7 +13,7 @@ defmodule HierbautberlinWeb.Plugs.AllowedForBackend do
   def call(conn, _opts) do
     conn
     |> put_flash(:error, "Leider musst du ein Admin sein.")
-    |> redirect(to: "/")
+    |> redirect(to: ~p"/map")
     |> halt()
   end
 end

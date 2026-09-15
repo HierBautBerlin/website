@@ -151,9 +151,3 @@ defmodule Hierbautberlin.Accounts.User do
     end
   end
 end
-
-defimpl Bamboo.Formatter, for: Hierbautberlin.Accounts.User do
-  def format_email_address(user, _opts) do
-    {nil, user.email}
-  end
-end

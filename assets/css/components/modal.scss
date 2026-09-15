@@ -31,7 +31,12 @@
 
 .phx-modal-content {
   padding: 2rem;
-  overflow: scroll;
+  overflow: auto;
+
+  // focused when the dialog opens, that is no reason for a focus ring
+  &:focus {
+    outline: none;
+  }
 }
 
 .phx-modal-close {
@@ -72,5 +77,19 @@
     min-width: auto;
     max-width: unset;
     max-height: unset;
+  }
+}
+
+// phones: the dialog fills the width of the screen
+@media only screen and (max-width: 64rem) {
+  .phx-modal-inner {
+    min-width: 0;
+    width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+    margin: 1rem auto;
+  }
+
+  .phx-modal-content {
+    padding: 2rem 1.6rem;
   }
 }

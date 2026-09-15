@@ -1,0 +1,21 @@
+# Keep the build context small and never send local data into an image
+.git
+_build
+deps
+.elixir_ls
+priv/plts
+priv/static/js
+priv/static/css
+priv/static/cache_manifest.json
+priv/static/**/*-????????????????????????????????.*
+assets/node_modules
+cover
+
+# local production data and imports
+dump.sql
+*.sql
+file_storage
+import
+data
+bench
+test

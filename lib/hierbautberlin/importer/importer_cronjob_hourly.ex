@@ -22,11 +22,12 @@ defmodule Hierbautberlin.Importer.ImporterCronjobHourly do
   end
 
   def handle_info(message, state) do
-    Bugsnag.report(%RuntimeError{message: "unknown message in analyze_text: #{inspect(message)}"},
+    Bugsnag.report(
+      %RuntimeError{message: "unknown message in importer cronjob (hourly): #{inspect(message)}"},
       severity: "warning"
     )
 
-    {:ok, state}
+    {:noreply, state}
   end
 
   defp schedule_work() do
