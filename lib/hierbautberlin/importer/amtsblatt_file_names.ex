@@ -6,8 +6,9 @@ defmodule Hierbautberlin.Importer.AmtsblattFileNames do
   (`/view_pdf/amtsblatt/abl_2023_29_…_online.pdf?ts=1688105763?page=95&title=…`).
 
   The importer strips the query since then. This moves the stored files, renames
-  the file entries and fixes the links. News items that also exist without the
-  timestamp (issues imported twice) are deleted. Running it again changes nothing.
+  the file entries and fixes the links. Files and news items that also exist
+  without the timestamp (issues imported twice) are deleted. Running it again
+  changes nothing.
   """
   import Ecto.Query, warn: false
   require Logger
@@ -51,6 +52,8 @@ defmodule Hierbautberlin.Importer.AmtsblattFileNames do
     cond do
       # the issue was imported twice, the file without timestamp is used
       FileStorage.get_file_by_name(new_name) ->
+        File.rm(FileStorage.path_for_file(name))
+        {:ok, _} = FileStorage.delete_file(file)
         :exists
 
       File.exists?(FileStorage.path_for_file(name)) ->

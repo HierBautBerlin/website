@@ -24,6 +24,28 @@ defmodule HierbautberlinWeb.ViewPDFControllerTest do
                "/filestorage/A154C2456073E64CBE2C/C5F68BBA3DB6F113B2E6/77EEBF27B6FBB35E8FC7/018B/this_file_exists.pdf"
     end
 
+    test "renders the first page without page and title", %{conn: conn} do
+      FileStorage.store_file(
+        "amtsblatt/no_page.pdf",
+        "./test/support/data/amtsblatt/abl_2021_28_2389_2480_online.pdf",
+        "application/pdf",
+        "No Page"
+      )
+
+      assert conn |> get(~p"/view_pdf/amtsblatt/no_page.pdf") |> html_response(200) =~ "No Page"
+    end
+
+    test "redirects old links with the timestamp of berlin.de", %{conn: conn} do
+      conn =
+        get(
+          conn,
+          "/view_pdf/amtsblatt/abl_2023_17_1761_1912_online.pdf?ts=1681452185?page=106&title=Stra%C3%9Fenbenennung"
+        )
+
+      assert redirected_to(conn, 301) ==
+               "/view_pdf/amtsblatt/abl_2023_17_1761_1912_online.pdf?page=106&title=Stra%C3%9Fenbenennung"
+    end
+
     test "returns a 404", %{conn: conn} do
       conn =
         get(

@@ -68,7 +68,17 @@ defmodule Hierbautberlin.Importer.AmtsblattFileNamesTest do
     refute Repo.get(NewsItem, duplicate.id)
     assert Repo.reload!(original)
 
-    assert %{files_moved: 0, news_items_fixed: 0, news_items_deleted: 0} =
-             AmtsblattFileNames.run()
+    refute FileStorage.get_file_by_name(
+             "amtsblatt/abl_2023_16_1705_1760_online.pdf?ts=1680760872"
+           )
+
+    assert FileStorage.get_file_by_name("amtsblatt/abl_2023_16_1705_1760_online.pdf")
+
+    assert %{
+             files_moved: 0,
+             files_already_existing: 0,
+             news_items_fixed: 0,
+             news_items_deleted: 0
+           } = AmtsblattFileNames.run()
   end
 end
