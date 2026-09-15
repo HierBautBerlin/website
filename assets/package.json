@@ -1,56 +1,23 @@
 {
-  "repository": {},
-  "description": " ",
+  "name": "hierbautberlin-assets",
+  "private": true,
+  "description": "JavaScript and CSS for hierbautberlin. Bundled by esbuild and dart_sass via mix.",
   "license": "MIT",
   "scripts": {
-    "deploy": "webpack --mode production",
-    "watch": "webpack --mode development --watch",
-    "test": "yarn lint",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.1",
-    "@turf/helpers": "^6.3.0",
-    "@turf/turf": "^6.5.0",
-    "lodash-es": "^4.17.21",
-    "mapbox-gl": "^2.8.2",
+    "@turf/circle": "^7.2.0",
+    "maplibre-gl": "^6.6.0",
     "milligram": "^1.4.1",
-    "pdfjs-dist": "^2.13.216",
+    "pdfjs-dist": "^6.3.289",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view",
-    "stimulus": "^3.0.1",
-    "topbar": "^1.0.1"
+    "topbar": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.10",
-    "@babel/preset-env": "^7.18.2",
-    "@types/lodash-es": "^4.17.6",
-    "@types/mapbox-gl": "^2.7.0",
-    "@types/nprogress": "^0.2.0",
-    "@types/phoenix": "^1.5.4",
-    "@types/phoenix_live_view": "^0.15.1",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "babel-loader": "^8.2.5",
-    "copy-webpack-plugin": "^11.0.0",
-    "css-loader": "^6.7.1",
-    "css-minimizer-webpack-plugin": "^3.4.1",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-plugin-import": "^2.26.0",
-    "file-loader": "^6.2.0",
-    "hard-source-webpack-plugin": "^0.13.1",
-    "mini-css-extract-plugin": "^2.6.1",
-    "sass": "^1.54.3",
-    "sass-loader": "^12.6.0",
-    "source-map-loader": "^4.0.0",
-    "terser-webpack-plugin": "^5.3.3",
-    "ts-loader": "^9.3.1",
-    "typescript": "^4.7.4",
-    "webpack": "^5.74.0",
-    "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^4.10.0"
+    "@types/phoenix": "^1.6.6",
+    "typescript": "^5.8.3"
   }
 }

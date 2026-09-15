@@ -1,0 +1,53 @@
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content={get_csrf_token()} />
+  <.live_title prefix={if assigns[:page_title], do: "Hier Baut Berlin - "}>
+    {assigns[:page_title] || "Hier Baut Berlin"}
+  </.live_title>
+  <link phx-track-static rel="stylesheet" href={~p"/css/app.css"} />
+  <script defer phx-track-static type="text/javascript" src={~p"/js/app.bundle.js"}>
+  </script>
+  <meta :for={{key, value} <- ogtags(@conn)} property={key} content={value} />
+  <%= if Application.get_env(:hierbautberlin, :environment) == :prod do %>
+    <script src="//d2wy8f7a9ursnm.cloudfront.net/v7/bugsnag.min.js">
+    </script>
+    <script>
+      if (typeof Bugsnag !== "undefined") { Bugsnag.start({ apiKey: '68d18513cd64891ed5b4d409575effa0' }) }
+    </script>
+  <% end %>
+  <%!-- Visitor statistics without cookies, through our domain (PlausibleProxy).
+       Map positions are removed, links to entries are counted as their own pages. --%>
+  <%= if HierbautberlinWeb.Plugs.PlausibleProxy.script_id() do %>
+    <script async src={HierbautberlinWeb.Plugs.PlausibleProxy.script_path()}>
+    </script>
+    <script>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init({
+        endpoint: "/api/hbb-event", // PlausibleProxy.event_path()
+        transformRequest: function (payload) {
+          var url = new URL(payload.u);
+          var query = new URLSearchParams();
+          url.searchParams.forEach(function (value, key) {
+            if (/^(utm_.+|ref|source)$/.test(key)) query.set(key, value);
+          });
+          var details = url.searchParams.get("details");
+          var type = url.searchParams.get("detailsType");
+          var path = url.pathname === "/map" && details && type
+            ? "/map/eintrag/" + encodeURIComponent(type) + "/" + encodeURIComponent(details)
+            : url.pathname;
+          payload.u = url.origin + path + (query.toString() ? "?" + query.toString() : "");
+          return payload;
+        }
+      });
+    </script>
+  <% end %>
+  <link
+    :if={assigns[:rss_link]}
+    rel="alternate"
+    type="application/rss+xml"
+    title="Hier Baut Berlin - new items for location"
+    href={assigns[:rss_link]}
+  />
+</head>

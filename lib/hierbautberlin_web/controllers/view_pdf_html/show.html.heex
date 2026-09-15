@@ -1,0 +1,29 @@
+<link phx-track-static rel="stylesheet" href={~p"/css/pdf_viewer.css"} />
+<script defer phx-track-static type="module" src={~p"/js/pdf.viewer.bundle.js"}>
+</script>
+
+<div class="view-pdf">
+  <div class="view-pdf--topbar">
+    <h1 class="view-pdf--name">{@file.title}</h1>
+    <div class="view-pdf--buttons">
+      <button id="pdf-prev" aria-label="Vorherige Seite">←</button>
+      <div class="view-pdf--number" id="pdf-number"></div>
+      <button id="pdf-next" aria-label="Nächste Seite">→</button>
+      <div class="view-pdf--spacer"></div>
+      <button id="pdf-zoom-in" aria-label="Vergrößern">+</button>
+      <button id="pdf-zoom-out" aria-label="Verkleinern">−</button>
+      <div class="view-pdf--spacer"></div>
+      <button id="pdf-download" aria-label="PDF laden">⤓</button>
+    </div>
+  </div>
+
+  <div class="view-pdf--wrapper">
+    <canvas
+      class="view-pdf--canvas"
+      id="pdf-canvas"
+      data-pdf-path={Hierbautberlin.FileStorage.url_for_file(@file)}
+    >
+    </canvas>
+    <div class="view-pdf--text" id="pdf-text"></div>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<header class="header" id="site-header">
+  <div class="inner">
+    <div class="logo">
+      <div class="logo--image">
+        <a href="/">
+          <img
+            src="/images/hierbautberlin.png"
+            alt={gettext("Ein Berliner Bär mit einem Arbeitshelm.")}
+          />
+        </a>
+      </div>
+      <div class="logo--text">
+        <a href="/">{gettext("Hier Baut Berlin")}</a>
+      </div>
+    </div>
+    <nav aria-label="Hauptmenü">
+      <%!-- Phones: the menu opens as a panel, see assets/js/navigation.ts --%>
+      <button
+        type="button"
+        id="nav-toggle"
+        class="nav--toggle"
+        aria-expanded="false"
+        aria-controls="nav-panel"
+        aria-label="Menü"
+      >
+        <span class="nav--toggle--bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+
+      <div id="nav-panel" class="nav--panel">
+        <ul class="header--menu">
+          <li>
+            <a href="/map" aria-current={if current_path?(assigns, "/map"), do: "page"}>Karte</a>
+          </li>
+          <li><a href="https://blog.hierbautberlin.de">Blog</a></li>
+          <%= if @current_user do %>
+            <li>
+              <.link
+                href={~p"/users/settings"}
+                aria-current={if current_path?(assigns, "/users/settings"), do: "page"}
+              >
+                Einstellungen
+              </.link>
+            </li>
+            <li><.link href={~p"/users/log_out"} method="delete">Abmelden</.link></li>
+          <% else %>
+            <li>
+              <.link
+                href={~p"/users/register"}
+                aria-current={if current_path?(assigns, "/users/register"), do: "page"}
+              >
+                Registrieren
+              </.link>
+            </li>
+            <li>
+              <.link
+                href={~p"/users/log_in"}
+                aria-current={if current_path?(assigns, "/users/log_in"), do: "page"}
+              >
+                Anmelden
+              </.link>
+            </li>
+          <% end %>
+        </ul>
+
+        <ul class="nav--secondary">
+          <li>
+            <%!-- the feed of the current map position, updated by the map --%>
+            <a id="nav-rss" href={~p"/feed/13.3781537/52.5166309"}>
+              <.svg_image name="rss" class="nav--secondary--icon" /> RSS-Feed für diesen Ort
+            </a>
+          </li>
+          <li><a href="https://github.com/hierbautberlin/website">GitHub</a></li>
+          <li><a href="/impressum">Impressum</a></li>
+          <li><a href="/datenschutz">Datenschutz</a></li>
+        </ul>
+
+        <div class="nav--funding">
+          <p>Gefördert bis 30.09.2021 durch</p>
+          <.funding_logos />
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

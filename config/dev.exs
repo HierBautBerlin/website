@@ -6,8 +6,9 @@ config :hierbautberlin, :environment, :dev
 config :hierbautberlin, Hierbautberlin.Repo,
   username: "postgres",
   password: "postgres",
-  database: "hierbautberlin_dev",
-  hostname: "localhost",
+  database: System.get_env("DATABASE_NAME", "hierbautberlin_dev"),
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
+  port: String.to_integer(System.get_env("DATABASE_PORT", "5432")),
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -23,11 +24,11 @@ config :hierbautberlin, HierbautberlinWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    yarn: [
-      "run",
-      "watch",
-      cd: Path.expand("../assets", __DIR__)
-    ]
+    esbuild: {Esbuild, :install_and_run, [:app, ~w(--sourcemap=inline --watch)]},
+    sass:
+      {DartSass, :install_and_run,
+       [:default, ~w(--embed-source-map --source-map-urls=absolute --watch)]},
+    sass_pdf_viewer: {DartSass, :install_and_run, [:pdf_viewer, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -60,15 +61,12 @@ config :hierbautberlin, HierbautberlinWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/hierbautberlin_web/(live|views)/.*(ex)$",
-      ~r"lib/hierbautberlin_web/templates/.*(eex)$"
+      ~r"lib/hierbautberlin_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
-config :hierbautberlin, HierbautberlinWeb.Mailer, adapter: Bamboo.LocalAdapter
-
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :default_formatter, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -76,3 +74,10 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :phoenix_live_view,
+  debug_heex_annotations: true,
+  enable_expensive_runtime_checks: true
+
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false

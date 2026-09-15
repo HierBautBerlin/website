@@ -10,13 +10,24 @@ defmodule HierbautberlinWeb.SubscriptionControllerTest do
 
   describe "GET /index" do
     test "redirects if not logged in", %{conn: conn} do
-      conn = conn |> get(Routes.subscriptions_path(conn, :index))
+      conn = conn |> get(~p"/users/subscriptions")
       assert redirected_to(conn) == "/users/log_in"
     end
 
     test "renders index page", %{user: user, conn: conn} do
-      conn = conn |> log_in_user(user) |> get(Routes.subscriptions_path(conn, :index))
+      conn = conn |> log_in_user(user) |> get(~p"/users/subscriptions")
       assert html_response(conn, 200) =~ "Benachrichtigungen bearbeiten"
+    end
+
+    test "renders a map with the radius of each subscription", %{user: user, conn: conn} do
+      {:ok, _subscription} = Accounts.subscribe(user, %{lat: 52.51, lng: 13.2679})
+
+      html = conn |> log_in_user(user) |> get(~p"/users/subscriptions") |> html_response(200)
+
+      assert html =~
+               ~r/data-subscription-map data-lat="52.51" data-lng="13.2679" data-radius="\d+"/
+
+      refute html =~ "phx-hook"
     end
   end
 
@@ -29,7 +40,7 @@ defmodule HierbautberlinWeb.SubscriptionControllerTest do
         conn
         |> log_in_user(user)
         |> put(
-          Routes.subscriptions_path(conn, :update, subscription.id),
+          ~p"/users/subscriptions/#{subscription.id}",
           %{"subscription" => %{"radius" => 1000, "lat" => "50", "lng" => "12"}}
         )
 
@@ -55,11 +66,11 @@ defmodule HierbautberlinWeb.SubscriptionControllerTest do
         conn
         |> log_in_user(user_fixture())
         |> put(
-          Routes.subscriptions_path(conn, :update, subscription.id),
+          ~p"/users/subscriptions/#{subscription.id}",
           %{"subscription" => %{"radius" => 1000, "lat" => "50", "lng" => "12"}}
         )
 
-      assert get_flash(conn, :error) == "Aktualisierung fehlgeschlagen"
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Aktualisierung fehlgeschlagen"
       assert redirected_to(conn) == "/users/subscriptions"
       sub = Accounts.get_subscription_by_id(user, subscription.id)
       assert sub.radius == 4000
@@ -74,7 +85,7 @@ defmodule HierbautberlinWeb.SubscriptionControllerTest do
       conn =
         conn
         |> log_in_user(user)
-        |> delete(Routes.subscriptions_path(conn, :delete, subscription.id))
+        |> delete(~p"/users/subscriptions/#{subscription.id}")
 
       assert redirected_to(conn) == "/users/subscriptions"
 
@@ -88,11 +99,11 @@ defmodule HierbautberlinWeb.SubscriptionControllerTest do
       conn =
         conn
         |> log_in_user(user_fixture())
-        |> delete(Routes.subscriptions_path(conn, :delete, subscription.id))
+        |> delete(~p"/users/subscriptions/#{subscription.id}")
 
       assert redirected_to(conn) == "/users/subscriptions"
 
-      assert get_flash(conn, :error) == "Löschen fehlgeschlagen"
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Löschen fehlgeschlagen"
       assert Accounts.get_subscription_by_id(user, subscription.id) != nil
     end
   end

@@ -8,6 +8,7 @@ defmodule Hierbautberlin.GeoData.GeoStreetNumber do
     field :external_id, :string
     field :number, :string
     field :zip, :string
+    field :ortsteil, :string
     field :geo_point, Geometry
 
     belongs_to :geo_street, GeoStreet

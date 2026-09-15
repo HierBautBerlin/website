@@ -9,4 +9,14 @@
 msgid ""
 msgstr ""
 "Language: de\n"
-"Plural-Forms: nplurals=2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/hierbautberlin_web/components/layouts/header.html.heex:8
+#, elixir-autogen, elixir-format
+msgid "Ein Berliner Bär mit einem Arbeitshelm."
+msgstr ""
+
+#: lib/hierbautberlin_web/components/layouts/header.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "Hier Baut Berlin"
+msgstr ""

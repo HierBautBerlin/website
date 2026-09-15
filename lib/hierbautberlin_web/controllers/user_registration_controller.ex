@@ -7,7 +7,7 @@ defmodule HierbautberlinWeb.UserRegistrationController do
 
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
-    render(conn, "new.html", changeset: changeset, page_title: "Registrieren")
+    render(conn, :new, changeset: changeset, page_title: "Registrieren")
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -16,7 +16,7 @@ defmodule HierbautberlinWeb.UserRegistrationController do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &Routes.user_confirmation_url(conn, :confirm, &1)
+            fn token -> url(~p"/users/confirm/#{token}") end
           )
 
         conn
@@ -24,7 +24,7 @@ defmodule HierbautberlinWeb.UserRegistrationController do
         |> UserAuth.log_in_user(user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset, page_title: "Registrieren")
+        render(conn, :new, changeset: changeset, page_title: "Registrieren")
     end
   end
 end

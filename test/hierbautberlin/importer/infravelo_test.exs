@@ -39,7 +39,42 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
     end
   end
 
+  defmodule DatesMock do
+    def get!("https://www.infravelo.de/api/v1/projects/", _headers, _opts) do
+      %{
+        body: File.read!("./test/support/data/infravelo/dates.json"),
+        headers: [],
+        status_code: 200
+      }
+    end
+  end
+
   describe "import/1" do
+    test "uses the year of implementation or the milestones as dates" do
+      {:ok, [year_only, milestones_only, nothing]} = Infravelo.import(DatesMock)
+
+      # 2025 in Europe/Berlin
+      assert year_only.date_start == ~U[2024-12-31 23:00:00Z]
+      assert year_only.date_end == ~U[2025-12-30 23:00:00Z]
+      assert year_only.title == "Rüdiger- Ecke Dietlindestr"
+
+      assert year_only.description ==
+               "Projekttyp: Anlehnbügel (Anzahl Stellplätze: 4, Anzahl Bügel: 2)\n" <>
+                 "Bezirk: Lichtenberg\n" <>
+                 "Vorhabenträger: Bezirksamt Lichtenberg finanziert durch Landesmitteln - Sondervermögen Infrastruktur der Wachsenden Stadt und Nachhaltigkeitsfonds\n" <>
+                 "Bauherr: Bezirksamt Lichtenberg\n" <>
+                 "Jahr der Umsetzung: 2025"
+
+      # 1. Quartal 2020 to 4. Quartal 2021
+      assert milestones_only.title == "Mitte – Tegel – Spandau"
+      assert milestones_only.date_start == ~U[2019-12-31 23:00:00Z]
+      assert milestones_only.date_end == ~U[2021-12-30 23:00:00Z]
+
+      assert nothing.date_start == nil
+      assert nothing.date_end == nil
+      assert nothing.description == "Vorhabenträger: Berlin"
+    end
+
     test "basic import of infravelo data" do
       {:ok, result} = Infravelo.import(ImportMock)
       assert length(result) == 100
@@ -50,7 +85,11 @@ defmodule Hierbautberlin.Importer.InfraveloTest do
       assert first.date_start == ~U[2022-03-31 22:00:00Z]
 
       assert first.description ==
-               "Die Braunschweiger Straße ist eine Nebenstraße im Neuköllner Richardkiez. Auf dem Abschnitt zwischen Sonnenallee und Niemetzstraße wird das Kopfsteinpflaster durch Asphalt ersetzt, um die Strecke für Radfahrende attraktiver zu machen. Außerdem wird der Kfz-Durchgangsverkehr reduziert, indem die Einfahrt für Kfz von der Sonnenallee verboten wird. Dadurch wird die Sicherheit und Aufenthaltsqualität für alle Verkehrsteilnehmer*innen erhöht."
+               "Die Braunschweiger Straße ist eine Nebenstraße im Neuköllner Richardkiez. Auf dem Abschnitt zwischen Sonnenallee und Niemetzstraße wird das Kopfsteinpflaster durch Asphalt ersetzt, um die Strecke für Radfahrende attraktiver zu machen. Außerdem wird der Kfz-Durchgangsverkehr reduziert, indem die Einfahrt für Kfz von der Sonnenallee verboten wird. Dadurch wird die Sicherheit und Aufenthaltsqualität für alle Verkehrsteilnehmer*innen erhöht.\n\n" <>
+                 "Projekttyp: Mischverkehr, Nebenroute (Länge: 150 m)\n" <>
+                 "Bezirk: Neukölln\n" <>
+                 "Vorhabenträger: Senatsverwaltung für Umwelt, Verkehr und Klimaschutz\n" <>
+                 "Bauherr: Bezirksamt Neukölln"
 
       assert first.external_id == "9080026"
 

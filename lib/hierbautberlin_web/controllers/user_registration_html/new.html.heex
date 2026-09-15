@@ -1,0 +1,21 @@
+<Layouts.app flash={@flash}>
+  <h1>Registrieren</h1>
+
+  <.form :let={f} for={@changeset} action={~p"/users/register"}>
+    <div :if={@changeset.action} class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+
+    <.input field={f[:email]} type="email" label="Email" required />
+    <.input field={f[:password]} type="password" label="Passwort" required />
+
+    <div>
+      <button type="submit">Registieren</button>
+    </div>
+  </.form>
+
+  <p>
+    <.link href={~p"/users/log_in"}>Anmelden</.link> |
+    <.link href={~p"/users/reset_password"}>Passwort vergessen?</.link>
+  </p>
+</Layouts.app>

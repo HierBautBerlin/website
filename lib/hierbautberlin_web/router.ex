@@ -8,7 +8,7 @@ defmodule HierbautberlinWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {HierbautberlinWeb.LayoutView, :root}
+    plug :put_root_layout, html: {HierbautberlinWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
@@ -16,6 +16,10 @@ defmodule HierbautberlinWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :tiles do
+    plug :put_secure_browser_headers
   end
 
   pipeline :backend do
@@ -28,6 +32,12 @@ defmodule HierbautberlinWeb.Router do
     live_dashboard "/dashboard",
       metrics: HierbautberlinWeb.Telemetry,
       ecto_repos: [Hierbautberlin.Repo]
+  end
+
+  scope "/tiles", HierbautberlinWeb do
+    pipe_through :tiles
+
+    get "/items/:version/:z/:x/:y", MapTileController, :show
   end
 
   scope "/", HierbautberlinWeb do
@@ -62,7 +72,7 @@ defmodule HierbautberlinWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
 
-    get "/", WelcomeController, :index
+    get "/", RootController, :index
     get "/impressum", ImpressumController, :index
     get "/datenschutz", PrivacyController, :index
     get "/ping", HealthcheckController, :index
@@ -75,7 +85,11 @@ defmodule HierbautberlinWeb.Router do
     live "/map", MapLive, :index
   end
 
-  if Application.get_env(:hierbautberlin, :environment) == :dev do
-    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  if Application.compile_env(:hierbautberlin, :environment) == :dev do
+    scope "/dev" do
+      pipe_through :browser
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
   end
 end

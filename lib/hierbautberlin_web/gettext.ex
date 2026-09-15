@@ -5,7 +5,7 @@ defmodule HierbautberlinWeb.Gettext do
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import HierbautberlinWeb.Gettext
+      use Gettext, backend: HierbautberlinWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -20,5 +20,5 @@ defmodule HierbautberlinWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :hierbautberlin
+  use Gettext.Backend, otp_app: :hierbautberlin
 end

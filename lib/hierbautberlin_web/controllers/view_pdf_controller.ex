@@ -6,14 +6,13 @@ defmodule HierbautberlinWeb.ViewPDFController do
     file = url_path |> Path.join() |> FileStorage.get_file_by_name!()
 
     conn
-    |> put_root_layout("full_width.html")
-    |> put_layout(false)
-    |> render("show.html", %{file: file, page: page, text: text, page_title: file.title})
+    |> put_root_layout(html: {HierbautberlinWeb.Layouts, :full_width})
+    |> render(:show, file: file, page: page, text: text, page_title: file.title)
   rescue
     Ecto.NoResultsError ->
       conn
       |> put_status(404)
-      |> put_view(HierbautberlinWeb.ErrorView)
-      |> render("404.html", %{})
+      |> put_view(html: HierbautberlinWeb.ErrorHTML)
+      |> render(:"404")
   end
 end

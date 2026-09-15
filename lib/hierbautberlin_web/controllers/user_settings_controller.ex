@@ -10,7 +10,7 @@ defmodule HierbautberlinWeb.UserSettingsController do
   def edit(%{assigns: %{current_user: current_user}} = conn, _params) do
     current_user = Accounts.with_subscriptions(current_user)
 
-    render(conn, "edit.html",
+    render(conn, :edit,
       current_user: current_user,
       page_title: "Einstellungen"
     )
@@ -25,7 +25,7 @@ defmodule HierbautberlinWeb.UserSettingsController do
         Accounts.deliver_update_email_instructions(
           applied_user,
           user.email,
-          &Routes.user_settings_url(conn, :confirm_email, &1)
+          fn token -> url(~p"/users/settings/confirm_email/#{token}") end
         )
 
         conn
@@ -33,11 +33,11 @@ defmodule HierbautberlinWeb.UserSettingsController do
           :info,
           "Ein Link zur Bestätigung der neuen Email-Adresse ist an die neue Adresse verschickt worden."
         )
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: ~p"/users/settings")
 
       {:error, changeset} ->
         current_user = Accounts.with_subscriptions(user)
-        render(conn, "edit.html", email_changeset: changeset, current_user: current_user)
+        render(conn, :edit, email_changeset: changeset, current_user: current_user)
     end
   end
 
@@ -49,12 +49,12 @@ defmodule HierbautberlinWeb.UserSettingsController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Passwort erfolgreich aktualisiert.")
-        |> put_session(:user_return_to, Routes.user_settings_path(conn, :edit))
+        |> put_session(:user_return_to, ~p"/users/settings")
         |> UserAuth.log_in_user(user)
 
       {:error, changeset} ->
         current_user = Accounts.with_subscriptions(user)
-        render(conn, "edit.html", password_changeset: changeset, current_user: current_user)
+        render(conn, :edit, password_changeset: changeset, current_user: current_user)
     end
   end
 
@@ -71,7 +71,7 @@ defmodule HierbautberlinWeb.UserSettingsController do
       {:error, _} ->
         conn
         |> put_flash(:info, "Konto konnte nicht gelöscht werden.")
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: ~p"/users/settings")
     end
   end
 
@@ -80,12 +80,12 @@ defmodule HierbautberlinWeb.UserSettingsController do
       :ok ->
         conn
         |> put_flash(:info, "Email erfolgreich aktualisiert.")
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: ~p"/users/settings")
 
       :error ->
         conn
         |> put_flash(:error, "Email-Aktualisierungslink ist leider veraltet.")
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: ~p"/users/settings")
     end
   end
 

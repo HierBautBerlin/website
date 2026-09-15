@@ -2,8 +2,9 @@ defmodule HierbautberlinWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  use HierbautberlinWeb, :verified_routes
+
   alias Hierbautberlin.Accounts
-  alias HierbautberlinWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -81,7 +82,7 @@ defmodule HierbautberlinWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: "/")
+    |> redirect(to: ~p"/map")
   end
 
   @doc """
@@ -134,7 +135,7 @@ defmodule HierbautberlinWeb.UserAuth do
       conn
       |> put_flash(:error, "Du musst angemeldet sein um diese Seite zu sehen.")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> redirect(to: ~p"/users/log_in")
       |> halt()
     end
   end

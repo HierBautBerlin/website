@@ -49,9 +49,9 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
   end
 
   describe "import/1" do
-    test "basic import of infravelo data" do
+    test "basic import of mein berlin data" do
       {:ok, result} = MeinBerlin.import(ImportMock)
-      assert length(result) == 465
+      assert length(result) == 26
 
       first = List.first(result) |> Repo.preload(:source)
 
@@ -70,21 +70,59 @@ defmodule Hierbautberlin.Importer.MeinBerlinTest do
 
       last = List.last(result) |> Repo.preload(:source)
 
-      assert last.external_id == "/vorhaben/2019-00002/"
+      assert last.external_id == "/vorhaben/2026-01480/"
       assert last.geometry == nil
 
       assert last.geo_point == %Geo.Point{
-               coordinates: {13.452748, 52.46358},
+               coordinates: {13.455687, 52.45342},
                properties: %{},
                srid: 4326
              }
 
       assert last.source.short_name == "MEIN_BERLIN"
       assert last.state == "active"
-      assert last.subtitle == "infraVelo"
-      assert last.title == "Radschnellverbindung \"Y-Trasse\""
-      assert last.url == "https://mein.berlin.de/vorhaben/2019-00002/"
-      assert last.participation_open == true
+      assert last.subtitle == "Bezirksamt Neukölln"
+      assert last.title == "Innenentwicklungskonzept Haarlemer Straße"
+      assert last.url == "https://mein.berlin.de/vorhaben/2026-01480/"
+      assert last.date_updated == ~U[2026-09-10 19:22:09Z]
+      assert last.participation_open == false
+
+      # a running plan is no participation
+      plan = Enum.find(result, &(&1.external_id == "/vorhaben/2026-01486/"))
+      assert plan.participation_open == false
+      assert plan.importance == 1.0
+
+      open =
+        Enum.find(result, &(&1.external_id == "/projekte/ambrosia-standorte-im-land-berlin/"))
+
+      assert open.participation_open == true
+      assert open.importance == 3.0
+      assert open.relevant_until == ~U[2026-10-01 21:59:00Z]
+
+      # participation phases over years are processes
+      long =
+        Enum.find(
+          result,
+          &(&1.external_id == "/projekte/verkehrsplanung-mobilitatspunkte-im-bezirk-charlot/")
+        )
+
+      assert long.participation_open == true
+      assert long.importance == 1.5
+
+      upcoming =
+        Enum.find(
+          result,
+          &(&1.external_id == "/projekte/vorbereitende-untersuchungen-ehemaliger-guterbahnh/")
+        )
+
+      assert upcoming.participation_open == false
+      assert upcoming.importance == 2.0
+      assert upcoming.relevant_from == ~U[2026-09-21 21:59:00Z]
+
+      old = Enum.find(result, &(&1.external_id == "/projekte/kiezkasse-planterwald-2018/"))
+      assert old.participation_open == false
+      assert old.relevant_until == ~U[2018-04-16 21:59:00Z]
+      assert Enum.any?(result, &(&1.state == "intended"))
     end
 
     test "Updates an entry" do

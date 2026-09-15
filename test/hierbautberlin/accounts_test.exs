@@ -624,7 +624,7 @@ defmodule Hierbautberlin.AccountsTest do
     end
   end
 
-  describe "is_subscribed" do
+  describe "subscribed?" do
     setup do
       user = user_fixture()
 

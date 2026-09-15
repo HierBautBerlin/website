@@ -1,72 +1,54 @@
 defmodule Hierbautberlin.Importer.UVPTest do
   use Hierbautberlin.DataCase
 
+  alias Hierbautberlin.GeoData
   alias Hierbautberlin.Importer.UVP
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.GeoData
 
   defmodule ImportMock do
-    def get!(
-          "https://www.uvp-verbund.de/portal/_ns:ZzMwX18zMXxpbWFya2VyNA__/main-maps.psml",
-          ["User-Agent": "hierbautberlin.de"],
-          timeout: 60_000,
-          recv_timeout: 60_000
-        ) do
-      {:ok, html} = File.read("./test/support/data/uvp/uvp.js")
-      %{body: html, headers: [], status_code: 200}
-    end
-  end
+    def get!(url, ["User-Agent": "hierbautberlin.de"], timeout: 60_000, recv_timeout: 60_000) do
+      body =
+        case url do
+          "https://www.uvp-verbund.de/rest/getMapMarkers?legend=obj_class_zv&page=1" ->
+            File.read!(
+              "./test/support/data/uvp/#{Process.get(:uvp_fixture, "markers_page_1")}.json"
+            )
 
-  defmodule ImportUpdateMock do
-    def get!(
-          "https://www.uvp-verbund.de/portal/_ns:ZzMwX18zMXxpbWFya2VyNA__/main-maps.psml",
-          ["User-Agent": "hierbautberlin.de"],
-          timeout: 60_000,
-          recv_timeout: 60_000
-        ) do
-      {:ok, html} = File.read("./test/support/data/uvp/uvp_update.js")
-      %{body: html, headers: [], status_code: 200}
+          _other ->
+            "[]"
+        end
+
+      %{body: body, headers: [], status_code: 200}
     end
   end
 
   describe "import/1" do
-    test "basic import of infravelo data" do
-      {:ok, result} = UVP.import(ImportMock)
-      assert length(result) == 3419
+    test "imports the procedures in the Berlin area" do
+      {:ok, result} = UVP.import(ImportMock, delay: 0)
+      assert length(result) == 2
 
       first = List.first(result) |> Repo.preload(:source)
 
-      assert first.external_id == "294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
+      assert first.external_id == "0F8A6A66-A2F9-40EE-A426-AD2C013622DB"
       assert first.geometry == nil
-
-      assert first.geo_point == %Geo.Point{
-               coordinates: {13.248999999999999, 51.96115},
-               properties: %{},
-               srid: 4326
-             }
-
+      assert first.geo_point == %Geo.Point{coordinates: {13.61585, 52.3477}, srid: 4326}
       assert first.source.short_name == "UVP"
-      assert first.title == "Beregnung in der Gemarkung Schlenzer"
+      assert first.title == "Ausbau de L 401 in der Ortsdurchfahrt Zeuthen"
+      assert first.subtitle == "Zulassungsverfahren"
 
       assert first.url ==
-               "https://www.uvp-verbund.de/trefferanzeige?docuuid=294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
+               "https://www.uvp-verbund.de/trefferanzeige?docuuid=0F8A6A66-A2F9-40EE-A426-AD2C013622DB"
     end
 
-    test "Updates an entry" do
-      {:ok, result} = UVP.import(ImportMock)
+    test "updates an entry" do
+      {:ok, [first | _]} = UVP.import(ImportMock, delay: 0)
 
-      first = List.first(result)
+      Process.put(:uvp_fixture, "markers_update")
+      {:ok, [updated]} = UVP.import(ImportMock, delay: 0)
 
-      assert first.external_id == "294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
-      assert first.title == "Beregnung in der Gemarkung Schlenzer"
-
-      {:ok, result} = UVP.import(ImportUpdateMock)
-      second = GeoData.get_geo_item!(List.first(result).id)
-
+      second = GeoData.get_geo_item!(updated.id)
       assert first.id == second.id
-
-      assert second.external_id == "294BDB79-9CB1-43C0-A98D-FFBA0B1C85E0"
-      assert second.title == "Beregnung in der Gemarkung Schlenzer - Update"
+      assert second.title == "Ausbau de L 401 in der Ortsdurchfahrt Zeuthen - Update"
     end
   end
 end

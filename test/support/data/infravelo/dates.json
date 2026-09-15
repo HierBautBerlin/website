@@ -1,0 +1,168 @@
+{
+  "count": 3,
+  "previous": null,
+  "next": null,
+  "results": [
+    {
+      "id": "9110053003",
+      "title": "   Rüdiger- Ecke Dietlindestr ",
+      "subtitle": "",
+      "yearOfImplementation": 2025,
+      "description": "",
+      "status": "Abgeschlossen",
+      "holder": "Bezirksamt Lichtenberg finanziert durch Landesmitteln - Sondervermögen Infrastruktur der Wachsenden Stadt und Nachhaltigkeitsfonds",
+      "costs": "",
+      "link": "https://www.infravelo.de/projekt/ruediger-ecke-dietlindestr/",
+      "apiLink": "https://www.infravelo.de/api/v1/project/9110053003/",
+      "companyConstruction": "",
+      "owner": "Bezirksamt Lichtenberg",
+      "districts": [
+        {
+          "name": "Lichtenberg"
+        }
+      ],
+      "coordinator": "",
+      "companyPlanning": "",
+      "dateStart": null,
+      "dateEnd": null,
+      "milestones": [],
+      "types": [
+        {
+          "name": "",
+          "type": "Anlehnbügel",
+          "metrics": [
+            {
+              "name": "Anzahl Stellplätze",
+              "value": "4"
+            },
+            {
+              "name": "Anzahl Bügel",
+              "value": "2"
+            }
+          ]
+        }
+      ],
+      "categories": [],
+      "image": null,
+      "imagesCurrent": [],
+      "imagesBefore": [],
+      "kml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n  <Document id=\"root_doc\">\n    <Folder>\n\t\t\t<name>Standortpin</name>\n\t\t\t<Placemark>\n\t\t\t\t<ExtendedData>\n\t\t\t\t\t<SchemaData schemaUrl=\"#Standortpin\">\n\t\t\t\t\t\t<SimpleData name=\"StandortID\">9110053003</SimpleData>\n\t\t\t\t\t</SchemaData>\n\t\t\t\t</ExtendedData>\n\t\t\t\t<Point>\n\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t13.5019991113,52.5154137685\n\t\t\t\t\t</coordinates>\n\t\t\t\t</Point>\n\t\t\t</Placemark>\n\t\t</Folder>\n  </Document>\n</kml>",
+      "additionalInformation": [],
+      "additionalHtmlContent": []
+    },
+    {
+      "id": "100082",
+      "title": "Mitte – Tegel – Spandau",
+      "subtitle": "Komfortabel mit dem Rad von Spandau bis zum Hauptbahnhof",
+      "yearOfImplementation": null,
+      "description": "Die Radschnellverbindung \"Mitte – Tegel – Spandau\" soll den Bezirk Spandau mit dem Berliner Hauptbahnhof verbinden. Der Trassenkorridor verläuft überwiegend parallel zum Berlin-Spandauer Schifffahrtskanal. Er kreuzt den nördlichen S-Bahn-Ring sowie die Stadtautobahn A 111. Gute Verknüpfungen zum Bereich Flughafen Tegel, der Europacity sowie dem Radfernweg Berlin-Kopenhagen können entstehen.\nInsgesamt weist die Verbindung eine Länge von etwa 14,4 km auf.\n\nDie Machbarkeitsuntersuchung ist abgeschlossen. Sie kommt zu dem Ergebnis, dass die Radschnellverbindung \"Mitte – Tegel – Spandau\" machbar ist und einen positiven Kosten-Nutzen-Faktor aufweist. Die einzelnen Abschnitte und Routenvarianten wurden miteinander verglichen und eine derzeitige Vorzugstrasse empfohlen. Mehr dazu erfahren Sie im Ergebnisbericht (siehe unten).\n\nDie Projektkarte zeigt die Vorzugsvariante, die im Rahmen der Machbarkeitsuntersuchung ermittelt wurde (Stand 12/2020) und stellt einen Arbeitsstand dar. Die Radschnellverbindung \"Mitte – Tegel – Spandau\" befindet sich in der Vorplanung. Die laufende Planung wird qualifiziert beendet, sodass die Möglichkeit besteht, zu einem späteren Zeitpunkt die Planungen mit diesem Stand fortzuführen.",
+      "status": "in Planung",
+      "holder": "Senatsverwaltung für Mobilität, Verkehr, Klimaschutz und Umwelt",
+      "costs": "",
+      "link": "https://www.infravelo.de/projekt/mitte-tegel-spandau/",
+      "apiLink": "https://www.infravelo.de/api/v1/project/100082/",
+      "companyConstruction": "",
+      "owner": "GB infraVelo GmbH",
+      "districts": [
+        {
+          "name": "Mitte"
+        },
+        {
+          "name": "Reinickendorf"
+        },
+        {
+          "name": "Spandau"
+        }
+      ],
+      "coordinator": "GB infraVelo GmbH",
+      "companyPlanning": "ETC Gauff Mobility GmbH, Ramboll Deutschland GmbH, EIBS Entwurfs- und Ingenieurbüro Straßenwesen GmbH",
+      "dateStart": null,
+      "dateEnd": null,
+      "milestones": [
+        {
+          "name": "Start der Machbarkeitsuntersuchung",
+          "date": "1. Quartal 2020",
+          "description": "Fachliche Untersuchungen einzelner Trassenführungen auf konkrete Machbarkeit"
+        },
+        {
+          "name": "Ende der Machbarkeitsuntersuchung",
+          "date": "4. Quartal 2021",
+          "description": ""
+        }
+      ],
+      "types": [
+        {
+          "name": "Radschnellverbindung",
+          "type": "Noch nicht festgelegt, da in Planung",
+          "metrics": [
+            {
+              "name": "Straßenseite",
+              "value": "z. T. Beidseitig, z. T. Einseitig"
+            },
+            {
+              "name": "Streckenlänge",
+              "value": "14.400 m"
+            }
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "name": "Rad<span class=\"shy\">­</span>schnell<span class=\"shy\">­</span>ver<span class=\"shy\">­</span>bin<span class=\"shy\">­</span>dung"
+        }
+      ],
+      "image": {
+        "uri": "https://www.infravelo.de/fileadmin/projektbilder_import/mitte-tegel-spandau-augtgcpfrh5e10k85a8e7ctc5n.jpg",
+        "extension": "jpg"
+      },
+      "imagesCurrent": [],
+      "imagesBefore": [
+        {
+          "uri": "https://www.infravelo.de/fileadmin/projektbilder_import/mitte-tegel-spandau-augtgcpfrh5e10k85a8e7ctc5n.jpg",
+          "extension": "jpg"
+        }
+      ],
+      "kml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n  <Document id=\"root_doc\">\n    <Folder>\n\t\t\t<name>Standortpin</name>\n\t\t\t<Placemark>\n\t\t\t\t<ExtendedData>\n\t\t\t\t\t<SchemaData schemaUrl=\"#Standortpin\">\n\t\t\t\t\t\t<SimpleData name=\"ProjektID\">100082</SimpleData>\n\t\t\t\t\t</SchemaData>\n\t\t\t\t</ExtendedData>\n\t\t\t\t<Point>\n\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t13.2962624558,52.5554858677\n\t\t\t\t\t</coordinates>\n\t\t\t\t</Point>\n\t\t\t</Placemark>\n\t\t</Folder>\n    <Folder>\n\t\t\t<name>Polylinie</name>\n\t\t\t<Placemark>\n\t\t\t\t<Style>\n\t\t\t\t\t<LineStyle>\n\t\t\t\t\t\t<color>ff0000ff</color>\n\t\t\t\t\t</LineStyle>\n\t\t\t\t\t<PolyStyle>\n\t\t\t\t\t\t<fill>0</fill>\n\t\t\t\t\t</PolyStyle>\n\t\t\t\t</Style>\n\t\t\t\t<ExtendedData>\n\t\t\t\t\t<SchemaData schemaUrl=\"#Polylinie\">\n\t\t\t\t\t\t<SimpleData name=\"ProjektID\">100082</SimpleData>\n\t\t\t\t\t</SchemaData>\n\t\t\t\t</ExtendedData>\n\t\t\t\t<MultiGeometry>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3707890997,52.5269870993,0 13.3706865993,52.5270846989,0 13.3707051994,52.5271145995,0 13.3706762993,52.5271854992,0 13.3707151995,52.5272219991,0 13.3702990003,52.527837299,0 13.3700798006,52.5281594987,0 13.3699660003,52.5283242988,0 13.3696732003,52.5287596995,0 13.3695992006,52.528869399,0 13.3695308001,52.5289690993,0 13.3694256,52.5291222993,0 13.3692045002,52.529444499,0 13.3690633993,52.529654399,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3690633993,52.529654399,0 13.3690591994,52.529772199,0 13.3689814001,52.5298933993,0 13.3685856002,52.5302974994,0 13.3681909005,52.5307003987,0 13.3681524,52.5307396992,0 13.3681103995,52.5307824994,0 13.3680931993,52.5308000987,0 13.3678400998,52.5310584989,0 13.3675600004,52.5313444992,0 13.3674782996,52.5314277994,0 13.3674647001,52.5314415993,0 13.3669931996,52.5319192992,0 13.3669477998,52.5319653994,0 13.3668557,52.5320586995,0 13.3667527001,52.5321627992,0 13.3662803001,52.5326401989,0 13.3662482993,52.5326725989,0 13.3662268002,52.532694199,0 13.3657371999,52.5331889988,0 13.3656511998,52.5332759993,0 13.3654761994,52.5334542988,0 13.3651950998,52.5337370987,0 13.3651221006,52.5338105995,0 13.3651114006,52.5338213992,0 13.3650298994,52.5339037987,0 13.3646411994,52.5343045987,0 13.3645977,52.5343494988,0 13.3645025993,52.5344470991,0 13.3644074998,52.5345446994,0 13.3639138996,52.5350418991,0 13.3637190004,52.5352408989,0 13.3633877003,52.5355634991,0 13.3633417993,52.5356081991,0 13.3631606007,52.5357879992,0 13.3630171998,52.5359301995,0 13.3629109994,52.536037199,0 13.3627820003,52.5361236989,0 13.3625917002,52.536170099,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3625917002,52.536170099,0 13.3626547993,52.5360896989,0 13.3627148998,52.536019899,0 13.3628167001,52.535916999,0 13.3628602005,52.5358729987,0 13.3630141996,52.5357172994,0 13.3631824001,52.5355471992,0 13.3637434001,52.5349799993,0 13.3639468003,52.5347743988,0 13.3642360006,52.5344819989,0 13.3643318005,52.5343851987,0 13.3644274998,52.5342883989,0 13.3649481996,52.5337617993,0 13.3649590006,52.5337508994,0 13.3650308998,52.5336781991,0 13.3651518007,52.5335559991,0 13.3654277993,52.5332768988,0 13.3654877997,52.5332161987,0 13.3655728995,52.5331300994,0 13.3655930998,52.5331096988,0 13.3660802993,52.5326169992,0 13.3662484005,52.5324470993,0 13.3665484003,52.5321436993,0 13.3665872993,52.5321042987,0 13.3666905995,52.5319998993,0 13.3667813999,52.5319066993,0 13.3672967003,52.5313861991,0 13.3673945998,52.5312871992,0 13.3676111,52.5310691992,0 13.3677767997,52.5309011989,0 13.3679302997,52.5307461993,0 13.3679915001,52.5306843988,0 13.3680328001,52.5306425987,0 13.3681931001,52.5304804988,0 13.3684282004,52.5302426992,0 13.3685306004,52.5301391993,0 13.3687174996,52.5299500992,0 13.368826,52.5298403993,0 13.3688730006,52.5297818992,0 13.3689110007,52.5297344987,0 13.3690633993,52.529654399,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3608196001,52.5368390989,0 13.3611602006,52.5367216989,0 13.3615058006,52.5365909993,0 13.3617205,52.5365086992,0 13.3619174995,52.5364340991,0 13.3620081994,52.5363996994,0 13.3625104994,52.5362083987,0 13.3625917002,52.536170099,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3608196001,52.5368390989,0 13.3607259996,52.5369824988,0 13.3605696994,52.5371417993,0 13.3604997003,52.5372215993,0 13.3603135006,52.5373023994,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3603135006,52.5373023994,0 13.3603418997,52.5371608991,0 13.3605363997,52.5369603995,0 13.3606248996,52.5369015991,0 13.3608196001,52.5368390989,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3603135006,52.5373023994,0 13.3604522007,52.5373666994,0 13.3606047004,52.5374371991,0 13.3609187994,52.5375752993,0 13.3610890995,52.5376501988,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3610890995,52.5376501988,0 13.3613601002,52.5377228995,0 13.3615166,52.5377954989,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3615166,52.5377954989,0 13.3615979002,52.5378335994,0 13.3616793003,52.5378713991,0 13.3615840996,52.5379436993,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3614193999,52.5378673991,0 13.3612648999,52.537795899,0 13.3610890995,52.5376501988,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3614193999,52.5378673991,0 13.3615166,52.5377954989,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3615840996,52.5379436993,0 13.3614193999,52.5378673991,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3615840996,52.5379436993,0 13.3615269993,52.5379868995,0 13.3614805003,52.5380221994,0 13.3614546005,52.5380420987,0 13.3613267003,52.5381138992,0 13.3612692999,52.5381327994,0 13.3612145001,52.538137099,0 13.3610337996,52.538128899,0 13.3608753993,52.538123499,0 13.3607084003,52.5381232989,0 13.3605500003,52.5381449995,0 13.3583113997,52.5387540991,0 13.3579713997,52.5388542994,0 13.3578642001,52.5388848994,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3578664472,52.5388843911,0 13.3571319002,52.539093699,0 13.3570542005,52.5392551991,0 13.3570172007,52.5393358993,0 13.3567977003,52.5392659986,0 13.3566503001,52.5392171992,0 13.3558273002,52.5394333988,0 13.3550303002,52.5396470993,0 13.3548814003,52.5396866989,0 13.3547821003,52.5397075994,0 13.3545661994,52.5397516995,0 13.3545501001,52.5397549993,0 13.3542940998,52.5397932987,0 13.3541501007,52.5398076987,0 13.3538337999,52.5398217988,0 13.3535844999,52.539816299,0 13.3534209003,52.5398034989,0 13.3531557002,52.539773599,0 13.3529827007,52.5397523993,0 13.3527989002,52.5397381988,0 13.3527443001,52.5397351991,0 13.3526281003,52.5397335988,0 13.3526009996,52.5397022994,0 13.3525441994,52.5396814991,0 13.3525026006,52.5396727993,0 13.3523961005,52.5396504987,0 13.3523028004,52.5396306988,0 13.3521659002,52.539601699,0 13.3513288994,52.5394209987,0 13.3507643997,52.5393022994,0 13.3500505996,52.5391433992,0 13.3495654997,52.5390456993,0 13.3491721993,52.5389703989,0 13.3487894007,52.538911799,0 13.3483753003,52.5388647993,0 13.3482638999,52.5388574992,0 13.3479888005,52.5388393987,0 13.3476465998,52.5388361994,0 13.3473833003,52.5388425994,0 13.3472683002,52.5388453991,0 13.3469457997,52.5388686991,0 13.3461539999,52.5389662989,0 13.3458724005,52.5390009991,0 13.3454100001,52.5390574991,0 13.3452684997,52.5390758991,0 13.3451428996,52.5390924992,0 13.3449745998,52.5391128987,0 13.3448115998,52.5391337991,0 13.3446823994,52.5391509993,0 13.3433945996,52.5393238992,0 13.3401630996,52.5397502991,0 13.3400539997,52.539764899,0 13.3399551994,52.5397918991,0 13.3398638998,52.5398391992,0 13.3394801999,52.5401111992,0 13.3392113004,52.5403096992,0 13.3385068003,52.5408077989,0 13.3380893998,52.5410962993,0 13.3380149005,52.5411485992,0 13.3379588002,52.5411880987,0 13.3373408007,52.5416252993,0 13.3371619007,52.5417527991,0 13.3370174003,52.5418558992,0 13.3367244994,52.5420647989,0 13.3366760994,52.5420992991,0 13.3365958007,52.5421574993,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3365958007,52.5421574993,0 13.3363872007,52.5423095992,0 13.3362758007,52.542390899,0 13.3361381996,52.5423208992,0 13.3357139998,52.5420973993,0 13.3356696997,52.542074099,0 13.3355842007,52.5420290991,0 13.3354742994,52.5421084987,0 13.3344941,52.5427717991,0 13.3343574995,52.5428800988,0 13.3342575004,52.5430007989,0 13.3341782998,52.5431255993,0 13.3339974002,52.543464299,0 13.3338135994,52.5438218992,0 13.3336250002,52.5441955993,0 13.3333842997,52.5446441987,0 13.3332487004,52.5449176995,0 13.3331860006,52.5450187991,0 13.3330921993,52.5451480991,0 13.3329722004,52.5452875992,0 13.3325418001,52.5456627989,0 13.3324728996,52.545741199,0 13.3324445001,52.5458211992,0 13.3322924005,52.5458369988,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3322924005,52.5458369988,0 13.3323095997,52.5457754992,0 13.3323437993,52.5457193991,0 13.3323829,52.5456721992,0 13.3324432007,52.5456209992,0 13.3327287007,52.5454012991,0 13.3328084003,52.5453312995,0 13.3328822005,52.5452519989,0 13.3329933006,52.5451182988,0 13.3330870003,52.5449898992,0 13.3332800006,52.5446237992,0 13.3335131995,52.5441741988,0 13.3335697003,52.5440628995,0 13.3336678001,52.5438258993,0 13.3336831005,52.5437945991,0 13.3338755002,52.5434411994,0 13.3340567007,52.5431356993,0 13.3341106003,52.5430502989,0 13.3341768997,52.5429561987,0 13.3342731001,52.5428516994,0 13.3343963998,52.5427416994,0 13.3345681998,52.5426234995,0 13.3351120994,52.5422491995,0 13.3353324999,52.5420975995,0 13.3353859002,52.5420607992,0 13.3355043005,52.5419894989,0 13.3357245997,52.5418399989,0 13.3358345994,52.5417652992,0 13.3358665001,52.5417809994,0 13.3359159,52.5418052992,0 13.3359859005,52.5418397987,0 13.3360346999,52.5418621993,0 13.3361548007,52.5419245993,0 13.3364124004,52.5420585988,0 13.3364648993,52.5420858992,0 13.3365958007,52.5421574993,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3322924005,52.5458369988,0 13.3319965993,52.5459255989,0 13.3297398007,52.546896499,0 13.3290190996,52.5472105989,0 13.3280064001,52.5476536995,0 13.3279187999,52.5476967989,0 13.3276388003,52.5477378992,0 13.3235145999,52.5494958991,0 13.3233682993,52.5495582993,0 13.3232026997,52.5495271989,0 13.3230006,52.5495124988,0 13.3220408006,52.549705599,0 13.3218507996,52.549721899,0 13.3218884002,52.5498643992,0 13.3218276994,52.5498710992,0 13.3217039995,52.5498996992,0 13.3216171005,52.5499269994,0 13.3205258006,52.5503108987,0 13.3198894004,52.550536099,0 13.3193015004,52.5507405992,0 13.3191291995,52.5508035988,0 13.3189128003,52.5508572991,0 13.3187082005,52.5508935987,0 13.3186530993,52.5509033995,0 13.3183754003,52.5509713995,0 13.3181356001,52.5510579988,0 13.3175259998,52.5512706992,0 13.3169643003,52.5514680995,0 13.3164872993,52.551639199,0 13.3164012002,52.5516681989,0 13.3158362993,52.5518639992,0 13.3153007,52.5520437988,0 13.3148479997,52.5521990994,0 13.3146479006,52.5522676992,0 13.3143426994,52.5523710991,0 13.3141178003,52.5524471995,0 13.3139772004,52.5524947991,0 13.3138614007,52.552560199,0 13.3138332003,52.5525760991,0 13.3136957007,52.5526901995,0 13.3136389993,52.5527185993,0 13.3135905006,52.552742999,0 13.3133687994,52.5528278991,0 13.3132553005,52.5528712994,0 13.3127034005,52.5530700987,0 13.3122287999,52.5532385989,0 13.3119683998,52.5533310987,0 13.3117239004,52.5534178995,0 13.3106124006,52.5538125988,0 13.3097506993,52.554118499,0 13.3086479004,52.5545100989,0 13.3084094998,52.554594699,0 13.3077103997,52.5548429995,0 13.3076425998,52.5548669994,0 13.3070859002,52.5550616995,0 13.3069999004,52.5550773988,0 13.3069351001,52.555101399,0 13.3066803993,52.555196399,0 13.3064382565,52.5552782273,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2574533076,52.5536198658,0 13.2572847615,52.5530328066,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2497649999,52.5535104994,0 13.249769238,52.5535099021,0 13.2498877994,52.553493199,0 13.2500615995,52.5534985991,0 13.2524775,52.552958999,0 13.2525357,52.5529477993,0 13.2531284998,52.5528342992,0 13.2539438995,52.552800499,0 13.2547606006,52.5528597992,0 13.2558257,52.5529425988,0 13.2559594996,52.5529217993,0 13.2572655276,52.5530447632,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2497649999,52.5535104994,0 13.249767009,52.5535142784,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2735975549,52.5543141423,0 13.2735904998,52.5543161991,0 13.2734533998,52.5543161989,0 13.2698755007,52.5539665994,0 13.2694233997,52.5539175994,0 13.2691602003,52.5539193992,0 13.2653976001,52.5545494992,0 13.2652879004,52.5545560987,0 13.2651624,52.5545413992,0 13.2643409001,52.5543450995,0 13.2633862,52.5540609991,0 13.261371,52.5540710994,0 13.2575593997,52.553678599,0 13.2574938833,52.5536829186,0 13.2574538931,52.5536202394,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2736056107,52.5543220282,0 13.2742184197,52.5548972726,0 13.2910525008,52.5565371914,0 13.2925370831,52.5551567033,0 13.292849974,52.5548657377,0 13.2940811077,52.5549600257,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2940741357,52.5549599252,0 13.2949999745,52.5550115341,0 13.2988801934,52.5553352462,0 13.3013099745,52.5556214949,0 13.3017549818,52.5555885406,0 13.3021828622,52.5557465292,0 13.3021845261,52.5557471438,0 13.3031145956,52.5553228284,0 13.3039625478,52.5550399349,0 13.3055357417,52.5548313467,0 13.3059370721,52.5547276773,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.3064403192,52.5552770268,0 13.3059410096,52.5547301927,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2258006005,52.5544523995,0 13.2259327995,52.5544469992,0 13.2260618004,52.5544200987,0 13.2268722999,52.5541513995,0 13.2279728002,52.553784999,0 13.2284552996,52.5536142988,0 13.2288502004,52.5534741993,0 13.2289825006,52.5534290991,0 13.2304232005,52.5529379992,0 13.2309908007,52.5527480988,0 13.2310845005,52.5527166992,0 13.2312804998,52.5526510989,0 13.2316435007,52.5525295992,0 13.2319332993,52.5524017989,0 13.2322972006,52.5522184987,0 13.2330086003,52.5518601988,0 13.2335705993,52.5515770993,0 13.2339790997,52.551371299,0 13.2356270998,52.5505558993,0 13.2361354006,52.5502560988,0 13.2361775005,52.550210399,0 13.2362066997,52.5501581995,0 13.2373425843,52.5501712713,0 13.2375510805,52.5502233873,0 13.2376704001,52.5503136988,0 13.2384366008,52.5508932987,0 13.2388528,52.5512081987,0 13.2389262994,52.5512637989,0 13.2394029999,52.5516228988,0 13.2395879417,52.551771302,0 13.2413360999,52.5509314992,0 13.2450795895,52.5491440226,0 13.2457766988,52.5488012612,0 13.245907199,52.5488568603,0 13.2459399986,52.5488801607,0 13.2460359991,52.5489506611,0 13.2461609991,52.5490502605,0 13.247447042,52.55004858,0 13.2478228779,52.5498698652,0 13.2483480606,52.5497703414,0 13.2485376107,52.5501879262,0 13.2485636245,52.5502969043,0 13.2486350587,52.5505367543,0 13.2487479995,52.5509827987,0 13.2488309997,52.5512280994,0 13.2488802251,52.5513599113,0 13.2491382997,52.5520793995,0 13.2491604007,52.5521525992,0 13.2492478003,52.5523724988,0 13.2494085001,52.5527896992,0 13.2494400993,52.5528557988,0 13.2495052994,52.5530124988,0 13.2495509,52.5531179989,0 13.2497649999,52.5535104994,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2258006005,52.5544523995,0 13.2258192005,52.5546128993,0 13.2259138,52.5548873989,0 13.2259336996,52.554945099,0 13.2259476,52.554985499,0 13.2259913999,52.5551125992,0 13.2260325,52.5552319992,0 13.2260960002,52.5554168988,0 13.2262310993,52.5557881995,0 13.2264172008,52.5562994988,0 13.2264527999,52.5563972993,0 13.2265313002,52.556612999,0 13.2266664005,52.5568925993,0 13.2267184007,52.5570001995,0 13.2270029002,52.5574724987,0 13.2270626994,52.5575716991,0 13.2270795995,52.5575963994,0 13.2272627998,52.5578506989,0 13.2273126006,52.5579198994,0 13.2273980003,52.5580229994,0 13.2275210002,52.5581713992,0 13.2277328994,52.5584167992,0 13.2279411003,52.558666899,0 13.2279683004,52.5586994992,0 13.2280529997,52.5588011992,0 13.2281266,52.5589246993,0 13.2278599004,52.5589876994,0 13.2276236994,52.5590426993,0 13.2274600994,52.5590800995,0 13.2272923007,52.5591107993,0 13.2268930993,52.5591727991,0 13.2266437993,52.5592065991,0 13.2264911003,52.5592236991,0 13.2263252001,52.5592380988,0 13.2261348002,52.5592616995,0 13.2258503999,52.5593047993,0 13.2257152996,52.5593329992,0 13.225589,52.5593598994,0 13.2220011999,52.5599030994,0 13.2210924997,52.5600329994,0 13.2210438999,52.560040799,0 13.2202300995,52.5601713993,0 13.2200070001,52.560173799,0 13.2198347001,52.5601666987,0 13.2196561999,52.5601573992,0 13.2192537003,52.5601586995,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2192537003,52.5601586995,0 13.2196917999,52.5600877995,0 13.2197982,52.5600705991,0 13.2210407997,52.5598816994,0 13.2218663,52.5597575991,0 13.2254751007,52.5592309994,0 13.2255361993,52.5592217993,0 13.2259786004,52.5591554992,0 13.2272293004,52.5589560987,0 13.2274888993,52.5589111991,0 13.2275464,52.5589007986,0 13.2277746993,52.5588548993,0 13.2276945007,52.5587596989,0 13.2274625005,52.5584841991,0 13.2272244999,52.5581969994,0 13.2271475,52.5580978994,0 13.2270464994,52.5579679991,0 13.2269556003,52.5578571991,0 13.2267731997,52.5576347994,0 13.2267148003,52.5575368993,0 13.2264164,52.5570360993,0 13.2263730993,52.5569407989,0 13.2262447007,52.5566580987,0 13.2261585993,52.5564338987,0 13.2261237994,52.5563399988,0 13.2259479005,52.5558033987,0 13.2258238994,52.5554519989,0 13.2257709996,52.5553158988,0 13.2257570006,52.5552796988,0 13.2257064004,52.555149499,0 13.2256680003,52.5550261994,0 13.2255880005,52.5547691987,0 13.2255609995,52.5546825995,0 13.2255967993,52.5545932994,0 13.2256413007,52.5545330995,0 13.2256937995,52.5544904993,0 13.2257390993,52.554467099,0 13.2258006005,52.5544523995,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t\t<LineString>\n\t\t\t\t\t\t<altitudeMode>relativeToGround</altitudeMode>\n\t\t\t\t\t\t<coordinates>\n\t\t\t\t\t\t\t13.2125282001,52.5610811987,0 13.2129138006,52.5610290995,0 13.2132746005,52.5609853991,0 13.2135119001,52.5609535994,0 13.2138946996,52.560902299,0 13.2149750004,52.5607554995,0 13.2153836993,52.5606998995,0 13.2154892,52.5606867993,0 13.2165020005,52.5605514993,0 13.2166840997,52.5605271991,0 13.2171898,52.560456799,0 13.2174650996,52.560418199,0 13.2189077007,52.5602157993,0 13.2192537003,52.5601586995,0\n\t\t\t\t\t\t</coordinates>\n\t\t\t\t\t</LineString>\n\t\t\t\t</MultiGeometry>\n\t\t\t</Placemark>\n\t\t</Folder>\n  </Document>\n</kml>",
+      "additionalInformation": [],
+      "additionalHtmlContent": [
+        "\n\n\n\n\n\n\n    \n      \n        \n      \n    \n      \n        \n      \n    \n\n    \n\n    \n        <section id=\"c1207\"\n                  class=\"download\">\n            \n                \n    \n      \n          <h2 id=\"c1207\" class=\"h2-home\">\n            \n              <span>\n                Links und Downloads zum Projekt\n              </span>\n            \n          </h2>\n        \n    \n  \n            \n\n            <div class=\"download--inner\">\n                \n                \n                <ul class=\"download--items\">\n                    \n                        \n                                \n                                \n                                \n                            \n                        \n    \n        \n        <li class=\"download--item\">\n            \n                    <a href=\"/assets/PDFs/ergebnisbericht-rsv-mitte-tegel-spandau-final.pdf\" target=\"_blank\" class=\"download--item-download\">\n                        <span class=\"download--item-icon\">\n                            <i class=\"icon icon-download\" aria-hidden=\"true\"></i>\n                        </span>\n                        \n                            Ergebnisbericht zur Machbarkeitsuntersuchung (Februar 2022)\n                            \n                                \n                                \n                                    (PDF, 4,09 MB)\n                                \n                            \n                            <span class=\"sr-only\">(öffnet in neuem Fenster)</span>\n                        \n                    </a>\n                \n        </li>\n    \n\n                    \n                        \n                                \n                                \n                                \n                            \n                        \n    \n        \n        <li class=\"download--item\">\n            \n                    <a href=\"/projekte/archiv/#c3644\" target=\"_self\" class=\"download--item-link\">\n                        <span class=\"download--item-icon\">\n                            <i class=\"icon icon-arrow-right\" aria-hidden=\"true\"></i>\n                        </span>\n                        \n                            Archiv\n                            \n                            <span class=\"sr-only\">(öffnet in neuem Fenster)</span>\n                        \n                    </a>\n                \n        </li>\n    \n\n                    \n\n                    \n                </ul>\n        </div>\n        </section>\n    \n\n\n"
+      ]
+    },
+    {
+      "id": "pyb10",
+      "title": "S Adlershof",
+      "subtitle": "",
+      "yearOfImplementation": null,
+      "description": "",
+      "status": null,
+      "holder": "Berlin",
+      "costs": "",
+      "link": "https://www.infravelo.de/projekt/s-adlershof/",
+      "apiLink": "https://www.infravelo.de/api/v1/project/pyb10/",
+      "companyConstruction": "",
+      "owner": "",
+      "districts": [],
+      "coordinator": "",
+      "companyPlanning": "",
+      "dateStart": null,
+      "dateEnd": null,
+      "milestones": [],
+      "types": [],
+      "categories": [],
+      "image": {
+        "uri": "https://www.infravelo.de/fileadmin/pyb_bilder_import/a05c54da-6942-4721-8a1a-729e37b67da6.jpg",
+        "extension": "jpg"
+      },
+      "imagesCurrent": [
+        {
+          "uri": "https://www.infravelo.de/fileadmin/pyb_bilder_import/a05c54da-6942-4721-8a1a-729e37b67da6.jpg",
+          "extension": "jpg"
+        }
+      ],
+      "imagesBefore": [],
+      "kml": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n  <Document id=\"root_doc\">\n    <Folder>\n      <name>Standortpin</name>\n      <Placemark>\n        <ExtendedData>\n          <SchemaData schemaUrl=\"#Standortpin\">\n            <SimpleData name=\"ProjektID\">pyb10</SimpleData>\n          </SchemaData>\n        </ExtendedData>\n        <Point>\n          <coordinates>13.540626,52.434888</coordinates>\n        </Point>\n      </Placemark>\n    </Folder>\n  </Document>\n</kml>",
+      "additionalInformation": [],
+      "additionalHtmlContent": []
+    }
+  ]
+}

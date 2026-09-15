@@ -5,12 +5,12 @@ defmodule Hierbautberlin.MixProject do
     [
       app: :hierbautberlin,
       version: "1.0.0+#{get_commit_sha()}",
-      elixir: "~> 1.7",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      listeners: [Phoenix.CodeReloader],
       dialyzer: dialyzer(),
       releases: [
         # the name of the release. We can add more configurations if we want
@@ -26,16 +26,29 @@ defmodule Hierbautberlin.MixProject do
     ]
   end
 
+  # Docker builds have no .git directory, they pass the commit as SOURCE_COMMIT
   defp get_commit_sha do
-    {sha, 0} = System.cmd("git", ~w[rev-parse HEAD])
-    String.trim(sha)
+    case System.get_env("SOURCE_COMMIT") do
+      sha when sha not in [nil, ""] ->
+        sha
+
+      _ ->
+        case System.cmd("git", ~w[rev-parse HEAD], stderr_to_stdout: true) do
+          {sha, 0} -> String.trim(sha)
+          _ -> "unknown"
+        end
+    end
+  rescue
+    # git is not installed
+    ErlangError -> "unknown"
   end
 
   defp dialyzer do
     [
       plt_core_path: "priv/plts",
       plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
-      plt_add_apps: [:mix]
+      # test/support uses ExUnit, CI runs dialyzer with MIX_ENV=test
+      plt_add_apps: [:mix, :ex_unit]
     ]
   end
 
@@ -58,49 +71,43 @@ defmodule Hierbautberlin.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:aho_corasick, "~> 0.0.1"},
-      {:bamboo_phoenix, "~> 1.0.0"},
-      {:bamboo, "~> 2.1.0"},
-      {:bcrypt_elixir, "~> 2.0"},
-      {:bugsnag, "~> 3.0.0"},
-      {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:csv, "~> 2.4"},
-      {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:downstream, "~> 1.1.0"},
-      {:ecto_psql_extras, "~> 0.2"},
-      {:ecto_sql, "~> 3.4"},
-      {:ex_check, "~> 0.14.0", only: [:dev, :test], runtime: false},
-      {:ex_machina, "~> 2.7.0", only: :test},
-      {:ex_unicode, "~> 1.11.2"},
-      {:exkml, github: "bitboxer/exkml", branch: "update-deps"},
-      {:fast_rss, "~> 0.3.4"},
-      {:floki, ">= 0.27.0"},
-      {:geo_postgis, "~> 3.1"},
-      {:geo_turf, "~> 0.1.0"},
-      {:gettext, "~> 0.11"},
+      {:bandit, "~> 1.5"},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:bugsnag, "~> 3.0"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:csv, "~> 3.2"},
+      {:dart_sass, "~> 0.7", runtime: Mix.env() == :dev},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ecto_psql_extras, "~> 0.8"},
+      {:ecto_sql, "~> 3.12"},
+      {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
+      {:ex_check, "~> 0.16", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.8", only: :test},
+      {:fast_rss, "~> 0.5"},
+      {:floki, "~> 0.38"},
+      {:geo_postgis, "~> 3.7"},
+      {:geo_turf, "~> 0.6"},
+      {:gettext, "~> 0.26"},
+      # tzdata (via timex) depends on hackney, force the patched 4.x line
+      {:hackney, "~> 4.7"},
       {:html_entities, "~> 0.5.2"},
-      {:httpoison, "~> 1.8"},
-      {:jason, "~> 1.0"},
-      {:jaxon, "~> 2.0"},
-      {:mix_test_watch, "~> 1.0", only: [:dev], runtime: false},
-      {:phoenix_ecto, "~> 4.1"},
-      {:phoenix_html_simplified_helpers, "~> 2.1.0"},
-      {:phoenix_html, "~> 2.11"},
-      {:phoenix_inline_svg, "~> 1.4"},
-      {:phoenix_live_dashboard, "~> 0.4"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.15.1"},
-      {:phoenix, "~> 1.5.8"},
-      {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
-      {:plug_cowboy, "~> 2.0"},
-      {:postgrex, ">= 0.0.0"},
-      {:premailex, "~> 0.3.13"},
-      {:rustler, "~> 0.22.0", override: true},
-      {:sweet_xml, "~> 0.7.0"},
-      {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
-      {:timex, "~> 3.7.2"},
-      {:jiffy_ex, "~> 1.1.0"}
+      {:jason, "~> 1.4"},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:mix_test_watch, "~> 1.2", only: [:dev], runtime: false},
+      {:phoenix, "~> 1.8.1"},
+      {:phoenix_ecto, "~> 4.6"},
+      {:phoenix_html, "~> 4.2"},
+      {:phoenix_live_dashboard, "~> 0.8"},
+      {:phoenix_live_reload, "~> 1.6", only: :dev},
+      {:phoenix_live_view, "~> 1.1"},
+      {:postgrex, ">= 0.19.0"},
+      {:premailex, "~> 1.0"},
+      {:req, "~> 0.5"},
+      {:sweet_xml, "~> 0.7"},
+      {:swoosh, "~> 1.19"},
+      {:telemetry_metrics, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 
@@ -112,10 +119,32 @@ defmodule Hierbautberlin.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "cmd yarn install --cwd assets"],
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.setup": [
+        "esbuild.install --if-missing",
+        "sass.install --if-missing",
+        "cmd npm install --prefix assets"
+      ],
+      "assets.build": [
+        "esbuild app",
+        "esbuild map_worker",
+        "esbuild pdf_viewer",
+        "esbuild pdf_worker",
+        "sass default",
+        "sass pdf_viewer"
+      ],
+      "assets.deploy": [
+        "esbuild app --minify",
+        "esbuild map_worker --minify",
+        "esbuild pdf_viewer --minify",
+        "esbuild pdf_worker --minify",
+        "sass default --no-source-map --style=compressed",
+        "sass pdf_viewer --no-source-map --style=compressed",
+        "phx.digest"
+      ]
     ]
   end
 end

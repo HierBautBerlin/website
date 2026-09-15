@@ -1,14 +1,14 @@
 defmodule HierbautberlinWeb.Email do
-  import Bamboo.Email
-  use Bamboo.Phoenix, view: HierbautberlinWeb.EmailView
-  alias HierbautberlinWeb.Mailer
+  import Swoosh.Email
+
+  alias HierbautberlinWeb.{EmailTemplates, Mailer}
+
+  @from {"Hier Baut Berlin", "mail@hierbautberlin.de"}
 
   def base_email(user) do
-    new_email(
-      to: user,
-      from: "mail@hierbautberlin.de"
-    )
-    |> put_layout({HierbautberlinWeb.LayoutView, :email})
+    new()
+    |> to(user.email)
+    |> from(@from)
   end
 
   def default_email(user, subject, html_body, text_body) do
@@ -19,18 +19,40 @@ defmodule HierbautberlinWeb.Email do
   end
 
   def new_items_found(user, items) do
-    base_email(user)
-    |> subject("Hier Baut Berlin - Neue Einträge gefunden")
-    |> assign(:items, items)
-    |> render(:new_items_found)
-    |> premail()
-    |> Mailer.deliver_later()
+    assigns = %{items: items}
+
+    email =
+      base_email(user)
+      |> subject("Hier Baut Berlin - Neue Einträge gefunden")
+      |> html_body(render_html(:new_items_found_html, assigns))
+      |> text_body(render_text(:new_items_found_text, assigns))
+
+    deliver(email)
   end
 
-  defp premail(email) do
-    html = Premailex.to_inline_css(email.html_body)
+  def deliver(email) do
+    with {:ok, _metadata} <- Mailer.deliver(email) do
+      {:ok, email}
+    end
+  end
 
-    email
-    |> html_body(html)
+  defp render_html(template, assigns) do
+    inner = apply(EmailTemplates, template, [assigns])
+
+    %{inner_content: inner}
+    |> EmailTemplates.layout_html()
+    |> Phoenix.HTML.Safe.to_iodata()
+    |> IO.iodata_to_binary()
+    |> Premailex.to_inline_css()
+  end
+
+  defp render_text(template, assigns) do
+    inner = apply(EmailTemplates, template, [assigns])
+
+    %{inner_content: inner}
+    |> EmailTemplates.layout_text()
+    |> Phoenix.HTML.Safe.to_iodata()
+    |> IO.iodata_to_binary()
+    |> HtmlEntities.decode()
   end
 end

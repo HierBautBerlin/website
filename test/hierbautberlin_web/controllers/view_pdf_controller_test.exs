@@ -15,10 +15,7 @@ defmodule HierbautberlinWeb.ViewPDFControllerTest do
       conn =
         get(
           conn,
-          Routes.view_pdf_path(conn, :show, ["this_file_exists.pdf"], %{
-            page: 1,
-            title: "Hello Title!"
-          })
+          ~p"/view_pdf/this_file_exists.pdf?#{%{page: 1, title: "Hello Title!"}}"
         )
 
       assert response(conn, 200) =~ "Hello Title!"
@@ -31,7 +28,7 @@ defmodule HierbautberlinWeb.ViewPDFControllerTest do
       conn =
         get(
           conn,
-          Routes.view_pdf_path(conn, :show, ["not_found.pdf"], %{page: 1, title: "Hello Title!"})
+          ~p"/view_pdf/not_found.pdf?#{%{page: 1, title: "Hello Title!"}}"
         )
 
       assert response(conn, 404)

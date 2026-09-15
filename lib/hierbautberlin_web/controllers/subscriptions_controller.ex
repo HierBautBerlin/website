@@ -6,7 +6,7 @@ defmodule HierbautberlinWeb.SubscriptionsController do
   def index(%{assigns: %{current_user: current_user}} = conn, _params) do
     current_user = Accounts.with_subscriptions(current_user)
 
-    render(conn, "index.html",
+    render(conn, :index,
       page_title: "Benachrichtigungen bearbeiten",
       current_user: current_user
     )
@@ -21,20 +21,20 @@ defmodule HierbautberlinWeb.SubscriptionsController do
     if subscription == nil do
       conn
       |> put_flash(:error, "Aktualisierung fehlgeschlagen")
-      |> redirect(to: Routes.subscriptions_path(conn, :index))
+      |> redirect(to: ~p"/users/subscriptions")
     else
       case Accounts.update_subscription(subscription, subscription_params) do
         {:ok, _user} ->
           conn
           |> put_flash(:info, "Ort erfolgreich aktualisiert.")
-          |> redirect(to: Routes.subscriptions_path(conn, :index))
+          |> redirect(to: ~p"/users/subscriptions")
 
         {:error, _changeset} ->
           current_user = Accounts.with_subscriptions(current_user)
 
           conn
           |> put_flash(:error, "Aktualisierung fehlgeschlagen")
-          |> render("index.html",
+          |> render(:index,
             current_user: current_user,
             page_title: "Benachrichtigungen bearbeiten"
           )
@@ -48,13 +48,13 @@ defmodule HierbautberlinWeb.SubscriptionsController do
     if subscription == nil do
       conn
       |> put_flash(:error, "Löschen fehlgeschlagen")
-      |> redirect(to: Routes.subscriptions_path(conn, :index))
+      |> redirect(to: ~p"/users/subscriptions")
     else
       Accounts.delete_subscription(subscription)
 
       conn
       |> put_flash(:info, "Ort gelöscht.")
-      |> redirect(to: Routes.subscriptions_path(conn, :index))
+      |> redirect(to: ~p"/users/subscriptions")
     end
   end
 end

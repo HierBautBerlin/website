@@ -76,7 +76,7 @@ defmodule HierbautberlinWeb.RSSControllerTest do
       two: two,
       three: three
     } do
-      conn = get(conn, Routes.rss_path(conn, :show, "13.2679", "52.51"))
+      conn = get(conn, ~p"/feed/13.2679/52.51")
       doc = response(conn, 200)
 
       result =
@@ -114,6 +114,11 @@ defmodule HierbautberlinWeb.RSSControllerTest do
                  title: "This is a nice title"
                }
              ]
+    end
+
+    test "accepts coordinates without decimals and rejects invalid ones", %{conn: conn} do
+      assert conn |> get("/feed/13/52") |> response(200)
+      assert conn |> get("/feed/abc/52") |> response(400)
     end
   end
 end

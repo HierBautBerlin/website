@@ -113,6 +113,8 @@ defmodule Hierbautberlin.Services.Berlin do
     "Treptow-Köpenick"
   ]
 
+  def districts, do: @berlin_districts
+
   def district_for_local_center(local_center) do
     @berlin_local_centers[local_center]
   end

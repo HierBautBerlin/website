@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="handwritten">
+  <!-- boundary corners -->
+  <node id="1" lat="52.0" lon="13.0"/>
+  <node id="2" lat="52.0" lon="13.5"/>
+  <node id="3" lat="52.0" lon="14.0"/>
+  <node id="4" lat="53.0" lon="14.0"/>
+  <node id="5" lat="53.0" lon="13.5"/>
+  <node id="6" lat="53.0" lon="13.0"/>
+
+  <!-- street nodes -->
+  <node id="10" lat="52.5" lon="13.4"/>
+  <node id="11" lat="52.5" lon="13.6"/>
+  <node id="12" lat="52.6" lon="13.4"/>
+  <node id="13" lat="52.6" lon="13.45"/>
+
+  <!-- addresses -->
+  <node id="101" lat="52.5001" lon="13.41">
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="1"/>
+    <tag k="addr:postcode" v="10115"/>
+  </node>
+  <node id="102" lat="52.5001" lon="13.42">
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="2 a"/>
+  </node>
+  <node id="103" lat="52.5001" lon="13.61">
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="5"/>
+  </node>
+  <node id="104" lat="52.7" lon="13.2">
+    <tag k="addr:street" v="Nur-Adressen-Weg"/>
+    <tag k="addr:housenumber" v="7"/>
+  </node>
+
+  <node id="105" lat="52.5002" lon="13.44">
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="7-9"/>
+  </node>
+
+  <!-- building nodes -->
+  <node id="201" lat="52.5010" lon="13.430"/>
+  <node id="202" lat="52.5010" lon="13.431"/>
+  <node id="203" lat="52.5011" lon="13.431"/>
+  <node id="204" lat="52.5011" lon="13.430"/>
+  <node id="211" lat="52.5010" lon="13.410"/>
+  <node id="212" lat="52.5010" lon="13.411"/>
+  <node id="213" lat="52.5011" lon="13.411"/>
+  <node id="214" lat="52.5011" lon="13.410"/>
+
+  <!-- park nodes (the OSM driver needs increasing node ids) -->
+  <node id="221" lat="52.60" lon="13.20"/>
+  <node id="222" lat="52.60" lon="13.21"/>
+  <node id="223" lat="52.61" lon="13.21"/>
+  <node id="224" lat="52.61" lon="13.20"/>
+
+  <way id="300">
+    <nd ref="1"/><nd ref="3"/><nd ref="4"/><nd ref="6"/><nd ref="1"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="admin_level" v="4"/>
+    <tag k="name" v="Berlin"/>
+  </way>
+  <way id="301">
+    <nd ref="1"/><nd ref="2"/><nd ref="5"/><nd ref="6"/><nd ref="1"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="name" v="Mitte"/>
+  </way>
+  <way id="302">
+    <nd ref="2"/><nd ref="3"/><nd ref="4"/><nd ref="5"/><nd ref="2"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="admin_level" v="9"/>
+    <tag k="name" v="Pankow"/>
+  </way>
+  <way id="303">
+    <nd ref="1"/><nd ref="2"/><nd ref="5"/><nd ref="6"/><nd ref="1"/>
+    <tag k="boundary" v="administrative"/>
+    <tag k="admin_level" v="10"/>
+    <tag k="name" v="Moabit"/>
+  </way>
+
+  <way id="400">
+    <nd ref="10"/><nd ref="11"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Teststraße"/>
+  </way>
+  <way id="401">
+    <nd ref="12"/><nd ref="13"/>
+    <tag k="highway" v="footway"/>
+    <tag k="name" v="Parkweg"/>
+  </way>
+
+  <!-- building with a list of house numbers -->
+  <way id="500">
+    <nd ref="201"/><nd ref="202"/><nd ref="203"/><nd ref="204"/><nd ref="201"/>
+    <tag k="building" v="yes"/>
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="3;4"/>
+  </way>
+  <!-- same address as node 101 -->
+  <way id="501">
+    <nd ref="211"/><nd ref="212"/><nd ref="213"/><nd ref="214"/><nd ref="211"/>
+    <tag k="building" v="yes"/>
+    <tag k="addr:street" v="Teststraße"/>
+    <tag k="addr:housenumber" v="1"/>
+  </way>
+  <way id="600">
+    <nd ref="221"/><nd ref="222"/><nd ref="223"/><nd ref="224"/><nd ref="221"/>
+    <tag k="leisure" v="park"/>
+    <tag k="name" v="Testpark"/>
+  </way>
+</osm>

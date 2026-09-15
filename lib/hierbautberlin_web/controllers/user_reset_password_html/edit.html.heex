@@ -1,0 +1,26 @@
+<Layouts.app flash={@flash}>
+  <h1>Passwort zurücksetzen</h1>
+
+  <.form :let={f} for={@changeset} action={~p"/users/reset_password/#{@token}"} method="put">
+    <div :if={@changeset.action} class="alert alert-danger">
+      <p>Ups, etwas ist schief gelaufen! Bitte überprüfe die unten stehenden Fehler.</p>
+    </div>
+
+    <.input field={f[:password]} type="password" label="Neues Passwort" required />
+    <.input
+      field={f[:password_confirmation]}
+      type="password"
+      label="Passwort bestätigen"
+      required
+    />
+
+    <div>
+      <button type="submit">Passwort zurücksetzen</button>
+    </div>
+  </.form>
+
+  <p>
+    <.link href={~p"/users/register"}>Registrieren</.link> |
+    <.link href={~p"/users/log_in"}>Anmelden</.link>
+  </p>
+</Layouts.app>

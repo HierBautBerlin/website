@@ -1,18 +1,25 @@
 defmodule Hierbautberlin.GeoData do
   import Ecto.Query, warn: false
 
-  alias Hierbautberlin.{PostgresQueryHelper, Repo}
+  alias Hierbautberlin.Repo
 
   alias Hierbautberlin.GeoData.{
     AnalyzeText,
     GeoItem,
     GeoPlace,
-    GeoPosition,
     GeoStreet,
     GeoStreetNumber,
     NewsItem,
+    Relevance,
     Source
   }
+
+  @doc """
+  All sources ordered by name, for the source filter on the map.
+  """
+  def list_sources do
+    Repo.all(from source in Source, order_by: source.name)
+  end
 
   def get_source!(id) do
     Repo.get!(Source, id)
@@ -58,45 +65,50 @@ defmodule Hierbautberlin.GeoData do
     Repo.all(query)
   end
 
-  def search_street(search) do
-    if String.length(search) < 3 do
-      do_simple_street_search(search)
-    else
-      do_complex_street_search(search)
-    end
-    |> Repo.all()
-  end
+  @doc """
+  Finds streets by name for the search on the map, best matches first:
 
-  defp do_simple_street_search(search) do
-    search_query = "#{search}%"
+    1. the name is the search
+    2. the name starts with the search ("unter den lin" -> "Unter den Linden")
+    3. a word in the name starts with the search ("linden")
+    4. the name contains the search ("torstr" -> "Wassertorstraße")
+    5. the start of the name has a typo ("Sonenallee")
 
-    from(
-      entry in GeoStreet,
-      where: ilike(entry.name, ^search_query),
-      order_by: [desc: entry.street_number_count],
-      limit: 10
-    )
-  end
+  Names are compared normalized (see the `search_normalize` SQL function), so
+  "karl marx", "Friedrichstrasse" and "müllerstr." work. Within a group, streets
+  with more house numbers (usually the more important ones) come first.
+  """
+  def search_street(search, limit \\ 10) do
+    %{rows: rows} =
+      Repo.query!(
+        """
+        WITH query AS MATERIALIZED (SELECT search_normalize($1) AS q)
+        SELECT id FROM (
+          SELECT s.id, s.name, s.district, s.street_number_count, CASE
+              WHEN s.search_name = q THEN 0
+              WHEN s.search_name LIKE q || '%' THEN 1
+              WHEN s.search_name LIKE '% ' || q || '%' THEN 2
+              WHEN length(q) >= 3 AND s.search_name LIKE '%' || q || '%' THEN 3
+              WHEN length(q) >= 5
+                AND levenshtein(q, left(s.search_name, length(q))) <= CASE WHEN length(q) >= 9 THEN 2 ELSE 1 END
+                THEN 4
+            END AS tier
+          FROM geo_streets s, query
+          WHERE q <> ''
+        ) ranked
+        WHERE tier IS NOT NULL
+        ORDER BY tier, street_number_count DESC, name, district
+        LIMIT $2
+        """,
+        [search, limit]
+      )
 
-  defp do_complex_street_search(search) do
-    downcase_search = String.downcase(search)
-    formatted_search = PostgresQueryHelper.format_search_query(search)
+    ids = List.flatten(rows)
 
-    from(
-      entry in GeoStreet,
-      where:
-        fragment(
-          "? in (select id from geo_streets where (fulltext_search @@ to_tsquery('german', unaccent(?)) or name ilike ?))",
-          entry.id,
-          ^formatted_search,
-          ^"%#{search}%"
-        ),
-      order_by: [
-        desc: entry.street_number_count,
-        asc: fragment("levenshtein(?, lower(?), 1, 10, 20), name", ^downcase_search, entry.name)
-      ],
-      limit: 10
-    )
+    streets =
+      from(street in GeoStreet, where: street.id in ^ids) |> Repo.all() |> Map.new(&{&1.id, &1})
+
+    Enum.map(ids, &Map.fetch!(streets, &1))
   end
 
   def get_geo_place!(id) do
@@ -143,10 +155,60 @@ defmodule Hierbautberlin.GeoData do
 
   def upsert_geo_item(attrs \\ %{}) do
     item = get_geo_item_with_external_id(attrs[:source_id], attrs[:external_id]) || %GeoItem{}
+    attrs = Map.merge(attrs, Relevance.for_geo_item(attrs))
 
     item
     |> GeoItem.changeset(attrs)
     |> Repo.insert_or_update()
+  end
+
+  @doc """
+  Hides the geo items of a source that are not part of the latest import anymore.
+
+  Nothing is hidden when the import looks incomplete (no items or less than half
+  of the currently visible items), so a broken data source doesn't hide everything.
+  Returns the number of hidden items.
+  """
+  def hide_missing_geo_items(%Source{id: source_id}, imported_external_ids) do
+    visible_query = from(item in GeoItem, where: item.source_id == ^source_id and not item.hidden)
+    visible_count = Repo.aggregate(visible_query, :count)
+    imported_count = length(Enum.uniq(imported_external_ids))
+
+    if imported_count == 0 or imported_count < visible_count / 2 do
+      0
+    else
+      {count, _} =
+        visible_query
+        |> where([item], item.external_id not in ^imported_external_ids)
+        |> Repo.update_all(set: [hidden: true, updated_at: DateTime.utc_now(:second)])
+
+      count
+    end
+  end
+
+  @doc """
+  Hides the geo items of a source outside of the bounding box
+  `{min_lng, min_lat, max_lng, max_lat}`, e.g. items of an older import that
+  covered all of Germany. Returns the number of hidden items.
+  """
+  def hide_geo_items_outside(%Source{id: source_id}, {min_lng, min_lat, max_lng, max_lat}) do
+    {count, _} =
+      from(item in GeoItem,
+        where: item.source_id == ^source_id and not item.hidden,
+        where:
+          not fragment(
+            "COALESCE(?, ?) && ST_MakeEnvelope(?, ?, ?, ?, 4326)",
+            item.geo_point,
+            item.geometry,
+            ^min_lng,
+            ^min_lat,
+            ^max_lng,
+            ^max_lat
+          )
+      )
+      |> Repo.update_all(set: [hidden: true, updated_at: DateTime.utc_now(:second)])
+
+    count
   end
 
   def get_point(geo_item)
@@ -157,16 +219,6 @@ defmodule Hierbautberlin.GeoData do
   end
 
   def get_point(%GeoItem{geometry: geometry}) when not is_nil(geometry) do
-    %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
-    %{lat: lat, lng: lng}
-  end
-
-  def get_point(%GeoPosition{geopoint: item}) when not is_nil(item) do
-    %{coordinates: {lng, lat}} = item
-    %{lat: lat, lng: lng}
-  end
-
-  def get_point(%GeoPosition{geometry: geometry}) when not is_nil(geometry) do
     %{coordinates: {lng, lat}} = Geo.Turf.Measure.center(geometry)
     %{lat: lat, lng: lng}
   end
@@ -183,81 +235,13 @@ defmodule Hierbautberlin.GeoData do
     %{lat: lat, lng: lng}
   end
 
+  def get_point(%struct{geo_point: %Geo.Point{coordinates: {lng, lat}}})
+      when struct in [GeoStreet, GeoStreetNumber, GeoPlace] do
+    %{lat: lat, lng: lng}
+  end
+
   def get_point(_item) do
     %{lat: nil, lng: nil}
-  end
-
-  def get_items_near(lat, lng, count \\ 10) do
-    items = GeoItem.get_near(lat, lng, count) ++ NewsItem.get_near(lat, lng, count)
-
-    items
-    |> remove_old_items()
-    |> sort_by_relevance(%{lat: lat, lng: lng})
-    |> Enum.take(count)
-  end
-
-  defp remove_old_items(items) do
-    five_years_ago = Timex.shift(Timex.today(), years: -5)
-
-    Enum.filter(items, fn item ->
-      item.newest_date == nil || Timex.after?(item.newest_date, five_years_ago)
-    end)
-  end
-
-  defp sort_by_relevance(items, coordinates) do
-    {new_items, old_items} =
-      items
-      |> remove_empty_positions()
-      |> split_items_by_date()
-
-    sort_by_date_and_distance(new_items, coordinates) ++
-      sort_by_date_and_distance(old_items, coordinates)
-  end
-
-  defp remove_empty_positions(items) do
-    Enum.filter(items, fn item ->
-      !Enum.empty?(item.positions)
-    end)
-  end
-
-  defp split_items_by_date(items) do
-    Enum.split_with(items, fn item ->
-      item.newest_date && abs(Timex.diff(Timex.now(), item.newest_date, :weeks)) < 6
-    end)
-  end
-
-  def sort_by_date_and_distance(items, %{lat: lat, lng: lng}) do
-    Enum.sort_by(items, fn item ->
-      months_difference =
-        Timex.diff(
-          Timex.now(),
-          item.newest_date || Timex.shift(Timex.today(), months: -3),
-          :months
-        )
-
-      distance =
-        item.positions
-        |> Enum.map(fn position ->
-          %{lat: item_lat, lng: item_lng} = get_point(position)
-
-          Geo.Turf.Measure.distance(
-            %Geo.Point{coordinates: {lng, lat}},
-            %Geo.Point{coordinates: {item_lng, item_lat}},
-            :meters
-          )
-        end)
-        |> Enum.sort()
-        |> List.first()
-
-      push_factor =
-        if item.participation_open do
-          30
-        else
-          0
-        end
-
-      distance / 10 + months_difference - push_factor
-    end)
   end
 
   def with_news(item) do
@@ -273,9 +257,17 @@ defmodule Hierbautberlin.GeoData do
   end
 
   def upsert_news_item!(attrs, full_text, districts) do
+    districts = districts |> List.wrap() |> Enum.filter(&is_binary/1)
     result = analyze_text(full_text, %{districts: districts})
 
     item = get_news_item_with_external_id(attrs[:source_id], attrs[:external_id]) || %NewsItem{}
+
+    attrs =
+      attrs
+      |> Map.merge(%{full_text: full_text, districts: districts})
+      |> Map.merge(
+        Relevance.for_news_item(attrs[:title], full_text || attrs[:content], attrs[:published_at])
+      )
 
     item
     |> NewsItem.changeset(attrs)
@@ -314,9 +306,9 @@ defmodule Hierbautberlin.GeoData do
 
     query =
       from item in GeoItem,
-        where: item.inserted_at >= ^since,
+        where: item.inserted_at >= ^since and not item.hidden,
         where: ^conditions,
-        order_by: :inserted_at
+        order_by: [:inserted_at, :id]
 
     Repo.all(query)
   end
@@ -349,9 +341,9 @@ defmodule Hierbautberlin.GeoData do
 
     query =
       from item in NewsItem,
-        where: item.inserted_at >= ^since,
+        where: item.inserted_at >= ^since and not item.hidden,
         where: ^conditions,
-        order_by: :inserted_at
+        order_by: [:inserted_at, :id]
 
     Repo.all(query)
   end

@@ -1,0 +1,19 @@
+<p>
+  Hi,
+</p>
+
+<p>
+  Es gibt neue Einträge, die zu deinen Benachrichtigungen passen:
+</p>
+
+<ul>
+  <li :for={item <- @items}>
+    <a href={link_to_details(HierbautberlinWeb.Endpoint, item)}>{item.title}</a>
+  </li>
+</ul>
+
+<p>
+  Du kannst deine Benachrichtigungen jederzeit
+  <a href="https://hierbautberlin.de/users/subscriptions">hier</a>
+  ändern.
+</p>

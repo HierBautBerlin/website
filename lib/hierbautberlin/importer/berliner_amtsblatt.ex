@@ -1,10 +1,13 @@
 defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   import SweetXml
+  import Ecto.Query, warn: false
+  require Logger
 
   alias Hierbautberlin.FileStorage
   alias Hierbautberlin.GeoData
+  alias Hierbautberlin.GeoData.{NewsItem, Source}
+  alias Hierbautberlin.Repo
   alias Hierbautberlin.Services.UnicodeHelper
-  alias Phoenix.HTML.SimplifiedHelpers.Truncate
 
   @months [
     "Januar",
@@ -21,7 +24,10 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     "Dezember"
   ]
 
-  def import(http_connection \\ HTTPoison, downloader \\ Downstream) do
+  def import(
+        http_connection \\ Hierbautberlin.HTTPClient,
+        downloader \\ Hierbautberlin.HTTPClient
+      ) do
     {:ok, do_import_folder() ++ do_import_webpage(http_connection, downloader)}
   rescue
     error ->
@@ -37,12 +43,42 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       {:error, error}
   end
 
-  def import_webpage(http_connection \\ HTTPoison, downloader \\ Downstream) do
-    {:ok, do_import_webpage(http_connection, downloader)}
+  def import_webpage(
+        http_connection \\ Hierbautberlin.HTTPClient,
+        downloader \\ Hierbautberlin.HTTPClient
+      ) do
+    news_items = do_import_webpage(http_connection, downloader)
+    warn_if_outdated()
+    {:ok, news_items}
   rescue
     error ->
       Bugsnag.report(error)
       {:error, error}
+  end
+
+  # berlin.de only lists the last six issues, older ones are deleted. A new issue
+  # appears every week, so no new issue for three weeks means the import is
+  # broken (e.g. the page layout changed) and issues will be lost soon.
+  @outdated_after_days 21
+
+  def warn_if_outdated(now \\ DateTime.utc_now()) do
+    newest =
+      Repo.one(
+        from item in NewsItem,
+          join: source in Source,
+          on: source.id == item.source_id,
+          where: source.short_name == "BERLIN_AMTSBLATT",
+          select: max(item.published_at)
+      )
+
+    if newest && DateTime.diff(now, newest, :day) > @outdated_after_days do
+      message = "The newest Amtsblatt issue is from #{Date.to_iso8601(DateTime.to_date(newest))}"
+      Logger.warning(message)
+      Bugsnag.report(%RuntimeError{message: message}, severity: "warning")
+      :outdated
+    else
+      :ok
+    end
   end
 
   def do_import_folder() do
@@ -52,12 +88,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     |> File.ls!()
     |> Enum.map(fn file ->
       file_name = Path.join(import_path, file)
-
-      file_name
-      |> get_storage_name()
-      |> store_pdf(file_name)
-
-      news_items = import_amtsblatt(file_name)
+      news_items = import_and_store(file_name, get_storage_name(file_name))
       File.rm(file_name)
       news_items
     end)
@@ -65,21 +96,28 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   end
 
   def do_import_webpage(http_connection, downloader) do
-    pdf_url = get_latest_amtsblatt(http_connection)
-
-    if pdf_url && !FileStorage.exists?(get_storage_name(pdf_url)) do
+    # The page lists the latest issues, import all we don't have yet (oldest first)
+    http_connection
+    |> get_amtsblatt_urls()
+    |> Enum.reverse()
+    |> Enum.reject(&FileStorage.exists?(get_storage_name(&1)))
+    |> Enum.flat_map(fn pdf_url ->
       file = download_pdf(downloader, pdf_url)
 
-      pdf_url
-      |> get_storage_name()
-      |> store_pdf(file)
+      try do
+        import_and_store(file, get_storage_name(pdf_url))
+      after
+        File.rm(file)
+      end
+    end)
+  end
 
-      news_items = import_amtsblatt(file)
-      File.rm(file)
-      news_items
-    else
-      []
-    end
+  # A stored PDF counts as imported, so it is only stored after its news items
+  # were imported. Otherwise a failed import (or download) is never retried.
+  defp import_and_store(file, storage_name) do
+    news_items = import_amtsblatt(file)
+    store_pdf(storage_name, file)
+    news_items
   end
 
   def get_storage_name(pdf_url) do
@@ -117,7 +155,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     "Amtsblatt für Berlin, #{volume}. Jahrgang Nr. #{capture["number"]}"
   end
 
-  def get_latest_amtsblatt(http_connection) do
+  def get_amtsblatt_urls(http_connection) do
     url = "https://www.berlin.de/landesverwaltungsamt/logistikservice/amtsblatt-fuer-berlin/"
 
     response =
@@ -129,27 +167,26 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       )
 
     if response.status_code != 200 do
-      nil
+      []
     else
-      find_download_url(response.body)
+      find_download_urls(response.body)
     end
   end
 
-  defp find_download_url(text) do
-    {:ok, document} = Floki.parse_document(text)
+  @doc """
+  Returns the urls of all Amtsblatt PDFs linked on the page, newest first.
+  """
+  def find_download_urls(html) do
+    {:ok, document} = Floki.parse_document(html)
 
-    url =
-      document
-      |> Floki.find(".download-btn a")
-      |> Floki.attribute("href")
-      |> List.first()
-      |> Floki.text()
-
-    if String.length(url) > 0 do
-      "https://www.berlin.de" <> url
-    else
-      nil
-    end
+    document
+    # ".download-btn a" is the layout until 2024
+    |> Floki.find(".download-btn a, a.link--download")
+    |> Floki.attribute("href")
+    |> Enum.map(fn href -> href |> URI.parse() |> Map.put(:query, nil) |> URI.to_string() end)
+    |> Enum.filter(&String.ends_with?(&1, ".pdf"))
+    |> Enum.map(&(URI.merge("https://www.berlin.de", &1) |> URI.to_string()))
+    |> Enum.uniq()
   end
 
   def download_pdf(downloader, url) do
@@ -170,41 +207,69 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
         copyright: "Landesverwaltungsamt Berlin"
       })
 
-    number_of_pages = get_number_of_pages(file)
-    structure = get_structure(file)
-    first_item = List.first(structure)
+    file
+    |> extract_items(max_page)
+    |> Enum.map(fn item ->
+      GeoData.upsert_news_item!(
+        %{
+          external_id: item.url,
+          title: truncate(item.title, 250),
+          url: item.url,
+          content: item.description,
+          published_at: item.published_at,
+          source_id: source.id
+        },
+        item.full_text,
+        [item.section]
+      )
+    end)
+  end
 
+  @doc """
+  Extracts the news items of an Amtsblatt PDF without storing anything.
+  """
+  def extract_items(file, max_page \\ nil) do
     # Some PDFs are rather special and don't follow the structure.
     # Those need to be ignored.
-    if first_item.title == "Inhalt" do
-      last_page = max_page || get_last_page(structure, number_of_pages)
-      pages = extract_pages(file, last_page)
-      publish_date = get_date_from_page(List.first(pages))
+    case get_structure(file) do
+      [%{title: "Inhalt"} | _] = structure ->
+        last_page = max_page || get_last_page(structure, get_number_of_pages(file))
+        extract_items_with_structure(file, structure, last_page)
 
-      items = extract_news(pages, structure)
-
-      Enum.map(items, fn item ->
-        query = %{
-          page: item.item.page_number,
-          title: String.slice(item.title, 0, 100)
-        }
-
-        url = "/view_pdf/amtsblatt/#{Path.basename(file)}?#{URI.encode_query(query)}"
-
-        GeoData.upsert_news_item!(
-          %{
-            external_id: url,
-            title: Truncate.truncate(item.title, length: 250),
-            url: url,
-            content: item.description,
-            published_at: DateTime.new!(publish_date, ~T[13:26:08.003], "Etc/UTC"),
-            source_id: source.id
-          },
-          item.full_text,
-          [item.item.title]
-        )
-      end)
+      _ ->
+        []
     end
+  end
+
+  @doc """
+  Extracts the news items along the given structure (maps with `:title` and
+  `:page_number` in PDF order, returned as `:structure_item`). Used for the
+  stored PDFs, which have no outline anymore.
+  """
+  def extract_items_with_structure(file, structure, last_page) do
+    pages = extract_pages(file, last_page)
+    publish_date = get_date_from_page(List.first(pages))
+
+    pages
+    |> extract_news(structure)
+    |> Enum.map(fn item ->
+      # A keyword list keeps the parameter order stable, the url is used as external_id
+      query = [
+        page: item.item.page_number,
+        title: String.slice(item.title, 0, 100)
+      ]
+
+      %{
+        url: "/view_pdf/amtsblatt/#{Path.basename(file)}?#{URI.encode_query(query)}",
+        title: item.title,
+        description: item.description,
+        full_text: item.full_text,
+        section: item.item.title,
+        page_number: item.item.page_number,
+        structure_item: item.item,
+        published_at: DateTime.new!(publish_date, ~T[13:26:08.003], "Etc/UTC")
+      }
+    end)
   end
 
   def get_number_of_pages(file) do
@@ -218,6 +283,11 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   def get_structure(file) do
     {structure, 0} = System.cmd("dumppdf.py", ["--extract-toc", file])
 
+    # PDFs without an outline (e.g. the stored, shortened ones) return nothing
+    if String.contains?(structure, "<outlines"), do: parse_structure(structure), else: []
+  end
+
+  defp parse_structure(structure) do
     structure
     |> xpath(
       ~x"//outlines/outline"l,
@@ -353,64 +423,17 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   end
 
   def extract_news(pages, structure) do
-    pages =
-      Enum.map(pages, fn page ->
-        String.split(page, "\n")
-      end)
-
-    number_of_pages = length(pages)
-
-    filtered_structure =
-      structure
-      |> Enum.filter(fn item ->
-        item.page_number != nil
-      end)
+    pages = Enum.map(pages, &String.split(&1, "\n"))
+    filtered_structure = Enum.filter(structure, &(&1.page_number != nil))
 
     result =
       filtered_structure
       |> Stream.with_index()
       |> Enum.reduce(%{last_page: 0, last_line: 0, items: []}, fn {item, index}, acc ->
-        if item.page_number <= number_of_pages && should_import_topic?(item) do
-          page = Enum.at(pages, item.page_number - 1)
-          next_item = Enum.at(filtered_structure, index + 1)
+        next_item = Enum.at(filtered_structure, index + 1)
 
-          next_item =
-            if next_item && next_item.page_number > number_of_pages do
-              nil
-            else
-              next_item
-            end
-
-          {_, content_start_line} =
-            if item.page_number == acc.last_page do
-              find_section(page, item.title, acc.last_line)
-            else
-              find_section(page, item.title)
-            end
-
-          if content_start_line do
-            {end_line, text} =
-              extract_text_for_item(item, next_item, page, pages, content_start_line + 1)
-
-            text = trim_and_join_lines(text)
-
-            %{
-              last_page: if(next_item, do: next_item.page_number, else: item.page_number),
-              last_line: end_line,
-              items:
-                acc.items ++
-                  [
-                    %{
-                      full_text: text,
-                      item: item,
-                      title: extract_title(text),
-                      description: extract_description(text)
-                    }
-                  ]
-            }
-          else
-            acc
-          end
+        if item.page_number <= length(pages) && should_import_topic?(item) do
+          extract_news_item(item, next_item, pages, acc)
         else
           acc
         end
@@ -419,11 +442,66 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     result.items
   end
 
+  defp extract_news_item(item, next_item, pages, acc) do
+    page = Enum.at(pages, item.page_number - 1)
+    next_item = if next_item && next_item.page_number > length(pages), do: nil, else: next_item
+
+    {_, content_start_line} =
+      if item.page_number == acc.last_page do
+        find_section(page, item.title, acc.last_line)
+      else
+        find_section(page, item.title)
+      end
+
+    if content_start_line do
+      {end_line, text} =
+        extract_text_for_item(item, next_item, page, pages, content_start_line + 1)
+
+      text = trim_and_join_lines(text)
+
+      news = %{
+        full_text: text,
+        item: item,
+        title: extract_title(text),
+        description: extract_description(text)
+      }
+
+      %{
+        last_page: if(next_item, do: next_item.page_number, else: item.page_number),
+        last_line: end_line,
+        items: acc.items ++ [news]
+      }
+    else
+      acc
+    end
+  end
+
+  @skipped_sections ~r/\wkammer (zu )?Berlin|Apothekerversorgung Berlin|Lette-Verein|Versorgungswerk|\WInnung\W/
+
   defp should_import_topic?(item) do
-    !String.match?(
-      item.title,
-      ~r/\wkammer (zu )?Berlin|Apothekerversorgung Berlin|Lette-Verein|Versorgungswerk|\WInnung\W/
-    )
+    !String.match?(item.title, @skipped_sections)
+  end
+
+  @doc """
+  Cuts the text at the heading of a section that is not imported (chambers,
+  guilds, ...). Without the outline those sections end up in the text of the
+  item before them.
+  """
+  def cut_at_skipped_section(text) do
+    lines = String.split(text, "\n")
+
+    heading =
+      lines
+      |> Enum.with_index()
+      |> Enum.find(fn {line, index} ->
+        index > 0 and String.length(line) <= 60 and String.match?(" " <> line, @skipped_sections) and
+          String.trim(Enum.at(lines, index + 1) || "") == ""
+      end)
+
+    case heading do
+      {_line, index} -> lines |> Enum.take(index) |> Enum.join("\n") |> String.trim()
+      nil -> text
+    end
   end
 
   def extract_text_for_item(item, next_item, page, pages, start_line)
@@ -498,28 +576,35 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   def trim_and_join_lines(lines) do
     lines
     |> Enum.map(&String.trim(&1))
-    |> Enum.reduce("", fn line, acc ->
-      if String.ends_with?(acc, "-") do
-        # If the 2 characters before the - are lower case letters and
-        # the 2 characters after the - are lower case letters, join the line
-        # and remove the "-", otherwise just add the line
-        if UnicodeHelper.is_character_lower_case_letter?(String.at(acc, -3)) &&
-             UnicodeHelper.is_character_lower_case_letter?(String.at(acc, -2)) &&
-             UnicodeHelper.is_character_lower_case_letter?(String.at(line, 0)) &&
-             UnicodeHelper.is_character_lower_case_letter?(String.at(line, 1)) do
-          String.slice(acc, 0, String.length(acc) - 1) <> line
-        else
-          acc <> line
-        end
-      else
-        acc <> "\n" <> line
-      end
-    end)
+    |> Enum.reduce("", &join_line(&2, &1))
     |> String.trim()
   end
 
+  defp join_line(acc, line) do
+    cond do
+      not String.ends_with?(acc, "-") ->
+        acc <> "\n" <> line
+
+      # If the 2 characters before the - are lower case letters and
+      # the 2 characters after the - are lower case letters, join the line
+      # and remove the "-", otherwise just add the line
+      hyphenated_word?(acc, line) ->
+        String.slice(acc, 0, String.length(acc) - 1) <> line
+
+      true ->
+        acc <> line
+    end
+  end
+
+  defp hyphenated_word?(acc, line) do
+    UnicodeHelper.lower_case_letter?(String.at(acc, -3)) &&
+      UnicodeHelper.lower_case_letter?(String.at(acc, -2)) &&
+      UnicodeHelper.lower_case_letter?(String.at(line, 0)) &&
+      UnicodeHelper.lower_case_letter?(String.at(line, 1))
+  end
+
   def find_section(page, title, start \\ 0) do
-    title = clean_title(title)
+    {title, truncated?} = title |> clean_title() |> split_truncated()
 
     %{start: line_start, end: line_end} =
       page
@@ -553,7 +638,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
                  end: index
                }}
 
-            title == line_with_previous_lines ->
+            complete_title?(line_with_previous_lines, title, truncated?) ->
               {:halt,
                %{
                  start: line_start,
@@ -586,10 +671,21 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
     end
   end
 
+  # stored news item titles are cut after 250 characters
+  defp split_truncated(title) do
+    if String.ends_with?(title, "..."),
+      do: {String.slice(title, 0..-4//1), true},
+      else: {title, false}
+  end
+
+  defp complete_title?(text, title, truncated?) do
+    text == title or (truncated? and String.starts_with?(text, title))
+  end
+
+  # Titles are compared without whitespace, the PDF text has line breaks and
+  # different spacing ("(IfSG) -Isolation" vs. "(IfSG) - Isolation")
   defp clean_title(title) do
-    title
-    |> String.replace(~r/\s+/, " ")
-    |> String.trim()
+    String.replace(title, ~r/\s+/u, "")
   end
 
   defp extract_title(text) do
@@ -630,6 +726,14 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
       |> String.trim()
     else
       ""
+    end
+  end
+
+  defp truncate(text, length) do
+    if String.length(text) > length do
+      String.slice(text, 0, length - 3) <> "..."
+    else
+      text
     end
   end
 end

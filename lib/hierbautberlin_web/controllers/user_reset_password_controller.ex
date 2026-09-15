@@ -6,14 +6,14 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
   plug :get_user_by_reset_password_token when action in [:edit, :update]
 
   def new(conn, _params) do
-    render(conn, "new.html", page_title: "Passwort vergessen")
+    render(conn, :new, page_title: "Passwort vergessen")
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_reset_password_instructions(
         user,
-        &Routes.user_reset_password_url(conn, :edit, &1)
+        fn token -> url(~p"/users/reset_password/#{token}") end
       )
     end
 
@@ -23,11 +23,11 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
       :info,
       "Wenn deine Email-Adresse in unserem System ist, wirst du eine Email mit einer Anleitung zum zurücksetzen des Passwortes erhalten."
     )
-    |> redirect(to: "/")
+    |> redirect(to: ~p"/map")
   end
 
   def edit(conn, _params) do
-    render(conn, "edit.html",
+    render(conn, :edit,
       changeset: Accounts.change_user_password(conn.assigns.user),
       page_title: "Passwort ändern"
     )
@@ -40,10 +40,10 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Passwort erfolgreich zurück gesetzt.")
-        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> redirect(to: ~p"/users/log_in")
 
       {:error, changeset} ->
-        render(conn, "edit.html", changeset: changeset, page_title: "Passwort ändern")
+        render(conn, :edit, changeset: changeset, page_title: "Passwort ändern")
     end
   end
 
@@ -55,7 +55,7 @@ defmodule HierbautberlinWeb.UserResetPasswordController do
     else
       conn
       |> put_flash(:error, "Passwort-Link ist nicht korrekt oder veraltet.")
-      |> redirect(to: "/")
+      |> redirect(to: ~p"/map")
       |> halt()
     end
   end

@@ -3,7 +3,7 @@ defmodule HierbautberlinWeb.HealthcheckControllerTest do
 
   describe "GET /ping" do
     test "renders health page", %{conn: conn} do
-      conn = get(conn, Routes.healthcheck_path(conn, :index))
+      conn = get(conn, ~p"/ping")
       assert response(conn, 200) =~ "OK"
     end
   end

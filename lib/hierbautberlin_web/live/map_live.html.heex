@@ -1,0 +1,398 @@
+<Layouts.live flash={@flash}>
+  <%!-- The position is read when the hook mounts, after the LiveView connected --%>
+  <div
+    id="map-page"
+    phx-hook="InteractiveMap"
+    class="map--page"
+    data-position-lat={@map_position.lat}
+    data-position-lng={@map_position.lng}
+    data-position-zoom={@map_zoom}
+    data-tiles-url={@tiles_url}
+    data-tiles-min-zoom={@tiles_min_zoom}
+    data-hidden-sources={Jason.encode!(@hidden_sources)}
+  >
+    <div id="mapContainer" class="map--container">
+      <div id="map" class="map--container--tiles" phx-update="ignore"></div>
+
+      <%!-- Shown by the WelcomeBox hook until it was closed once. A card on the map,
+           full screen on phones (below the details of a shared link). --%>
+      <section
+        id="welcome-box"
+        class="map--welcome"
+        phx-hook="WelcomeBox"
+        phx-update="ignore"
+        aria-labelledby="welcome-box-title"
+        hidden
+      >
+        <button
+          type="button"
+          class="map--welcome--close"
+          data-welcome-close
+          aria-label="Willkommensbox schließen"
+        >
+          ×
+        </button>
+        <div class="map--welcome--content">
+          <img src={~p"/images/hierbautberlin.png"} alt="" class="map--welcome--logo" />
+          <h2 id="welcome-box-title" class="map--welcome--title">Willkommen bei Hier Baut Berlin</h2>
+          <p>
+            Was macht die Stadt in deinem Kiez? Hier Baut Berlin sammelt Bauprojekte,
+            Bebauungspläne, Beteiligungsverfahren und Meldungen der Stadt und zeigt sie auf der Karte.
+          </p>
+          <p>
+            Verschiebe die Karte oder suche eine Straße. In der Liste siehst du die wichtigsten Einträge
+            in der Nähe. Mit einem Konto bekommst du neue Einträge per E-Mail.
+          </p>
+          <button type="button" class="map--welcome--start" data-welcome-close>
+            Karte ansehen
+          </button>
+          <p class="map--welcome--small">
+            Gefördert vom <a href="https://prototypefund.de">Prototype Fund</a>
+            und dem <a href="https://www.bmbf.de">Bundesministerium für Bildung und Forschung</a>,
+            der Code ist <a href="https://github.com/hierbautberlin/website">Open Source</a>.
+          </p>
+        </div>
+      </section>
+
+      <%!-- Street search as ARIA combobox, keyboard handling in assets/js/searchCombobox.ts --%>
+      <div id="map-search" class="map--controls" phx-hook="SearchCombobox">
+        <div class="map--controls-top">
+          <form
+            id="map-search-form"
+            role="search"
+            phx-change="search"
+            phx-submit="search"
+            class="map--search-form"
+          >
+            <label for="search_field_query" class="visually-hidden">Straße suchen</label>
+            <.svg_image name="search" class="map--search-icon" />
+            <input
+              type="text"
+              id="search_field_query"
+              name="search_field[query]"
+              value={@search_text}
+              placeholder="Straße suchen"
+              phx-focus="show-results"
+              class="map--search-input"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="map-search-results"
+              aria-expanded={to_string(search_results_open?(assigns))}
+              autocomplete="off"
+              spellcheck="false"
+              autofocus
+              phx-debounce="200"
+            />
+          </form>
+
+          <button
+            id="map-location-button"
+            type="button"
+            class="map--location-button"
+            phx-update="ignore"
+          >
+            <.svg_image name="current-location" alt="Aktuelle Position finden" />
+          </button>
+        </div>
+
+        <div class="map--search-results" hidden={!search_results_open?(assigns)}>
+          <ul
+            id="map-search-results"
+            role="listbox"
+            aria-label="Gefundene Straßen"
+            class="map--search-results--list"
+            data-query={@search_text}
+          >
+            <li
+              :for={{street, index} <- Enum.with_index(@search_result || [])}
+              id={"map-search-result-#{index}"}
+              role="option"
+              aria-selected="false"
+              class="map--search-result"
+              data-lat={elem(street.geo_point.coordinates, 1)}
+              data-lng={elem(street.geo_point.coordinates, 0)}
+              data-name={street.name}
+            >
+              <span class="map--search-result--name">{street.name}</span>
+              <span class="map--search-result--area">{street_area(street)}</span>
+            </li>
+          </ul>
+          <p :if={@search_result == []} class="map--search-results--empty">
+            Keine Straße gefunden
+          </p>
+        </div>
+        <p class="visually-hidden" aria-live="polite">{search_status(@search_result)}</p>
+      </div>
+    </div>
+
+    <div id="map-list-wrapper" class="map--item-list-wrapper">
+      <%!-- Filters of the list: popups opened with JS commands (list_popup_toggle/1),
+           Escape is handled by assets/js/listPopup.ts --%>
+      <div class="map--list-toolbar" role="toolbar" aria-label="Liste">
+        <button
+          id="list-collapse-button"
+          type="button"
+          class="map--list-tool--button map--list-collapse"
+          aria-expanded="true"
+          aria-controls="map-list-body"
+          phx-click={list_collapse_toggle()}
+        >
+          <.svg_image name="chevron" class="map--list-tool--icon map--list-collapse--icon" />
+          <span>Liste</span>
+        </button>
+
+        <div
+          id="list-sources"
+          class="map--list-tool"
+          phx-hook="ListPopup"
+          phx-click-away={list_popup_close("list-sources")}
+          data-close={list_popup_close("list-sources") |> JS.focus(to: "#list-sources-button")}
+        >
+          <button
+            id="list-sources-button"
+            type="button"
+            class={["map--list-tool--button", @hidden_sources != [] && "map--list-tool--button-active"]}
+            aria-expanded="false"
+            aria-controls="list-sources-popup"
+            phx-click={list_popup_toggle("list-sources")}
+          >
+            <.svg_image name="filter" class="map--list-tool--icon" />
+            <span>Quellen</span>
+            <span :if={@hidden_sources != []} class="map--list-tool--count">
+              {length(@sources) - length(@hidden_sources)}/{length(@sources)}
+              <span class="visually-hidden">angezeigt</span>
+            </span>
+          </button>
+          <div id="list-sources-popup" class="map--list-popup">
+            <form id="list-sources-form" phx-change="filter-sources">
+              <fieldset>
+                <legend class="map--list-popup--title">Quellen anzeigen</legend>
+                <label :for={source <- @sources} class="map--list-popup--source">
+                  <input
+                    type="checkbox"
+                    name="sources[]"
+                    value={source.id}
+                    checked={source.id not in @hidden_sources}
+                  />
+                  <span class="map--list-popup--swatch" style={"background-color: #{source.color}"}>
+                  </span>
+                  {source.name}
+                </label>
+              </fieldset>
+              <button
+                :if={@hidden_sources != []}
+                type="button"
+                class="map--list-popup--action"
+                phx-click="show-all-sources"
+              >
+                Alle Quellen anzeigen
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div
+          id="list-search"
+          class="map--list-tool"
+          phx-hook="ListPopup"
+          phx-click-away={list_popup_close("list-search")}
+          data-close={list_popup_close("list-search") |> JS.focus(to: "#list-search-button")}
+        >
+          <button
+            id="list-search-button"
+            type="button"
+            class={["map--list-tool--button", @list_query && "map--list-tool--button-active"]}
+            aria-expanded="false"
+            aria-controls="list-search-popup"
+            phx-click={list_popup_toggle("list-search")}
+          >
+            <.svg_image name="search" class="map--list-tool--icon" />
+            <%= if @list_query do %>
+              <span class="visually-hidden">Suche in der Liste:</span>
+              <span class="map--list-tool--query">„{@list_query}“</span>
+            <% else %>
+              <span>In Liste suchen</span>
+            <% end %>
+          </button>
+          <button
+            :if={@list_query}
+            type="button"
+            class="map--list-tool--clear"
+            aria-label={"Suche „#{@list_query}“ entfernen"}
+            phx-click="clear-list-search"
+          >
+            ×
+          </button>
+          <div id="list-search-popup" class="map--list-popup">
+            <form
+              id="list-search-form"
+              phx-change="search-list"
+              phx-submit={
+                JS.push("search-list")
+                |> list_popup_close("list-search")
+                |> JS.focus(to: "#list-search-button")
+              }
+            >
+              <label for="list-search-query" class="map--list-popup--title">
+                Einträge in der Liste suchen
+              </label>
+              <input
+                type="text"
+                id="list-search-query"
+                name="list_search[query]"
+                value={@list_query}
+                placeholder="z. B. Spielplatz"
+                autocomplete="off"
+                aria-describedby="list-search-hint"
+                phx-debounce="300"
+              />
+              <p id="list-search-hint" class="map--list-popup--hint">
+                Sucht in Titel und Beschreibung, ab 3 Zeichen.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="map-list-body" class="map--item-list-body">
+        <ul
+          id="map-item-list"
+          class={["map--item-list", @map_items == [] && "map--item-list-without-items"]}
+        >
+          <li
+            :for={item <- @map_items}
+            :key={"#{item.type}-#{item.id}"}
+            id={"list-item-#{item.type}-#{item.id}"}
+            class="map--item-list--item"
+            data-item-type={item.type}
+            data-item-id={item.id}
+            phx-click="showDetails"
+            phx-value-item-type={item.type}
+            phx-value-item-id={item.id}
+          >
+            <h3
+              class="map--item-list--item--header"
+              style={"border-left: 5px solid #{item.source.color}"}
+            >
+              <a href={"/map?details=#{item.id}&detailsType=#{item.type}"} data-details-link>
+                {item.title}
+              </a>
+            </h3>
+            <%= cond do %>
+              <% !blank?(item.subtitle) -> %>
+                <p class="map--item-list--item--description">{item.subtitle}</p>
+              <% !blank?(item.description) -> %>
+                <p class="map--item-list--item--description">{item.description}</p>
+              <% true -> %>
+            <% end %>
+
+            <div>
+              <span :if={item.participation_open} class="label--participation">
+                Beteiligung möglich
+              </span>
+              <span :if={item.type == :geo_item && item.item.state} class="label--state">
+                {state_to_text(item.item)}
+              </span>
+              <span :if={item.type == :news_item} class="label--published">
+                {format_date(item.item.published_at)}
+              </span>
+              <span class="label--source">{item.source.name}</span>
+            </div>
+          </li>
+        </ul>
+        <div :if={@map_items == []} class="map--item-list--empty">
+          <%= cond do %>
+            <% @map_zoom < @tiles_min_zoom -> %>
+              Zoome näher heran, um Einträge zu sehen.
+            <% @hidden_sources != [] or @list_query -> %>
+              <p>Keine Einträge passen zu den Filtern.</p>
+              <button
+                :if={@list_query}
+                type="button"
+                class="map--list-popup--action"
+                phx-click="clear-list-search"
+              >
+                Suche entfernen
+              </button>
+              <button
+                :if={@hidden_sources != []}
+                type="button"
+                class="map--list-popup--action"
+                phx-click="show-all-sources"
+              >
+                Alle Quellen anzeigen
+              </button>
+            <% true -> %>
+              Hier gibt es keine Einträge.
+          <% end %>
+        </div>
+        <div class="map--item-list-footer">
+          <%= if @current_user do %>
+            <div class="map--item-list-footer--subscribe">
+              <form id="subscribe-form" phx-change="subscribe">
+                <label class="toggle toggle--small">
+                  <div class="toggle-inner">
+                    <input type="checkbox" name="subscribe" checked={@subscription != nil} />
+                    <div class="toggle-switch"></div>
+                  </div>
+                  <%!-- shorter on phones, fits in one line --%>
+                  <span class="map--item-list-footer--long">
+                    Sende E-Mail bei neuen Einträgen im {subscription_radius(@subscription)} Radius.
+                  </span>
+                  <span class="map--item-list-footer--short">
+                    E-Mail bei neuen Einträgen im {subscription_radius(@subscription)} Radius
+                  </span>
+                </label>
+              </form>
+            </div>
+          <% else %>
+            <div class="map--item-list-footer--register">
+              <%!-- shorter on phones, fits in one line --%>
+              <span class="map--item-list-footer--long">Willst du keine neuen Einträge verpassen?</span>
+              <span class="map--item-list-footer--short">Keine neuen Einträge verpassen?</span>
+              <a href="/users/register">Melde dich an!</a>
+            </div>
+          <% end %>
+          <div class="map--item-list-footer--impressum">
+            <.link href={@rss_link}>RSS</.link> |
+            <a href="https://github.com/hierbautberlin/website">GitHub</a> |
+            <a href="/impressum">Impressum</a> |
+            <a href="/datenschutz">Datenschutz</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <.modal
+      :if={@show_subscription != nil}
+      id="subscription-modal"
+      on_close="close_edit_subscription"
+    >
+      <.live_component
+        module={HierbautberlinWeb.Components.EditSubscriptionModal}
+        id={@show_subscription.id}
+        subscription={@show_subscription}
+        current_user={@current_user}
+      />
+    </.modal>
+
+    <.modal
+      :if={@detail_item != nil}
+      id="details-modal"
+      return_to={route_to_map(@socket, @map_position, @map_zoom)}
+    >
+      <%!-- text first (reading order), the map below or on the left on wide screens --%>
+      <div
+        id={"details-#{@detail_item_type}-#{@detail_item.id}"}
+        class="details"
+        phx-hook="DetailsScrollTop"
+      >
+        <div class="details--text">
+          <MapComponents.details item={@detail_item} />
+        </div>
+        <MapComponents.details_map item={@detail_item} shape={@detail_shape} />
+        <MapComponents.share_button item={@detail_item} />
+      </div>
+    </.modal>
+  </div>
+</Layouts.live>

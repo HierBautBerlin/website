@@ -1,0 +1,49 @@
+<Layouts.app flash={@flash}>
+  <p>
+    <.link href={~p"/users/settings"}>&lt; Zurück</.link>
+  </p>
+
+  <h2>Orte für Benachrichtigungen</h2>
+
+  <%= if Enum.empty?(@current_user.subscriptions) do %>
+    <p>
+      Gehe auf der Karte zu einem Ort, für den du Benachrichtigungen
+      erhalten willst und drücke auf den "Sende E-Mail bei neuen Einträgen" Knopf.
+      Die so hinzugefügten Orte kannst du dann hier nachträglich bearbeiten.
+    </p>
+  <% else %>
+    <div
+      :for={subscription <- @current_user.subscriptions}
+      class="map-details"
+      data-subscription-map
+      data-lat={elem(subscription.point.coordinates, 0)}
+      data-lng={elem(subscription.point.coordinates, 1)}
+      data-radius={subscription.radius}
+    >
+      <div class="map-details--map"></div>
+      <.form
+        :let={f}
+        for={Hierbautberlin.Accounts.change_subscription(subscription, @current_user)}
+        action={~p"/users/subscriptions/#{subscription.id}"}
+        method="put"
+        class="map-details--form"
+      >
+        <label>
+          Radius
+          <select name={f[:radius].name}>
+            {Phoenix.HTML.Form.options_for_select(radius_options(), f[:radius].value)}
+          </select>
+        </label>
+        <button type="submit" class="button button--small">Aktualisieren</button>
+        <.link
+          href={~p"/users/subscriptions/#{subscription.id}"}
+          method="delete"
+          data-confirm="Wirklich löschen?"
+          class="button button--danger"
+        >
+          Löschen
+        </.link>
+      </.form>
+    </div>
+  <% end %>
+</Layouts.app>

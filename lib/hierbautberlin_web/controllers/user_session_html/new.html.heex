@@ -1,0 +1,22 @@
+<Layouts.app flash={@flash}>
+  <h1>Anmelden</h1>
+
+  <.form :let={f} for={@conn.params["user"] || %{}} as={:user} action={~p"/users/log_in"}>
+    <div :if={@error_message} class="alert alert-danger">
+      <p>{@error_message}</p>
+    </div>
+
+    <.input field={f[:email]} type="email" label="Email" required />
+    <.input field={f[:password]} type="password" label="Passwort" value="" required />
+    <.input field={f[:remember_me]} type="checkbox" label="Für 60 Tage angemeldet bleiben" />
+
+    <div>
+      <button type="submit">Anmelden</button>
+    </div>
+  </.form>
+
+  <p>
+    <.link href={~p"/users/register"}>Registrieren</.link> |
+    <.link href={~p"/users/reset_password"}>Passwort vergessen?</.link>
+  </p>
+</Layouts.app>
