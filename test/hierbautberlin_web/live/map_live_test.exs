@@ -174,6 +174,27 @@ defmodule HierbautberlinWeb.MapLiveTest do
 
       assert has_element?(view, "#map-list-body #map-item-list")
       assert has_element?(view, "#map-list-body .map--item-list-footer")
+      refute has_element?(view, "#map-list-wrapper.map--item-list-wrapper-collapsed")
+    end
+
+    test "collapsing the list keeps it in the url", %{conn: conn} do
+      {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
+
+      render_click(view, "toggle_list")
+      assert_patch(view, ~p"/map?lat=52.51&lng=13.2679&zoom=15.0&list=collapsed")
+      assert has_element?(view, "#map-list-wrapper.map--item-list-wrapper-collapsed")
+      assert has_element?(view, "#list-collapse-button[aria-expanded='false']")
+
+      render_click(view, "toggle_list")
+      assert_patch(view, ~p"/map?lat=52.51&lng=13.2679&zoom=15.0")
+      assert has_element?(view, "#list-collapse-button[aria-expanded='true']")
+    end
+
+    test "renders the list collapsed with the url parameter", %{conn: conn} do
+      {:ok, view, html} = live(conn, ~p"/map?list=collapsed")
+
+      assert html =~ "map--item-list-wrapper-collapsed"
+      assert has_element?(view, "#list-collapse-button[aria-expanded='false']")
     end
   end
 

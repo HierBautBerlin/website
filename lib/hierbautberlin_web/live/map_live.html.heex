@@ -125,7 +125,10 @@
       </div>
     </div>
 
-    <div id="map-list-wrapper" class="map--item-list-wrapper">
+    <div
+      id="map-list-wrapper"
+      class={["map--item-list-wrapper", @list_collapsed && "map--item-list-wrapper-collapsed"]}
+    >
       <%!-- Filters of the list: popups opened with JS commands (list_popup_toggle/1),
            Escape is handled by assets/js/listPopup.ts --%>
       <div class="map--list-toolbar" role="toolbar" aria-label="Liste">
@@ -133,7 +136,7 @@
           id="list-collapse-button"
           type="button"
           class="map--list-tool--button map--list-collapse"
-          aria-expanded="true"
+          aria-expanded={to_string(!@list_collapsed)}
           aria-controls="map-list-body"
           phx-click={list_collapse_toggle()}
         >
@@ -380,7 +383,7 @@
     <.modal
       :if={@detail_item != nil}
       id="details-modal"
-      return_to={route_to_map(@socket, @map_position, @map_zoom)}
+      return_to={route_to_map(@socket, @map_position, @map_zoom, nil, nil, @list_collapsed)}
     >
       <%!-- text first (reading order), the map below or on the left on wide screens --%>
       <div

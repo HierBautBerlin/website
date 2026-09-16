@@ -3,7 +3,7 @@ defmodule HierbautberlinWeb.MapRouteHelpersTest do
 
   alias HierbautberlinWeb.MapRouteHelpers
 
-  describe "route_to_map/4" do
+  describe "route_to_map/6" do
     test "it returns a path with lat, lng, zoom and detail item", %{conn: conn} do
       assert MapRouteHelpers.route_to_map(
                conn,
@@ -18,6 +18,11 @@ defmodule HierbautberlinWeb.MapRouteHelpersTest do
     test "it returns a path with lat, lng, zoom and without detail item", %{conn: conn} do
       assert MapRouteHelpers.route_to_map(conn, %{lat: 12.12, lng: 12.12}, 10) ==
                "/map?lat=12.12&lng=12.12&zoom=10"
+    end
+
+    test "it keeps the collapsed list", %{conn: conn} do
+      assert MapRouteHelpers.route_to_map(conn, %{lat: 12.12, lng: 12.12}, 10, nil, nil, true) ==
+               "/map?lat=12.12&lng=12.12&zoom=10&list=collapsed"
     end
   end
 
