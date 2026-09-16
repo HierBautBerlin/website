@@ -177,6 +177,50 @@ defmodule HierbautberlinWeb.MapLiveTest do
     end
   end
 
+  describe "meta tags" do
+    test "a shared entry has its own description and canonical url", %{conn: conn, near: near} do
+      long_text = String.duplicate("Die Straße wird erneuert und bekommt neue Radwege. ", 10)
+
+      near
+      |> Ecto.Changeset.change(description: long_text)
+      |> Hierbautberlin.Repo.update!()
+
+      html =
+        conn
+        |> get(~p"/map?lat=52.51&lng=13.2679&zoom=15&details=#{near.id}&detailsType=geo_item")
+        |> html_response(200)
+
+      link = "http://localhost:4002/map?details=#{near.id}&amp;detailsType=geo_item"
+
+      assert html =~ ~s(<link rel="canonical" href="#{link}")
+      assert html =~ ~s(<meta property="og:url" content="#{link}")
+      assert html =~ ~s(<meta property="og:type" content="article")
+      assert html =~ ~s(<meta property="og:title" content="Hier Baut Berlin - Near Item")
+      assert html =~ ~s(<meta name="description" content="Die Straße wird erneuert und bekommt)
+      # the description is cut off after 200 characters, at a word boundary
+      refute html =~ ~s(content="#{long_text}")
+
+      assert [description] =
+               Regex.run(~r/<meta name="description" content="([^"]+)"/, html,
+                 capture: :all_but_first
+               )
+
+      assert String.length(description) <= 201
+      assert String.ends_with?(description, "…")
+    end
+
+    test "the map itself is canonical without the position", %{conn: conn} do
+      html = conn |> get(~p"/map?lat=52.51&lng=13.2679&zoom=15") |> html_response(200)
+
+      assert html =~ ~s(<link rel="canonical" href="http://localhost:4002/map")
+      refute html =~ ~s(<link rel="canonical" href="http://localhost:4002/map?)
+    end
+
+    test "the start page redirects permanently to the map", %{conn: conn} do
+      assert conn |> get(~p"/") |> redirected_to(301) == "/map"
+    end
+  end
+
   test "ignores unknown detail types", %{conn: conn} do
     {:ok, view, html} = live(conn, ~p"/map?details=1&detailsType=evil")
     refute html =~ "details-modal"
@@ -186,8 +230,8 @@ defmodule HierbautberlinWeb.MapLiveTest do
   end
 
   test "the start page is the map", %{conn: conn} do
-    assert redirected_to(get(conn, ~p"/")) == ~p"/map"
-    assert redirected_to(get(conn, "/?lat=52.4&lng=13.5")) == "/map?lat=52.4&lng=13.5"
+    assert redirected_to(get(conn, ~p"/"), 301) == ~p"/map"
+    assert redirected_to(get(conn, "/?lat=52.4&lng=13.5"), 301) == "/map?lat=52.4&lng=13.5"
   end
 
   test "updates the list when the map viewport changes", %{conn: conn} do
