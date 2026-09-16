@@ -1,0 +1,75 @@
+<Layouts.app flash={@flash}>
+  <h1>Über Hier Baut Berlin</h1>
+
+  <p>
+    Was macht die Stadt in deinem Kiez? Warum ist hier eine Baustelle, was wird nebenan gebaut,
+    und wo kannst du noch mitreden? Diese Informationen gibt es in Berlin zwar öffentlich, aber
+    verteilt über Amtsblätter, Pressemitteilungen, Beteiligungsportale und die Seiten der
+    einzelnen Verwaltungen. Hier Baut Berlin sammelt sie an einer Stelle und zeigt sie dort,
+    wo sie passieren: auf einer Karte.
+  </p>
+
+  <h2>Wie das funktioniert</h2>
+
+  <p>
+    Mehrmals täglich holen wir die neuen Veröffentlichungen unserer Quellen. Aus jedem Text
+    suchen wir die Orte heraus, die darin vorkommen – Straßen mit und ohne Hausnummer, Plätze,
+    Parks und Schulen – und setzen den Eintrag an die passende Stelle auf der Karte.
+    Bauprojekte, für die es genaue Geodaten gibt, zeichnen wir mit ihrer tatsächlichen Form
+    ein, also als Fläche oder Linie statt als Punkt.
+  </p>
+
+  <p>
+    Neben der Karte steht eine Liste der Einträge in der Umgebung, sortiert danach, wie
+    wichtig und wie aktuell sie sind. Du kannst sie nach Quellen filtern und durchsuchen.
+    Wenn du dich <.link href={~p"/users/register"}>registrierst</.link>, bekommst du eine
+    E-Mail, sobald es in einem Umkreis deiner Wahl etwas Neues gibt. Ohne Konto geht das auch
+    per RSS-Feed für den Ort, den du gerade auf der Karte siehst.
+  </p>
+
+  <p>
+    Wir zeigen jeweils einen Auszug und verlinken immer auf die Originalveröffentlichung.
+    Für den Inhalt sind die jeweiligen Herausgeber verantwortlich.
+  </p>
+
+  <h2>Wer dahinter steckt</h2>
+
+  <p>
+    Hier Baut Berlin wurde von <a href="https://bodo.tasche.me">Bodo Tasche</a> gebaut und wird
+    von ihm betrieben. Die Seite ist ein privates Projekt, kein Angebot der Stadt Berlin.
+    Der Quellcode ist offen und liegt auf
+    <a href="https://github.com/hierbautberlin/website">GitHub</a>. Die Entwicklung wurde bis
+    zum 30.09.2021 vom <a href="https://prototypefund.de">Prototype Fund</a> und dem
+    <a href="https://www.bmbf.de">Bundesministerium für Bildung und Forschung</a> gefördert.
+  </p>
+
+  <p>
+    Fragen, Fehler oder eine Quelle, die noch fehlt? Schreib an
+    <a href="mailto:mail@hierbautberlin.de">mail@hierbautberlin.de</a>.
+  </p>
+
+  <h2>Woher die Daten kommen</h2>
+
+  <p>Diese Quellen wertet Hier Baut Berlin aus:</p>
+
+  <ul>
+    <li :for={source <- @sources}>
+      <a href={source.url}>{source.name}</a>
+      <span :if={source.copyright && source.copyright != source.name}>
+        – {source.copyright}
+      </span>
+    </li>
+  </ul>
+
+  <p>
+    Die Straßen, Hausnummern und Parks, mit denen wir die Texte verorten, stammen aus
+    <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, die Schulen und die
+    Bezirksregionen aus der <a href="https://gdi.berlin.de">Geodateninfrastruktur Berlin</a>.
+    Die Karte selbst kommt von <a href="https://openfreemap.org">OpenFreeMap</a>.
+  </p>
+
+  <p>
+    Was wir dabei über deinen Besuch speichern, steht in der
+    <.link href={~p"/datenschutz"}>Datenschutzerklärung</.link>.
+  </p>
+</Layouts.app>

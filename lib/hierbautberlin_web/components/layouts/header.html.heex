@@ -33,6 +33,14 @@
           <li>
             <a href="/map" aria-current={if current_path?(assigns, "/map"), do: "page"}>Karte</a>
           </li>
+          <li>
+            <.link
+              href={~p"/ueber-uns"}
+              aria-current={if current_path?(assigns, "/ueber-uns"), do: "page"}
+            >
+              Über uns
+            </.link>
+          </li>
           <%= if @current_user do %>
             <li>
               <.link
@@ -71,6 +79,7 @@
             </a>
           </li>
           <li><a href="https://github.com/hierbautberlin/website">GitHub</a></li>
+          <li><a href="/ueber-uns">Über uns</a></li>
           <li><a href="/impressum">Impressum</a></li>
           <li><a href="/datenschutz">Datenschutz</a></li>
         </ul>
