@@ -74,6 +74,7 @@ defmodule HierbautberlinWeb.Router do
 
     get "/", RootController, :index
     get "/ueber-uns", AboutController, :index
+    get "/sitemap.xml", SitemapController, :index
     get "/impressum", ImpressumController, :index
     get "/datenschutz", PrivacyController, :index
     get "/ping", HealthcheckController, :index

@@ -4,3 +4,5 @@
 
 User-agent: MJ12bot
 Disallow: /map/
+
+Sitemap: https://hierbautberlin.de/sitemap.xml

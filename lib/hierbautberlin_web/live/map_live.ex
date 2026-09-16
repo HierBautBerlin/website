@@ -309,18 +309,56 @@ defmodule HierbautberlinWeb.MapLive do
       detail_item: nil,
       detail_item_type: nil,
       detail_shape: nil,
-      page_title: @default_title
+      page_title: @default_title,
+      # the position is not part of the canonical url, it would be a different
+      # one for every pixel the map was moved
+      canonical: url(~p"/map"),
+      meta_description: nil,
+      ogtags: %{}
     )
   end
 
   defp assign_detail(socket, {detail_item, detail_item_type}) do
+    link = MapRouteHelpers.share_link(detail_item)
+    description = description_of(detail_item)
+
     assign(socket,
       detail_item: detail_item,
       detail_item_type: detail_item_type,
       # lines, polygons and points for the small map in the details
       detail_shape: MapFeatures.details_shape(detail_item),
-      page_title: title_of(detail_item)
+      page_title: title_of(detail_item),
+      # a shared entry is its own page, no matter where the map was
+      canonical: link,
+      meta_description: description,
+      ogtags: %{"og:type" => "article", "og:url" => link}
     )
+  end
+
+  @description_length 200
+
+  # The first sentences of the entry for the description meta tag
+  defp description_of(item) do
+    [Map.get(item, :subtitle), Map.get(item, :description), Map.get(item, :content)]
+    |> Enum.reject(&blank?/1)
+    |> Enum.join(" ")
+    |> String.replace(~r/\s+/u, " ")
+    |> String.trim()
+    |> case do
+      "" -> nil
+      text -> truncate(text, @description_length)
+    end
+  end
+
+  defp truncate(text, length) do
+    if String.length(text) <= length do
+      text
+    else
+      text
+      |> String.slice(0, length)
+      |> String.replace(~r/\s+\S*$/u, "")
+      |> Kernel.<>("…")
+    end
   end
 
   defp get_detail_item(item_id, "geo_item") do

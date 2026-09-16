@@ -21,6 +21,40 @@ defmodule Hierbautberlin.GeoData do
     Repo.all(from source in Source, order_by: source.name)
   end
 
+  @doc """
+  The visible items for the sitemap, newest first: news since `since` and geo
+  items that started, ended or were updated since then (so running projects
+  stay in the sitemap). Returns `%{type: , id: , updated_at: }`.
+  """
+  def sitemap_items(since, limit \\ 20_000) do
+    geo_items =
+      from item in GeoItem,
+        where: item.hidden == false,
+        where:
+          fragment(
+            "greatest(?, ?, ?, ?) > ?",
+            item.date_start,
+            item.date_end,
+            item.date_updated,
+            item.inserted_at,
+            ^since
+          ),
+        select: %{type: "geo_item", id: item.id, updated_at: item.updated_at}
+
+    news_items =
+      from item in NewsItem,
+        where: item.hidden == false,
+        where: item.published_at > ^since,
+        select: %{type: "news_item", id: item.id, updated_at: item.updated_at}
+
+    query =
+      from item in subquery(union_all(geo_items, ^news_items)),
+        order_by: [desc: item.updated_at],
+        limit: ^limit
+
+    Repo.all(query)
+  end
+
   def get_source!(id) do
     Repo.get!(Source, id)
   end

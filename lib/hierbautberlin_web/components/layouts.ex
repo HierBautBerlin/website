@@ -44,34 +44,45 @@ defmodule HierbautberlinWeb.Layouts do
   def current_path?(_assigns, _path), do: false
 
   @doc """
-  The description meta tag of the page, pages can set `:meta_description`.
+  The description meta tag of the page, pages and LiveViews can set
+  `:meta_description`.
   """
-  def meta_description(conn) do
-    conn.assigns[:meta_description] || default_description()
+  def meta_description(assigns) do
+    assigns[:meta_description] || default_description()
   end
 
-  def ogtags(conn) do
-    description = default_description()
+  @doc """
+  The canonical URL of the page, without the parameters that only change what
+  the map shows. LiveViews and pages can set `:canonical`.
+  """
+  def canonical_url(assigns) do
+    assigns[:canonical] || base_url() <> assigns.conn.request_path
+  end
 
-    base_url = url(~p"/")
-    base_url = String.trim_trailing(base_url, "/")
-    image_url = base_url <> "/images/hierbautberlin.png"
+  @doc """
+  The Open Graph and Twitter tags, `:ogtags` overwrites single values.
+  """
+  def ogtags(assigns) do
+    image_url = base_url() <> "/images/hierbautberlin.png"
+    description = meta_description(assigns)
 
     Map.merge(
       %{
-        "og:title" => title(conn),
+        "og:title" => title(assigns),
         "og:description" => description,
         "og:type" => "website",
         "og:image" => image_url,
-        "og:url" => base_url <> conn.request_path,
+        "og:url" => canonical_url(assigns),
         "twitter:card" => "summary",
         "twitter:site" => "@hierbautberlin",
-        "twitter:description" => "Wir zeigen dir, was in Berlin passiert.",
+        "twitter:description" => description,
         "twitter:image" => String.replace(image_url, "http://", "https://")
       },
-      conn.assigns[:ogtags] || %{}
+      assigns[:ogtags] || %{}
     )
   end
+
+  defp base_url, do: ~p"/" |> url() |> String.trim_trailing("/")
 
   defp default_description do
     "Was macht die Stadt in meinem Kiez? Warum ist hier eine Baustelle? Was wird demnächst " <>
@@ -80,7 +91,7 @@ defmodule HierbautberlinWeb.Layouts do
       "Dann ist Hier Baut Berlin die Lösung."
   end
 
-  defp title(%{assigns: %{page_title: title}}) when not is_nil(title) do
+  defp title(%{page_title: title}) when not is_nil(title) do
     "Hier Baut Berlin - #{title}"
   end
 
