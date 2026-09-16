@@ -1,8 +1,9 @@
 <Layouts.app flash={@flash}>
   <h1>Passwort vergessen?</h1>
 
-  <.form :let={f} for={%{}} as={:user} action={~p"/users/reset_password"}>
+  <.form :let={f} for={@form} action={~p"/users/reset_password"}>
     <.input field={f[:email]} type="email" label="Email" required />
+    <HierbautberlinWeb.FormProtection.form_protection_fields />
 
     <div>
       <button type="submit">Sende Email zum Zurücksetzen des Passwortes</button>

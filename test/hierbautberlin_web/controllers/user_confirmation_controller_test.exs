@@ -3,6 +3,7 @@ defmodule HierbautberlinWeb.UserConfirmationControllerTest do
 
   alias Hierbautberlin.Accounts
   alias Hierbautberlin.Repo
+  alias HierbautberlinWeb.FormProtection
   import Hierbautberlin.AccountsFixtures
 
   setup do
@@ -21,9 +22,7 @@ defmodule HierbautberlinWeb.UserConfirmationControllerTest do
     @tag :capture_log
     test "sends a new confirmation token", %{conn: conn, user: user} do
       conn =
-        post(conn, ~p"/users/confirm", %{
-          "user" => %{"email" => user.email}
-        })
+        post(conn, ~p"/users/confirm", protected_form_params(%{"email" => user.email}))
 
       assert redirected_to(conn) == ~p"/map"
 
@@ -37,9 +36,7 @@ defmodule HierbautberlinWeb.UserConfirmationControllerTest do
       Repo.update!(Accounts.User.confirm_changeset(user))
 
       conn =
-        post(conn, ~p"/users/confirm", %{
-          "user" => %{"email" => user.email}
-        })
+        post(conn, ~p"/users/confirm", protected_form_params(%{"email" => user.email}))
 
       assert redirected_to(conn) == ~p"/map"
 
@@ -51,9 +48,7 @@ defmodule HierbautberlinWeb.UserConfirmationControllerTest do
 
     test "does not send confirmation token if email is invalid", %{conn: conn} do
       conn =
-        post(conn, ~p"/users/confirm", %{
-          "user" => %{"email" => "unknown@example.com"}
-        })
+        post(conn, ~p"/users/confirm", protected_form_params(%{"email" => "unknown@example.com"}))
 
       assert redirected_to(conn) == ~p"/map"
 
@@ -61,6 +56,43 @@ defmodule HierbautberlinWeb.UserConfirmationControllerTest do
                "Wenn deine Email-Adresse in unserem System ist"
 
       assert Repo.all(Accounts.UserToken) == []
+    end
+
+    @tag :capture_log
+    test "sends no email but the usual message when the honeypot is filled in", %{
+      conn: conn,
+      user: user
+    } do
+      params =
+        %{"email" => user.email} |> protected_form_params() |> Map.put("website", "http://spam")
+
+      conn = post(conn, ~p"/users/confirm", params)
+
+      assert redirected_to(conn) == ~p"/map"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
+               "Wenn deine Email-Adresse in unserem System"
+
+      refute Repo.get_by(Accounts.UserToken, user_id: user.id)
+    end
+
+    @tag :capture_log
+    test "shows the form again when it was submitted too fast or without a token", %{
+      conn: conn,
+      user: user
+    } do
+      fast =
+        %{"email" => user.email}
+        |> protected_form_params()
+        |> Map.put("form_token", FormProtection.token())
+
+      for params <- [fast, %{"user" => %{"email" => user.email}}] do
+        response = conn |> post(~p"/users/confirm", params) |> html_response(200)
+        assert response =~ "Bitte sende das Formular noch einmal ab."
+        assert response =~ user.email
+      end
+
+      refute Repo.get_by(Accounts.UserToken, user_id: user.id)
     end
   end
 

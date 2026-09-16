@@ -1,8 +1,9 @@
 <Layouts.app flash={@flash}>
   <h1>Bestätigungsanweisungen erneut senden</h1>
 
-  <.form :let={f} for={%{}} as={:user} action={~p"/users/confirm"}>
+  <.form :let={f} for={@form} action={~p"/users/confirm"}>
     <.input field={f[:email]} type="email" label="Email" required />
+    <HierbautberlinWeb.FormProtection.form_protection_fields />
 
     <div>
       <button type="submit">Bestätigungsanweisungen erneut senden</button>

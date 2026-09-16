@@ -67,4 +67,16 @@ defmodule HierbautberlinWeb.ConnCase do
     |> Phoenix.ConnTest.init_test_session(%{})
     |> Plug.Conn.put_session(:user_token, token)
   end
+
+  @doc """
+  Params of a form with `HierbautberlinWeb.FormProtection`, as if a person
+  loaded it a minute ago and left the honeypot empty.
+  """
+  def protected_form_params(user_params) do
+    %{
+      "user" => user_params,
+      "form_token" => HierbautberlinWeb.FormProtection.token(System.system_time(:second) - 60),
+      "website" => ""
+    }
+  end
 end

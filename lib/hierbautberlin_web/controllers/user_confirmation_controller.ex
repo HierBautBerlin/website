@@ -2,27 +2,28 @@ defmodule HierbautberlinWeb.UserConfirmationController do
   use HierbautberlinWeb, :controller
 
   alias Hierbautberlin.Accounts
+  alias HierbautberlinWeb.FormProtection
 
   def new(conn, _params) do
-    render(conn, :new, page_title: "Email-Bestätigung")
+    render_new(conn, %{})
   end
 
-  def create(conn, %{"user" => %{"email" => email}}) do
-    if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_user_confirmation_instructions(
-        user,
-        fn token -> url(~p"/users/confirm/#{token}") end
-      )
-    end
+  def create(conn, %{"user" => %{"email" => email} = user_params} = params) do
+    case FormProtection.check(params, "confirmation") do
+      :ok ->
+        deliver_confirmation_instructions(email)
+        impartial_response(conn)
 
-    # Regardless of the outcome, show an impartial success/error message.
-    conn
-    |> put_flash(
-      :info,
-      "Wenn deine Email-Adresse in unserem System ist und noch nicht bestätigt ist," <>
-        "wirst du eine Email von uns mit einer Anleitunb bekommen."
-    )
-    |> redirect(to: ~p"/map")
+      # looks like a success, so the bot doesn't learn anything
+      {:error, :honeypot} ->
+        impartial_response(conn)
+
+      # too fast or an old form: a person just submits the fresh form again
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "Bitte sende das Formular noch einmal ab.")
+        |> render_new(user_params)
+    end
   end
 
   # Do not log in the user after confirmation to avoid a
@@ -49,5 +50,32 @@ defmodule HierbautberlinWeb.UserConfirmationController do
             |> redirect(to: ~p"/map")
         end
     end
+  end
+
+  defp deliver_confirmation_instructions(email) do
+    if user = Accounts.get_user_by_email(email) do
+      Accounts.deliver_user_confirmation_instructions(
+        user,
+        fn token -> url(~p"/users/confirm/#{token}") end
+      )
+    end
+  end
+
+  defp render_new(conn, user_params) do
+    render(conn, :new,
+      form: Phoenix.Component.to_form(user_params, as: :user),
+      page_title: "Email-Bestätigung"
+    )
+  end
+
+  # Regardless of the outcome, show an impartial success/error message.
+  defp impartial_response(conn) do
+    conn
+    |> put_flash(
+      :info,
+      "Wenn deine Email-Adresse in unserem System ist und noch nicht bestätigt ist, " <>
+        "wirst du eine Email von uns mit einer Anleitung bekommen."
+    )
+    |> redirect(to: ~p"/map")
   end
 end

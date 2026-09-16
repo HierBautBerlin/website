@@ -153,6 +153,17 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: pretty;
 }
 
+// honeypot of HierbautberlinWeb.FormProtection: hidden from people and screen
+// readers, but still a normal field for bots (no display: none)
+.form-protection {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 // hidden visually, but read by screen readers
 .visually-hidden {
   position: absolute !important;
