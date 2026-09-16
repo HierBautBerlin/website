@@ -73,6 +73,7 @@ defmodule HierbautberlinWeb.Router do
     get "/users/confirm/:token", UserConfirmationController, :confirm
 
     get "/", RootController, :index
+    get "/ueber-uns", AboutController, :index
     get "/impressum", ImpressumController, :index
     get "/datenschutz", PrivacyController, :index
     get "/ping", HealthcheckController, :index

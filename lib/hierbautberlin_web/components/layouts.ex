@@ -43,13 +43,15 @@ defmodule HierbautberlinWeb.Layouts do
 
   def current_path?(_assigns, _path), do: false
 
+  @doc """
+  The description meta tag of the page, pages can set `:meta_description`.
+  """
+  def meta_description(conn) do
+    conn.assigns[:meta_description] || default_description()
+  end
+
   def ogtags(conn) do
-    description = """
-    Was macht die Stadt in meinem Kiez? Warum ist hier eine Baustelle? Was wird demnächst gebaut?
-    Dich interessiert, was in deinem Umfeld passiert? Wo du dich beteiligen kannst? Eventuell
-    sogar mit einer E-Mail-Benachrichtigung, sobald etwas Neues gefunden wird? Dann ist
-    Hier Baut Berlin die Lösung.
-    """
+    description = default_description()
 
     base_url = url(~p"/")
     base_url = String.trim_trailing(base_url, "/")
@@ -58,7 +60,7 @@ defmodule HierbautberlinWeb.Layouts do
     Map.merge(
       %{
         "og:title" => title(conn),
-        "og:description" => String.replace(description, "\n", " "),
+        "og:description" => description,
         "og:type" => "website",
         "og:image" => image_url,
         "og:url" => base_url <> conn.request_path,
@@ -69,6 +71,13 @@ defmodule HierbautberlinWeb.Layouts do
       },
       conn.assigns[:ogtags] || %{}
     )
+  end
+
+  defp default_description do
+    "Was macht die Stadt in meinem Kiez? Warum ist hier eine Baustelle? Was wird demnächst " <>
+      "gebaut? Dich interessiert, was in deinem Umfeld passiert? Wo du dich beteiligen kannst? " <>
+      "Eventuell sogar mit einer E-Mail-Benachrichtigung, sobald etwas Neues gefunden wird? " <>
+      "Dann ist Hier Baut Berlin die Lösung."
   end
 
   defp title(%{assigns: %{page_title: title}}) when not is_nil(title) do
