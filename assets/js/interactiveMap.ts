@@ -124,6 +124,10 @@ export default class InteractiveMap extends ViewHook {
     this.map?.remove();
   }
 
+  listCollapsed(): boolean {
+    return this.el.querySelector('#list-collapse-button')?.getAttribute('aria-expanded') === 'false';
+  }
+
   onResize() {
     this.updatePadding();
   }
@@ -300,7 +304,7 @@ export default class InteractiveMap extends ViewHook {
 
     if (window.innerWidth <= 800) {
       // aria-expanded is set right away, LiveView adds the class in the next frame
-      const collapsed = this.el.querySelector('#list-collapse-button')?.getAttribute('aria-expanded') === 'false';
+      const collapsed = this.listCollapsed();
       const toolbar = this.el.querySelector<HTMLElement>('.map--list-toolbar');
       const bottom = collapsed && toolbar
         ? toolbar.offsetHeight + COLLAPSED_LIST_MARGIN

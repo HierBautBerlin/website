@@ -30,7 +30,7 @@ defmodule HierbautberlinWeb.MapLive do
   @area %{south: 52.0, north: 53.0, west: 12.5, east: 14.5}
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(params, session, socket) do
     current_user =
       if session["user_token"] do
         Accounts.get_user_by_session_token(session["user_token"])
@@ -58,6 +58,8 @@ defmodule HierbautberlinWeb.MapLive do
         search_result_visible: false,
         map_items: [],
         stored_position: stored_position(socket),
+        # phones only, in the url so the page is rendered with the list collapsed
+        list_collapsed: params["list"] == "collapsed",
         # filters of the list, the hidden sources also apply to the map
         sources: GeoData.list_sources(),
         hidden_sources: [],
@@ -108,6 +110,13 @@ defmodule HierbautberlinWeb.MapLive do
       |> assign(:search_result_visible, false)
 
     {:reply, %{}, push_patch(socket, to: route_from_socket(socket), replace: true)}
+  end
+
+  # The list was already collapsed or expanded by list_collapse_toggle/0, this
+  # only keeps the state for the url and the next render
+  def handle_event("toggle_list", _params, socket) do
+    socket = update(socket, :list_collapsed, &(!&1))
+    {:noreply, push_patch(socket, to: route_from_socket(socket), replace: true)}
   end
 
   def handle_event("showDetails", %{"item-id" => item_id, "item-type" => item_type}, socket)
@@ -244,6 +253,7 @@ defmodule HierbautberlinWeb.MapLive do
     |> JS.toggle_class("map--item-list-wrapper-collapsed", to: "#map-list-wrapper")
     |> JS.toggle_attribute({"aria-expanded", "true", "false"}, to: "#list-collapse-button")
     |> JS.dispatch("hierbautberlin:list-toggled", to: "#map-page")
+    |> JS.push("toggle_list")
   end
 
   def list_popup_close(js \\ %JS{}, id) do
@@ -409,7 +419,8 @@ defmodule HierbautberlinWeb.MapLive do
       socket.assigns.map_position,
       socket.assigns.map_zoom,
       socket.assigns.detail_item,
-      socket.assigns.detail_item_type
+      socket.assigns.detail_item_type,
+      socket.assigns.list_collapsed
     )
   end
 

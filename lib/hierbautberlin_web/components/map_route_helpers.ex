@@ -9,7 +9,8 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
         map_position,
         map_zoom,
         detail_item \\ nil,
-        detail_item_type \\ nil
+        detail_item_type \\ nil,
+        list_collapsed \\ false
       ) do
     route_params = [
       lat: to_string(map_position.lat),
@@ -27,6 +28,8 @@ defmodule HierbautberlinWeb.MapRouteHelpers do
       else
         route_params
       end
+
+    route_params = if list_collapsed, do: route_params ++ [list: "collapsed"], else: route_params
 
     ~p"/map?#{route_params}"
   end
