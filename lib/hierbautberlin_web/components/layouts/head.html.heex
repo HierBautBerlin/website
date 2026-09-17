@@ -6,6 +6,12 @@
   <.live_title prefix={if assigns[:page_title], do: "Hier Baut Berlin - "}>
     {assigns[:page_title] || "Hier Baut Berlin"}
   </.live_title>
+  <link rel="icon" href={~p"/favicon.ico"} sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="32x32" href={~p"/favicon-32x32.png"} />
+  <link rel="icon" type="image/png" sizes="16x16" href={~p"/favicon-16x16.png"} />
+  <link rel="apple-touch-icon" sizes="180x180" href={~p"/apple-touch-icon.png"} />
+  <link rel="manifest" href={~p"/site.webmanifest"} />
+  <meta name="theme-color" content="#ffffff" />
   <link phx-track-static rel="stylesheet" href={~p"/css/app.css"} />
   <script defer phx-track-static type="text/javascript" src={~p"/js/app.bundle.js"}>
   </script>

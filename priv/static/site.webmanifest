@@ -1,6 +1,8 @@
 {
   "name": "Hier Baut Berlin",
-  "short_name": "hierbautberlin",
+  "short_name": "Hier Baut Berlin",
+  "start_url": "/",
+  "lang": "de",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

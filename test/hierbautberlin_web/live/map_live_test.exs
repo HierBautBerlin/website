@@ -237,6 +237,15 @@ defmodule HierbautberlinWeb.MapLiveTest do
       refute html =~ ~s(<link rel="canonical" href="http://localhost:4002/map?)
     end
 
+    test "links the favicons and the web manifest", %{conn: conn} do
+      html = conn |> get(~p"/map") |> html_response(200)
+
+      assert html =~ ~s(<link rel="icon" href="/favicon.ico" sizes="48x48")
+      assert html =~ ~s(<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png")
+      assert html =~ ~s(<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png")
+      assert html =~ ~s(<link rel="manifest" href="/site.webmanifest")
+    end
+
     test "the start page redirects permanently to the map", %{conn: conn} do
       assert conn |> get(~p"/") |> redirected_to(301) == "/map"
     end
