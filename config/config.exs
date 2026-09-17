@@ -47,7 +47,7 @@ config :esbuild,
   ],
   pdf_worker: [
     args:
-      ~w(node_modules/pdfjs-dist/build/pdf.worker.mjs --bundle --target=es2022 --format=esm --outdir=../priv/static/js --entry-names=pdf.worker.bundle),
+      ~w(node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs --bundle --target=es2022 --format=esm --outdir=../priv/static/js --entry-names=pdf.worker.bundle),
     cd: Path.expand("../assets", __DIR__)
   ]
 

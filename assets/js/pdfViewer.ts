@@ -3,8 +3,8 @@
 // Zoom with the buttons, the keyboard, pinching on touch screens, double tap or
 // ctrl + mouse wheel (pinching on a trackpad).
 import './pdfjsGlobal';
-import { TouchManager, getDocument } from 'pdfjs-dist';
-import { EventBus, PDFLinkService, PDFViewer } from 'pdfjs-dist/web/pdf_viewer.mjs';
+import { TouchManager, getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { EventBus, PDFLinkService, PDFViewer } from 'pdfjs-dist/legacy/web/pdf_viewer.mjs';
 
 const MIN_SCALE = 0.25;
 const MAX_SCALE = 5;
