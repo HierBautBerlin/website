@@ -47,18 +47,10 @@ footer {
     }
   }
 
-  .footer--right {
-    p {
-      margin-left: 0.5rem;
-    }
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-  }
-
+  // the links (GitHub, Über uns, Impressum, Datenschutz) are in the menu
+  // (header.html.heex) on phones
+  .footer--right,
   .footer--small {
-    .footer--right {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
+    display: none;
   }
 }

@@ -128,11 +128,14 @@ defmodule Hierbautberlin.MixProject do
         "sass.install --if-missing",
         "cmd npm install --prefix assets"
       ],
+      # decoders (JBIG2, JPEG 2000) and fonts PDF.js loads when a PDF needs them
+      "assets.pdfjs": &copy_pdfjs_files/1,
       "assets.build": [
         "esbuild app",
         "esbuild map_worker",
         "esbuild pdf_viewer",
         "esbuild pdf_worker",
+        "assets.pdfjs",
         "sass default",
         "sass pdf_viewer"
       ],
@@ -141,10 +144,24 @@ defmodule Hierbautberlin.MixProject do
         "esbuild map_worker --minify",
         "esbuild pdf_viewer --minify",
         "esbuild pdf_worker --minify",
+        "assets.pdfjs",
         "sass default --no-source-map --style=compressed",
         "sass pdf_viewer --no-source-map --style=compressed",
         "phx.digest"
       ]
     ]
+  end
+
+  # The files PDF.js loads at runtime (assets/js/pdfViewer.ts)
+  defp copy_pdfjs_files(_args) do
+    File.rm_rf!("priv/static/pdfjs")
+    File.mkdir_p!("priv/static/pdfjs")
+
+    for dir <- ~w(wasm standard_fonts) do
+      File.cp_r!(
+        Path.join("assets/node_modules/pdfjs-dist", dir),
+        Path.join("priv/static/pdfjs", dir)
+      )
+    end
   end
 end

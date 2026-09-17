@@ -2,28 +2,113 @@
 <script defer phx-track-static type="module" src={~p"/js/pdf.viewer.bundle.js"}>
 </script>
 
-<div class="view-pdf">
-  <div class="view-pdf--topbar">
-    <h1 class="view-pdf--name">{@file.title}</h1>
-    <div class="view-pdf--buttons">
-      <button id="pdf-prev" aria-label="Vorherige Seite">←</button>
-      <div class="view-pdf--number" id="pdf-number"></div>
-      <button id="pdf-next" aria-label="Nächste Seite">→</button>
-      <div class="view-pdf--spacer"></div>
-      <button id="pdf-zoom-in" aria-label="Vergrößern">+</button>
-      <button id="pdf-zoom-out" aria-label="Verkleinern">−</button>
-      <div class="view-pdf--spacer"></div>
-      <button id="pdf-download" aria-label="PDF laden">⤓</button>
+<%!-- The viewer is built by assets/js/pdfViewer.ts (PDF.js). Without JavaScript
+     or when the PDF can't be shown, the download link still works. --%>
+<div class="pdf" id="pdf" data-pdf-path={@url}>
+  <%!-- no <header>, the site styles every header element as the page header --%>
+  <div class="pdf--bar">
+    <div class="pdf--titles">
+      <h1 class="pdf--title">{@file.title}</h1>
+      <p :if={@entry_title} class="pdf--entry">{@entry_title}</p>
     </div>
+    <a class="pdf--button pdf--download" href={@url} download={@download_name}>
+      <.svg_image name="download" class="pdf--icon" />
+      <span class="pdf--download-label">PDF herunterladen</span>
+    </a>
   </div>
 
-  <div class="view-pdf--wrapper">
-    <canvas
-      class="view-pdf--canvas"
-      id="pdf-canvas"
-      data-pdf-path={Hierbautberlin.FileStorage.url_for_file(@file)}
+  <div class="pdf--stage">
+    <div
+      id="pdf-container"
+      class="pdf--container"
+      tabindex="0"
+      role="region"
+      aria-label={"Dokument: #{@file.title}"}
+      aria-describedby="pdf-keys"
     >
-    </canvas>
-    <div class="view-pdf--text" id="pdf-text"></div>
+      <div id="pdf-viewer" class="pdfViewer"></div>
+    </div>
+
+    <div id="pdf-loading" class="pdf--message" role="status">
+      <span class="pdf--spinner" aria-hidden="true"></span>
+      <span id="pdf-loading-text">PDF wird geladen …</span>
+    </div>
+
+    <div id="pdf-error" class="pdf--message pdf--message-error" role="alert" hidden>
+      <p>Das PDF konnte leider nicht angezeigt werden.</p>
+      <a class="pdf--button" href={@url} download={@download_name}>
+        <.svg_image name="download" class="pdf--icon" /> PDF herunterladen
+      </a>
+    </div>
+
+    <div id="pdf-controls" class="pdf--controls" role="group" aria-label="Seiten und Zoom" hidden>
+      <button
+        id="pdf-prev"
+        type="button"
+        class="pdf--button pdf--icon-button"
+        aria-label="Vorherige Seite"
+        title="Vorherige Seite"
+      >
+        <.svg_image name="chevron" class="pdf--icon pdf--icon-prev" />
+      </button>
+      <label for="pdf-page" class="visually-hidden">Seite</label>
+      <input
+        id="pdf-page"
+        class="pdf--page-input"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        enterkeyhint="go"
+        aria-describedby="pdf-page-count"
+      />
+      <span id="pdf-page-count" class="pdf--page-count"></span>
+      <button
+        id="pdf-next"
+        type="button"
+        class="pdf--button pdf--icon-button"
+        aria-label="Nächste Seite"
+        title="Nächste Seite"
+      >
+        <.svg_image name="chevron" class="pdf--icon pdf--icon-next" />
+      </button>
+
+      <span class="pdf--divider" aria-hidden="true"></span>
+
+      <button
+        id="pdf-zoom-out"
+        type="button"
+        class="pdf--button pdf--icon-button"
+        aria-label="Verkleinern"
+        title="Verkleinern (−)"
+        aria-keyshortcuts="-"
+      >
+        <.svg_image name="minus" class="pdf--icon" />
+      </button>
+      <button
+        id="pdf-zoom-reset"
+        type="button"
+        class="pdf--button pdf--zoom"
+        title="Größe zurücksetzen (0)"
+        aria-keyshortcuts="0"
+      >
+        100 %
+      </button>
+      <button
+        id="pdf-zoom-in"
+        type="button"
+        class="pdf--button pdf--icon-button"
+        aria-label="Vergrößern"
+        title="Vergrößern (+)"
+        aria-keyshortcuts="+"
+      >
+        <.svg_image name="plus" class="pdf--icon" />
+      </button>
+    </div>
+
+    <p id="pdf-keys" class="visually-hidden">
+      Mit Plus und Minus vergrößern und verkleinern, mit 0 die Größe zurücksetzen,
+      mit Pfeil links und rechts blättern.
+    </p>
+    <p id="pdf-announcer" class="visually-hidden" aria-live="polite"></p>
   </div>
 </div>

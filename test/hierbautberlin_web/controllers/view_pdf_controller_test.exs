@@ -18,10 +18,18 @@ defmodule HierbautberlinWeb.ViewPDFControllerTest do
           ~p"/view_pdf/this_file_exists.pdf?#{%{page: 1, title: "Hello Title!"}}"
         )
 
-      assert response(conn, 200) =~ "Hello Title!"
+      html = html_response(conn, 200)
 
-      assert response(conn, 200) =~
-               "/filestorage/A154C2456073E64CBE2C/C5F68BBA3DB6F113B2E6/77EEBF27B6FBB35E8FC7/018B/this_file_exists.pdf"
+      path =
+        "/filestorage/A154C2456073E64CBE2C/C5F68BBA3DB6F113B2E6/77EEBF27B6FBB35E8FC7/018B/this_file_exists.pdf"
+
+      assert html =~ ~s(<h1 class="pdf--title">Hello Title!</h1>)
+      assert html =~ ~s(data-pdf-path="#{path}")
+      # works without JavaScript
+      assert html =~ ~s(href="#{path}" download="this_file_exists.pdf")
+      # the entry that links to the page
+      assert html =~ ~s(<p class="pdf--entry">Hello Title!</p>)
+      assert html =~ ~s(<label for="pdf-page" class="visually-hidden">Seite</label>)
     end
 
     test "renders the first page without page and title", %{conn: conn} do
@@ -32,7 +40,9 @@ defmodule HierbautberlinWeb.ViewPDFControllerTest do
         "No Page"
       )
 
-      assert conn |> get(~p"/view_pdf/amtsblatt/no_page.pdf") |> html_response(200) =~ "No Page"
+      html = conn |> get(~p"/view_pdf/amtsblatt/no_page.pdf") |> html_response(200)
+      assert html =~ "No Page"
+      refute html =~ "pdf--entry"
     end
 
     test "redirects old links with the timestamp of berlin.de", %{conn: conn} do
