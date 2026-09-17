@@ -662,6 +662,11 @@ $list-toolbar-height: 4.9rem;
     padding: 0.8rem 1.2rem;
   }
 
+  // RSS and the other links are in the menu on phones
+  .map--item-list-footer--impressum {
+    display: none;
+  }
+
   .map--item-list-footer--register,
   .map--item-list-footer--subscribe {
     white-space: nowrap;
