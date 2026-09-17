@@ -10,4 +10,10 @@ defmodule HierbautberlinWeb.RootController do
     |> put_status(:moved_permanently)
     |> redirect(to: path)
   end
+
+  # The statistics (Plausible, see the root layout) count entries as
+  # /map/eintrag/:type/:id, so these paths open the entry on the map
+  def entry(conn, %{"type" => type, "id" => id}) do
+    redirect(conn, to: ~p"/map?#{[details: id, detailsType: type]}")
+  end
 end

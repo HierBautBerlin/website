@@ -249,6 +249,14 @@ defmodule HierbautberlinWeb.MapLiveTest do
     test "the start page redirects permanently to the map", %{conn: conn} do
       assert conn |> get(~p"/") |> redirected_to(301) == "/map"
     end
+
+    test "the paths of entries in the statistics open the entry", %{conn: conn, near: near} do
+      path = conn |> get("/map/eintrag/geo_item/#{near.id}") |> redirected_to(302)
+      assert path == "/map?details=#{near.id}&detailsType=geo_item"
+
+      {:ok, _view, html} = live(conn, path)
+      assert html =~ "Near Item"
+    end
   end
 
   test "ignores unknown detail types", %{conn: conn} do
