@@ -15,7 +15,8 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
     GeoPlace,
     GeoStreet,
     GeoStreetNumber,
-    NewsItem
+    NewsItem,
+    Relevance
   }
 
   alias Hierbautberlin.Repo
@@ -220,8 +221,12 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
               AND relevance_time_factor(relevant_from, relevant_until, relevance_half_life) > 0.5
             UNION ALL
             SELECT 'news_item', id FROM news_items
-            WHERE importance >= 2
-              AND relevance_time_factor(relevant_from, relevant_until, relevance_half_life) > 0.5
+            WHERE (importance >= 2
+                AND relevance_time_factor(relevant_from, relevant_until, relevance_half_life) > 0.5)
+              OR (importance * #{Relevance.fresh_boost()} >= 2
+                AND #{Relevance.fresh_news_sql("published_at", "source_id")}
+                AND relevance_time_factor(relevant_from, relevant_until, relevance_half_life)
+                  * #{Relevance.fresh_boost()} > 0.5)
           ) i
           CROSS JOIN center
           CROSS JOIN LATERAL (
@@ -244,6 +249,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
                        SELECT count(*) FROM map_features f
                        WHERE f.item_type = 'news_item' AND f.item_id = items.item_id
                      ) > 30 THEN 0.3 ELSE 1 END
+                   * CASE WHEN r.fresh THEN #{Relevance.fresh_boost()} ELSE 1 END
                    * relevance_time_factor(r.relevant_from, r.relevant_until, r.relevance_half_life)
                    / (1 + power(items.distance / center.radius, 2)) AS score
           FROM items
@@ -271,14 +277,16 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
 
   defp like_pattern(_query), do: nil
 
-  # Joins the relevance columns of the geo or news item as `r`
+  # Joins the relevance columns of the geo or news item as `r`, `fresh` is true
+  # for press releases of the last weeks
   defp relevance_join(table) do
     """
     CROSS JOIN LATERAL (
-      SELECT importance, relevant_from, relevant_until, relevance_half_life
+      SELECT importance, relevant_from, relevant_until, relevance_half_life, false AS fresh
       FROM geo_items WHERE #{table}.item_type = 'geo_item' AND id = #{table}.item_id
       UNION ALL
-      SELECT importance, relevant_from, relevant_until, relevance_half_life
+      SELECT importance, relevant_from, relevant_until, relevance_half_life,
+             #{Relevance.fresh_news_sql("published_at", "source_id")}
       FROM news_items WHERE #{table}.item_type = 'news_item' AND id = #{table}.item_id
     ) r
     """
