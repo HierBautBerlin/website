@@ -84,6 +84,7 @@ defmodule HierbautberlinWeb.Router do
 
     get "/feed/:lng/:lat", RSSController, :show
 
+    get "/map/eintrag/:type/:id", RootController, :entry
     live "/map", MapLive, :index
   end
 
