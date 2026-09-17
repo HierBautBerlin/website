@@ -142,6 +142,50 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
       assert titles.(query: "Four", hidden_sources: [four.source_id]) == []
     end
 
+    test "fresh press releases are on top for six weeks" do
+      presse = insert(:source, short_name: "BERLIN_PRESSE")
+      other = insert(:source)
+
+      insert_news = fn title, text, source, days ->
+        published_at = days_ago(days)
+
+        insert(
+          :news_item,
+          Map.merge(
+            %{title: title, source: source, published_at: published_at},
+            Relevance.for_news_item(title, text, published_at, source.short_name)
+          )
+        )
+      end
+
+      building = "Baubeginn für den Spielplatz"
+      insert_news.("Press release, three weeks old", building, presse, 21)
+      insert_news.("Press release, seven weeks old", building, presse, 49)
+      insert_news.("Other news, three weeks old", building, other, 21)
+
+      party =
+        "Das Bezirksamt lädt zum Fest am #{Calendar.strftime(days_ago(10), "%d.%m.%Y")} ein."
+
+      insert_news.("Press release, party is over", party, presse, 21)
+      MapFeatures.refresh()
+
+      titles =
+        MapFeatures.bounds_around(@center, 15)
+        |> MapFeatures.list_items(@center)
+        |> Enum.map(& &1.title)
+
+      # above "Seven - Newest Item" (current participation), the others are
+      # not current anymore
+      assert ["Press release, three weeks old", "Seven - Newest Item" | rest] = titles
+
+      assert Enum.find_index(rest, &(&1 == "Other news, three weeks old")) <
+               Enum.find_index(rest, &(&1 == "Press release, seven weeks old"))
+
+      # the boost doesn't bring back events that are over
+      assert Enum.find_index(rest, &(&1 == "Press release, party is over")) >
+               Enum.find_index(rest, &(&1 == "This is a nice title"))
+    end
+
     test "limits the number of items" do
       items = MapFeatures.list_items(MapFeatures.bounds_around(@center, 15), @center, limit: 3)
       assert 3 == length(items)

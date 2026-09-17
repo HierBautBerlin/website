@@ -295,12 +295,18 @@ defmodule Hierbautberlin.GeoData do
     result = analyze_text(full_text, %{districts: districts})
 
     item = get_news_item_with_external_id(attrs[:source_id], attrs[:external_id]) || %NewsItem{}
+    source = attrs[:source_id] && get_source!(attrs[:source_id])
 
     attrs =
       attrs
       |> Map.merge(%{full_text: full_text, districts: districts})
       |> Map.merge(
-        Relevance.for_news_item(attrs[:title], full_text || attrs[:content], attrs[:published_at])
+        Relevance.for_news_item(
+          attrs[:title],
+          full_text || attrs[:content],
+          attrs[:published_at],
+          source && source.short_name
+        )
       )
 
     item

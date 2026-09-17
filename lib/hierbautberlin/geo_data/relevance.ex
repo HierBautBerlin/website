@@ -18,6 +18,12 @@ defmodule Hierbautberlin.GeoData.Relevance do
   `relevance_time_factor` SQL function):
 
       importance * time factor * distance factor
+
+  Press releases usually matter only for a short time, but then a lot: without a
+  date in the text they are relevant for six weeks (instead of two), and during
+  these six weeks their score is multiplied by four (`fresh_news_sql/2`), so they
+  are above ongoing participations. Events that are over still lose their
+  relevance, the multiplier doesn't change the time factor.
   """
 
   import Ecto.Query, warn: false
@@ -29,6 +35,11 @@ defmodule Hierbautberlin.GeoData.Relevance do
   @notable 1.5
   @normal 1.0
   @minor 0.3
+
+  # Press releases high up for six weeks, see the moduledoc
+  @fresh_sources ~w(BERLIN_PRESSE)
+  @fresh_days 42
+  @fresh_boost 4.0
 
   # How long a news item without any date in its text stays relevant
   @news_days 14
@@ -49,14 +60,37 @@ defmodule Hierbautberlin.GeoData.Relevance do
   @minor_titles ~r/^(Grundstücksnummerierung|Festsetzung(\/Aufhebung)? (einer|von) Grundstücksnummer|Ungültigkeitserklärung|Entstehung einer Stiftung|Aufhebung einer Stiftung|Rechtsgeschäftliche Vertretung|Jahresabschluss|Eingruppierung|Öffentliche Versteigerung|Verwaltungsvorschrift|Ausführungsvorschrift|Rundschreiben|Gemeinsamer Tarif|Geschäftsstelle|Zuständige Stelle|Bezirksämter$|Gebührenordnung|Beitragsordnung|Wahlordnung|Ersatz|Bekanntmachung über (Veränderungen bei den Mitgliedern|die Wahl zum Beirat)|Berufung von Mitgliedern)/u
 
   @doc """
-  Relevance of a news item, based on its title, text and publication date.
+  SQL condition: the news item with these columns is a fresh press release.
   """
-  def for_news_item(title, text, %DateTime{} = published_at) do
+  def fresh_news_sql(published_at, source_id) do
+    sources = Enum.map_join(@fresh_sources, ", ", &"'#{&1}'")
+
+    """
+    (#{published_at} > now() AT TIME ZONE 'UTC' - interval '#{@fresh_days} days'
+     AND #{source_id} IN (SELECT id FROM sources WHERE short_name IN (#{sources})))
+    """
+  end
+
+  @doc """
+  Factor for the score of fresh press releases.
+  """
+  def fresh_boost, do: @fresh_boost
+
+  @doc """
+  Relevance of a news item, based on its title, text, publication date and the
+  short name of its source.
+  """
+  def for_news_item(title, text, published_at, source \\ nil)
+
+  def for_news_item(title, text, %DateTime{} = published_at, source) do
     title = title || ""
     text = Enum.join([title, text || ""], "\n")
     deadline = latest_date(text, published_at)
 
     {importance, default_days, half_life} = classify(title, text, deadline)
+
+    default_days =
+      if source in @fresh_sources, do: max(default_days, @fresh_days), else: default_days
 
     %{
       importance: importance,
@@ -66,7 +100,7 @@ defmodule Hierbautberlin.GeoData.Relevance do
     }
   end
 
-  def for_news_item(_title, _text, nil) do
+  def for_news_item(_title, _text, nil, _source) do
     %{importance: @normal, relevant_from: nil, relevant_until: nil, relevance_half_life: 30}
   end
 
@@ -90,11 +124,13 @@ defmodule Hierbautberlin.GeoData.Relevance do
   """
   def update_news_items do
     from(n in NewsItem,
+      join: s in assoc(n, :source),
       select: %{
         id: n.id,
         title: n.title,
         text: coalesce(n.full_text, n.content),
-        published_at: n.published_at
+        published_at: n.published_at,
+        source: s.short_name
       }
     )
     |> Repo.all(timeout: :infinity)
@@ -106,7 +142,7 @@ defmodule Hierbautberlin.GeoData.Relevance do
   end
 
   defp update_news_item(item) do
-    relevance = for_news_item(item.title, item.text, item.published_at)
+    relevance = for_news_item(item.title, item.text, item.published_at, item.source)
 
     from(n in NewsItem, where: n.id == ^item.id)
     |> Repo.update_all(set: Enum.to_list(relevance))

@@ -34,7 +34,7 @@ defmodule Hierbautberlin.GeoData.RelevanceTest do
     end
   end
 
-  describe "for_news_item/3" do
+  describe "for_news_item/4" do
     test "participation with a deadline is most important until the deadline" do
       assert %{importance: 3.0, relevant_until: ~U[2026-10-02 23:59:59Z], relevance_half_life: 7} =
                Relevance.for_news_item(
@@ -74,6 +74,19 @@ defmodule Hierbautberlin.GeoData.RelevanceTest do
                relevant_until: ~U[2026-09-15 10:00:00Z],
                relevance_half_life: 30
              } = Relevance.for_news_item("Neue Regenbogenbank im Park", "Eine Bank.", @published)
+    end
+
+    test "press releases are relevant for six weeks, events until they take place" do
+      assert %{importance: 1.0, relevant_until: ~U[2026-10-13 10:00:00Z]} =
+               Relevance.for_news_item("Neue Bank", "Eine Bank.", @published, "BERLIN_PRESSE")
+
+      assert %{relevant_until: ~U[2026-09-12 23:59:59Z], relevance_half_life: 3} =
+               Relevance.for_news_item(
+                 "Kiezfest am Leon-Jessel-Platz",
+                 "Das Bezirksamt lädt alle Nachbarn am 12. September 2026 ein.",
+                 @published,
+                 "BERLIN_PRESSE"
+               )
     end
   end
 
