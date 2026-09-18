@@ -9,7 +9,7 @@ import ListPopup from './listPopup';
 import ShareButton from './shareButton';
 import DetailsMap from './detailsMap';
 import { setupNavigation } from './navigation';
-import { storedMapPosition } from './storage';
+import { storedListFilters, storedMapPosition } from './storage';
 import SubscriptionMap, { setupSubscriptionMaps } from './subscriptionMap';
 
 // Another entry in an open details dialog starts at the top, not at the
@@ -42,8 +42,13 @@ const liveSocket = new LiveSocket('/live', Socket, {
   hooks: {
     InteractiveMap, WelcomeBox, SearchCombobox, ListPopup, ShareButton, DetailsMap, DetailsScrollTop, SubscriptionMap,
   },
-  // evaluated on every (re)connect, the map opens at the last position
-  params: () => ({ _csrf_token: csrfToken, map_position: storedMapPosition() }),
+  // evaluated on every (re)connect, the map opens at the last position with the
+  // filters of the last visit
+  params: () => ({
+    _csrf_token: csrfToken,
+    map_position: storedMapPosition(),
+    list_filters: storedListFilters(),
+  }),
 });
 
 // Show progress bar on live navigation and form submits

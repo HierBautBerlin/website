@@ -29,8 +29,12 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
 
   # Part of the tile version, so browsers load new tiles instead of cached ones
   # when the content of the tiles changes. Increase it when changing tile/3.
-  @tile_format 3
+  @tile_format 4
   @max_zoom 22
+
+  # Entries that are finished or whose date is longer ago than this are "old and
+  # done", the filter of the list can leave them out (also in interactiveMap.ts)
+  @outdated_after "1 year"
 
   # The list does not need the (big) geometry columns
   @geo_item_list_fields GeoItem.__schema__(:fields) -- [:geo_point, :geometry]
@@ -99,6 +103,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
             f.draw,
             f.participation_open,
             f.source_id,
+            #{outdated_sql("f")} AS outdated,
             CASE WHEN f.draw IN ('line', 'polygon') THEN s.background_color ELSE s.color END AS color,
             ST_AsMVTGeom(ST_Transform(f.geom, 3857), bounds.envelope, 4096, 64, true) AS geom
           FROM map_features f
@@ -131,6 +136,14 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
       )
 
     tile || <<>>
+  end
+
+  # Finished entries and entries whose date is more than a year ago. The client
+  # hides them when "Alte und erledigte Einträge" is unchecked, entries without
+  # a date stay visible.
+  defp outdated_sql(features) do
+    "(#{features}.finished OR " <>
+      "coalesce(#{features}.newest_date < now() - interval '#{@outdated_after}', false))"
   end
 
   # The most meaningful date of an item as text (Berlin time): the publication
@@ -167,6 +180,8 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
     * `:limit` - the maximum number of items (default 100)
     * `:hidden_sources` - ids of sources whose items are left out
     * `:query` - only items with this text in the title, subtitle or description
+    * `:show_old` - when false, finished entries and entries older than a year
+      are left out (default true)
   """
   def list_items(
         %{west: west, south: south, east: east, north: north},
@@ -176,6 +191,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
     limit = Keyword.get(opts, :limit, 100)
     hidden_sources = Keyword.get(opts, :hidden_sources, [])
     pattern = like_pattern(Keyword.get(opts, :query))
+    show_old = Keyword.get(opts, :show_old, true)
 
     %{rows: rows} =
       Repo.query!(
@@ -207,6 +223,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
           WHERE f.geom && center.envelope
             AND (f.newest_date IS NULL OR f.newest_date > now() - interval '5 years')
             AND NOT (f.source_id = ANY($8::bigint[]))
+            AND ($10::boolean OR NOT #{outdated_sql("f")})
             AND ($9::text IS NULL OR (f.item_type, f.item_id) IN (SELECT item_type, item_id FROM matching))
           ORDER BY f.geom <-> center.point
           LIMIT 2000
@@ -233,6 +250,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
             SELECT * FROM map_features f
             WHERE f.item_type = i.item_type AND f.item_id = i.item_id AND f.geom && center.envelope
               AND NOT (f.source_id = ANY($8::bigint[]))
+              AND ($10::boolean OR NOT #{outdated_sql("f")})
               AND ($9::text IS NULL OR (f.item_type, f.item_id) IN (SELECT item_type, item_id FROM matching))
           ) f
         ),
@@ -261,7 +279,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
         ORDER BY score DESC, newest_date DESC NULLS LAST, item_type, item_id
         LIMIT $7
         """,
-        [west, south, east, north, lng, lat, limit, hidden_sources, pattern]
+        [west, south, east, north, lng, lat, limit, hidden_sources, pattern, show_old]
       )
 
     load_items(rows)

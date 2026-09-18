@@ -4,7 +4,7 @@ import type {
 } from 'maplibre-gl';
 import { ViewHook } from 'phoenix_live_view';
 import { MAP_STYLE } from './mapStyle';
-import { storeMapPosition } from './storage';
+import { storeListFilters, type ListFilters, storeMapPosition } from './storage';
 import { updateFeedLink } from './navigation';
 import { FLY_TO_EVENT, type FlyToDetail } from './searchCombobox';
 
@@ -44,6 +44,9 @@ export default class InteractiveMap extends ViewHook {
 
   viewportTimeout?: number;
 
+  // the filters that were written to localStorage last, see rememberFilters
+  lastStoredFilters?: string;
+
   popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, className: 'map--popup' });
 
   mounted() {
@@ -71,7 +74,7 @@ export default class InteractiveMap extends ViewHook {
 
     this.map.on('load', () => {
       this.addItemLayers(data.tilesUrl || '', parseInt(data.tilesMinZoom || '11', 10));
-      this.applySourceFilter();
+      this.applyItemFilter();
       this.pushViewport();
     });
     this.map.on('moveend', () => this.scheduleViewport());
@@ -91,13 +94,11 @@ export default class InteractiveMap extends ViewHook {
   }
 
   updated() {
-    this.applySourceFilter();
+    this.applyItemFilter();
   }
 
-  // Hides the items of the sources that are disabled in the list toolbar
-  applySourceFilter() {
-    if (!this.map.getLayer('circles')) return;
-
+  // The filters of the popup in the list toolbar, rendered by MapLive
+  currentFilters(): ListFilters {
     let hidden: number[] = [];
     try {
       hidden = JSON.parse(this.el.dataset.hiddenSources || '[]');
@@ -105,7 +106,23 @@ export default class InteractiveMap extends ViewHook {
       hidden = [];
     }
 
-    const visible = ['!', ['in', ['get', 'source_id'], ['literal', hidden]]];
+    return { hidden_sources: hidden, show_old: this.el.dataset.showOld !== 'false' };
+  }
+
+  // Hides the items of the sources that are disabled in the filter popup and,
+  // when "Alte und erledigte Einträge" is unchecked, everything the server
+  // marked as outdated (finished or older than a year)
+  applyItemFilter() {
+    const filters = this.currentFilters();
+    this.rememberFilters(filters);
+    if (!this.map.getLayer('circles')) return;
+
+    const conditions: ExpressionSpecification[] = [];
+    if (filters.hidden_sources.length > 0) {
+      conditions.push(['!', ['in', ['get', 'source_id'], ['literal', filters.hidden_sources]]]);
+    }
+    if (!filters.show_old) conditions.push(['!=', ['get', 'outdated'], true]);
+
     const layers: [string, FilterSpecification][] = [
       ['polygons', drawFilter('polygon')],
       ['lines', drawFilter('line')],
@@ -113,8 +130,18 @@ export default class InteractiveMap extends ViewHook {
     ];
 
     layers.forEach(([layer, filter]) => {
-      this.map.setFilter(layer, (hidden.length > 0 ? ['all', filter, visible] : filter) as FilterSpecification);
+      this.map.setFilter(layer, (conditions.length > 0 ? ['all', filter, ...conditions] : filter) as FilterSpecification);
     });
+  }
+
+  // The next visit starts with the same filters (MapLive reads them from the
+  // connect params), only written when they really changed
+  rememberFilters(filters: ListFilters) {
+    const value = JSON.stringify(filters);
+    if (value === this.lastStoredFilters) return;
+
+    this.lastStoredFilters = value;
+    storeListFilters(filters);
   }
 
   destroyed() {

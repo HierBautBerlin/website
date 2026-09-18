@@ -7,8 +7,10 @@ defmodule HierbautberlinWeb.MapLive do
   items next to the map, the search and the detail modals. The client sends one
   debounced `viewport` event after the map was moved.
 
-  The browser remembers the last position (see `assets/js/storage.ts`) and sends
-  it as `map_position` connect param. It is used when the URL has no position.
+  The browser remembers the last position and the filters of the list (see
+  `assets/js/storage.ts`) and sends them as `map_position` and `list_filters`
+  connect params. The position is used when the URL has no position, the filters
+  from the first connected render on (the static render shows everything).
   """
   use HierbautberlinWeb, :live_view
 
@@ -36,6 +38,9 @@ defmodule HierbautberlinWeb.MapLive do
         Accounts.get_user_by_session_token(session["user_token"])
       end
 
+    sources = GeoData.list_sources()
+    filters = stored_filters(socket, sources)
+
     socket =
       socket
       |> assign(
@@ -60,9 +65,10 @@ defmodule HierbautberlinWeb.MapLive do
         stored_position: stored_position(socket),
         # phones only, in the url so the page is rendered with the list collapsed
         list_collapsed: params["list"] == "collapsed",
-        # filters of the list, the hidden sources also apply to the map
-        sources: GeoData.list_sources(),
-        hidden_sources: [],
+        # filters of the list, the sources and old entries also apply to the map
+        sources: sources,
+        hidden_sources: filters.hidden_sources,
+        show_old: filters.show_old,
         list_query: nil
       )
 
@@ -189,8 +195,8 @@ defmodule HierbautberlinWeb.MapLive do
     {:noreply, assign(socket, search_text: name, search_result_visible: false)}
   end
 
-  # the checkboxes of the sources that are shown, nothing is sent when all are unchecked
-  def handle_event("filter-sources", params, socket) do
+  # the checkboxes of the filter popup, unchecked boxes are not sent at all
+  def handle_event("filter-list", params, socket) do
     shown = params |> Map.get("sources", []) |> MapSet.new()
 
     hidden =
@@ -198,11 +204,20 @@ defmodule HierbautberlinWeb.MapLive do
       |> Enum.reject(&(to_string(&1.id) in shown))
       |> Enum.map(& &1.id)
 
-    {:noreply, socket |> assign(:hidden_sources, hidden) |> refresh_list()}
+    socket =
+      socket
+      |> assign(hidden_sources: hidden, show_old: params["show_old"] == "on")
+      |> refresh_list()
+
+    {:noreply, socket}
   end
 
   def handle_event("show-all-sources", _params, socket) do
     {:noreply, socket |> assign(:hidden_sources, []) |> refresh_list()}
+  end
+
+  def handle_event("show-old-items", _params, socket) do
+    {:noreply, socket |> assign(:show_old, true) |> refresh_list()}
   end
 
   # shorter searches match nearly everything and can't use the index
@@ -248,7 +263,7 @@ defmodule HierbautberlinWeb.MapLive do
   # (InteractiveMap) listens to the event and uses the free space
   def list_collapse_toggle do
     %JS{}
-    |> list_popup_close("list-sources")
+    |> list_popup_close("list-filter")
     |> list_popup_close("list-search")
     |> JS.toggle_class("map--item-list-wrapper-collapsed", to: "#map-list-wrapper")
     |> JS.toggle_attribute({"aria-expanded", "true", "false"}, to: "#list-collapse-button")
@@ -274,7 +289,8 @@ defmodule HierbautberlinWeb.MapLive do
       if zoom >= MapFeatures.min_zoom() do
         MapFeatures.list_items(bounds, position,
           hidden_sources: socket.assigns.hidden_sources,
-          query: socket.assigns.list_query
+          query: socket.assigns.list_query,
+          show_old: socket.assigns.show_old
         )
       else
         []
@@ -498,6 +514,30 @@ defmodule HierbautberlinWeb.MapLive do
       _ -> nil
     end
   end
+
+  # The filters the browser remembered (assets/js/storage.ts). Unknown source
+  # ids are left out, everything else falls back to "show everything".
+  defp stored_filters(socket, sources) do
+    with true <- connected?(socket),
+         %{} = stored <- get_connect_params(socket)["list_filters"] do
+      %{
+        hidden_sources: known_source_ids(stored["hidden_sources"], sources),
+        show_old: stored["show_old"] != false
+      }
+    else
+      _ -> %{hidden_sources: [], show_old: true}
+    end
+  end
+
+  defp known_source_ids(ids, sources) when is_list(ids) do
+    known = MapSet.new(sources, & &1.id)
+
+    ids
+    |> Enum.filter(&(is_integer(&1) and MapSet.member?(known, &1)))
+    |> Enum.uniq()
+  end
+
+  defp known_source_ids(_ids, _sources), do: []
 
   defp parse_with_default(string, default) when is_binary(string) do
     case Float.parse(string) do

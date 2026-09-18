@@ -10,6 +10,7 @@
     data-tiles-url={@tiles_url}
     data-tiles-min-zoom={@tiles_min_zoom}
     data-hidden-sources={Jason.encode!(@hidden_sources)}
+    data-show-old={to_string(@show_old)}
   >
     <div id="mapContainer" class="map--container">
       <div id="map" class="map--container--tiles" phx-update="ignore"></div>
@@ -145,29 +146,37 @@
         </button>
 
         <div
-          id="list-sources"
+          id="list-filter"
           class="map--list-tool"
           phx-hook="ListPopup"
-          phx-click-away={list_popup_close("list-sources")}
-          data-close={list_popup_close("list-sources") |> JS.focus(to: "#list-sources-button")}
+          phx-click-away={list_popup_close("list-filter")}
+          data-close={list_popup_close("list-filter") |> JS.focus(to: "#list-filter-button")}
         >
           <button
-            id="list-sources-button"
+            id="list-filter-button"
             type="button"
-            class={["map--list-tool--button", @hidden_sources != [] && "map--list-tool--button-active"]}
+            class={[
+              "map--list-tool--button",
+              (@hidden_sources != [] or !@show_old) && "map--list-tool--button-active"
+            ]}
             aria-expanded="false"
-            aria-controls="list-sources-popup"
-            phx-click={list_popup_toggle("list-sources")}
+            aria-controls="list-filter-popup"
+            phx-click={list_popup_toggle("list-filter")}
           >
             <.svg_image name="filter" class="map--list-tool--icon" />
-            <span>Quellen</span>
+            <span>Filter</span>
             <span :if={@hidden_sources != []} class="map--list-tool--count">
               {length(@sources) - length(@hidden_sources)}/{length(@sources)}
-              <span class="visually-hidden">angezeigt</span>
+              <span class="visually-hidden">Quellen angezeigt</span>
             </span>
           </button>
-          <div id="list-sources-popup" class="map--list-popup">
-            <form id="list-sources-form" phx-change="filter-sources">
+          <div id="list-filter-popup" class="map--list-popup">
+            <form id="list-filter-form" phx-change="filter-list">
+              <%!-- unchecked: entries that are finished or older than a year are hidden --%>
+              <label class="map--list-popup--option">
+                <input type="checkbox" name="show_old" checked={@show_old} />
+                Alte und erledigte Einträge
+              </label>
               <fieldset>
                 <legend class="map--list-popup--title">Quellen anzeigen</legend>
                 <label :for={source <- @sources} class="map--list-popup--source">
@@ -307,7 +316,7 @@
           <%= cond do %>
             <% @map_zoom < @tiles_min_zoom -> %>
               Zoome näher heran, um Einträge zu sehen.
-            <% @hidden_sources != [] or @list_query -> %>
+            <% @hidden_sources != [] or !@show_old or @list_query -> %>
               <p>Keine Einträge passen zu den Filtern.</p>
               <button
                 :if={@list_query}
@@ -324,6 +333,14 @@
                 phx-click="show-all-sources"
               >
                 Alle Quellen anzeigen
+              </button>
+              <button
+                :if={!@show_old}
+                type="button"
+                class="map--list-popup--action"
+                phx-click="show-old-items"
+              >
+                Alte und erledigte Einträge anzeigen
               </button>
             <% true -> %>
               Hier gibt es keine Einträge.
