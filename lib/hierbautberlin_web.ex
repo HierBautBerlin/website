@@ -17,6 +17,15 @@ defmodule HierbautberlinWeb do
     do:
       ~w(css fonts images svg js pdfjs favicon.ico favicon-16x16.png favicon-32x32.png apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png site.webmanifest robots.txt)
 
+  @doc """
+  Prefixes of the files in the root of priv/static. `mix phx.digest` renames
+  them (favicon.ico -> favicon-<hash>.ico) and `~p"/favicon.ico"` links to the
+  renamed file, which `static_paths/0` no longer matches. Plug.Static needs
+  these prefixes as `:only_matching`, otherwise the digested files are a 404
+  (Firefox then shows no favicon at all, Chrome falls back to /favicon.ico).
+  """
+  def static_path_prefixes, do: ~w(favicon- apple-touch-icon- android-chrome- site- robots-)
+
   def router do
     quote do
       use Phoenix.Router, helpers: false

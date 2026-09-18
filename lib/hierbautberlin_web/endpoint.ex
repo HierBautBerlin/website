@@ -26,7 +26,10 @@ defmodule HierbautberlinWeb.Endpoint do
     at: "/",
     from: :hierbautberlin,
     gzip: not code_reloading?,
-    only: HierbautberlinWeb.static_paths()
+    only: HierbautberlinWeb.static_paths(),
+    # `mix phx.digest` renames the files in the root of priv/static
+    # (favicon.ico -> favicon-<hash>.ico), :only only matches exact names
+    only_matching: HierbautberlinWeb.static_path_prefixes()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
