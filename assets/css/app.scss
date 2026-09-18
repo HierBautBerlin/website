@@ -26,6 +26,7 @@ body.full-width {
   flex-direction: column;
   height: 100vh;
   height: -webkit-fill-available;
+  height: 100dvh;
 }
 
 .container {
@@ -133,6 +134,9 @@ textarea {
     auto;
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  // dvh follows the dynamic toolbar of mobile browsers, so a page that fits on
+  // the screen (the map) does not become scrollable by the height of the toolbar
+  min-height: 100dvh;
 }
 
 button {

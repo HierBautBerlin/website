@@ -1,12 +1,27 @@
 // height of the toolbar of the list: button, padding and border
 $list-toolbar-height: 4.9rem;
+// height of the search field, the welcome box keeps its distance to it
+$search-input-height: 4.4rem;
+// distance of the search field and the welcome box to the edge of the map
+$map-controls-offset: 20px;
+// height of the header, the map page starts below it
+$header-height: 4rem;
+
+// Everything on the map page is positioned inside this box: it fills the window
+// below the header and never scrolls. dvh follows the dynamic toolbar of mobile
+// browsers (Firefox on Android), so the map always ends at the visible bottom.
+.map--page {
+  position: absolute;
+  top: $header-height;
+  left: 0;
+  right: 0;
+  height: calc(100vh - #{$header-height});
+  height: calc(100dvh - #{$header-height});
+}
 
 .map--container {
   position: absolute;
-  top: 4rem;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   overflow: hidden;
   background-color: #E6E4E0;
 }
@@ -26,8 +41,8 @@ $list-toolbar-height: 4.9rem;
 .map--controls {
   z-index: 102;
   position: absolute;
-  left: 20px;
-  top: 20px;
+  left: $map-controls-offset;
+  top: $map-controls-offset;
   width: 36rem;
   max-width: calc(100% - 40px);
   max-height: calc(100% - 40px);
@@ -46,7 +61,7 @@ $list-toolbar-height: 4.9rem;
   margin: 0;
 
   .map--search-input {
-    height: 4.4rem;
+    height: $search-input-height;
     margin: 0;
     padding: 0 1.2rem 0 4rem;
     font-size: 16px;
@@ -96,7 +111,7 @@ $list-toolbar-height: 4.9rem;
 .map--search-results--list {
   flex: 1 1 auto;
   min-height: 0;
-  max-height: min(42rem, calc(100vh - 20rem));
+  max-height: min(42rem, calc(100dvh - 20rem));
   margin: 0;
   padding: 0.4rem 0;
   overflow-y: auto;
@@ -136,8 +151,8 @@ $list-toolbar-height: 4.9rem;
 
 .map--location-button {
   flex-shrink: 0;
-  width: 4.4rem;
-  height: 4.4rem;
+  width: $search-input-height;
+  height: $search-input-height;
   padding: 0;
   margin: 0;
   display: flex;
@@ -389,9 +404,9 @@ $list-toolbar-height: 4.9rem;
 .map--item-list-wrapper {
   z-index: 101;
   position: absolute;
-  top: 6rem;
+  top: 2rem;
   right: 2rem;
-  height: calc(100vh - 10rem);
+  bottom: 4rem;
   width: 40rem;
   background-color: white;
   border-radius: 4px;
@@ -512,12 +527,16 @@ $list-toolbar-height: 4.9rem;
 .map--welcome {
   z-index: 102;
   position: absolute;
-  left: 20px;
+  left: $map-controls-offset;
   bottom: 3rem;
+  display: flex;
+  flex-direction: column;
   width: 34rem;
   max-width: calc(100% - 40px - 44rem);
   min-width: 28rem;
-  padding: 2rem 2.5rem 1rem 2rem;
+  // ends below the search field, so the two never overlap on short screens
+  max-height: calc(100% - #{$map-controls-offset} - #{$search-input-height} - 1.2rem - 3rem);
+  padding: 2rem 1rem 1rem 2rem;
   background-color: var(--bg-color);
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
@@ -529,6 +548,13 @@ $list-toolbar-height: 4.9rem;
   p {
     margin-bottom: 1.2rem;
   }
+}
+
+// scrolls when the box is taller than the space below the search field
+.map--welcome--content {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 1.5rem;
 }
 
 .map--welcome--title {
@@ -608,6 +634,7 @@ $list-toolbar-height: 4.9rem;
     width: auto;
     min-width: 0;
     max-width: none;
+    max-height: none;
     padding: 4.4rem 2.4rem 2.4rem;
     overflow-y: auto;
     font-size: 1.7rem;
@@ -617,8 +644,11 @@ $list-toolbar-height: 4.9rem;
   }
 
   // centered, but scrolls from the top when it is higher than the screen
+  // (the box itself scrolls here, not the content)
   .map--welcome--content {
     margin: auto 0;
+    padding-right: 0;
+    overflow: visible;
   }
 
   .map--welcome--logo {
@@ -683,7 +713,7 @@ $list-toolbar-height: 4.9rem;
   .map--item-list-wrapper {
     position: absolute;
     left: 2rem;
-    top: 45vh;
+    top: 45%;
     bottom: 1em;
     width: auto;
     height: auto;
@@ -745,7 +775,7 @@ $list-toolbar-height: 4.9rem;
     .map--list-popup {
       top: auto;
       bottom: calc(100% - 0.4rem);
-      max-height: min(40rem, 60vh);
+      max-height: min(40rem, 60dvh);
     }
   }
 
@@ -753,7 +783,7 @@ $list-toolbar-height: 4.9rem;
     right: 20px;
     width: auto;
     // ends above the list, the results dropdown needs a visible edge
-    max-height: calc(45vh - 6rem);
+    max-height: calc(45% - 4rem);
   }
 
 
