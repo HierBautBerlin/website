@@ -142,6 +142,37 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
       assert titles.(query: "Four", hidden_sources: [four.source_id]) == []
     end
 
+    test "leaves out old and finished items with show_old: false" do
+      insert_geo_item(
+        title: "Finished",
+        state: "finished",
+        date_end: days_ago(3),
+        geo_point: point(13.2679, 52.51)
+      )
+
+      MapFeatures.refresh()
+
+      titles = fn opts ->
+        MapFeatures.bounds_around(@center, 15)
+        |> MapFeatures.list_items(@center, opts)
+        |> Enum.map(& &1.title)
+      end
+
+      with_old = titles.([])
+      without_old = titles.(show_old: false)
+
+      assert "Finished" in with_old
+      refute "Finished" in without_old
+
+      # "Four" ended two years ago, "Two" 300 days ago
+      assert "Four" in with_old
+      refute "Four" in without_old
+      assert "Two" in without_old
+
+      # items without any date stay visible
+      assert "One" in without_old
+    end
+
     test "fresh press releases are on top for six weeks" do
       presse = insert(:source, short_name: "BERLIN_PRESSE")
       other = insert(:source)

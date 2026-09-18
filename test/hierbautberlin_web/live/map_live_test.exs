@@ -9,6 +9,10 @@ defmodule HierbautberlinWeb.MapLiveTest do
 
   defp point(lng, lat), do: %Geo.Point{coordinates: {lng, lat}, srid: 4326}
 
+  defp all_source_ids do
+    Hierbautberlin.GeoData.list_sources() |> Enum.map(&to_string(&1.id))
+  end
+
   setup do
     near = insert(:geo_item, title: "Near Item", geo_point: point(13.2679, 52.51))
     far = insert(:geo_item, title: "Far Item", geo_point: point(13.5, 52.4))
@@ -96,19 +100,22 @@ defmodule HierbautberlinWeb.MapLiveTest do
     test "hides sources in the list and on the map", %{conn: conn, near: near} do
       {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
       assert render(view) =~ "Near Item"
-      refute has_element?(view, "#list-sources-button.map--list-tool--button-active")
+      refute has_element?(view, "#list-filter-button.map--list-tool--button-active")
 
       other_sources =
         Hierbautberlin.GeoData.list_sources() |> Enum.reject(&(&1.id == near.source_id))
 
       html =
         view
-        |> form("#list-sources-form")
-        |> render_change(%{"sources" => Enum.map(other_sources, &to_string(&1.id))})
+        |> form("#list-filter-form")
+        |> render_change(%{
+          "sources" => Enum.map(other_sources, &to_string(&1.id)),
+          "show_old" => "on"
+        })
 
       refute html =~ "Near Item"
       assert html =~ "Keine Einträge passen zu den Filtern."
-      assert has_element?(view, "#list-sources-button.map--list-tool--button-active")
+      assert has_element?(view, "#list-filter-button.map--list-tool--button-active")
       assert has_element?(view, "#map-page[data-hidden-sources='[#{near.source_id}]']")
 
       assert has_element?(
@@ -117,10 +124,81 @@ defmodule HierbautberlinWeb.MapLiveTest do
              )
 
       html =
-        view |> element("#list-sources-popup button", "Alle Quellen anzeigen") |> render_click()
+        view |> element("#list-filter-popup button", "Alle Quellen anzeigen") |> render_click()
 
       assert html =~ "Near Item"
-      refute has_element?(view, "#list-sources-button.map--list-tool--button-active")
+      refute has_element?(view, "#list-filter-button.map--list-tool--button-active")
+    end
+
+    test "hides old and finished entries", %{conn: conn} do
+      insert(:geo_item,
+        title: "Finished Item",
+        state: "finished",
+        geo_point: point(13.2679, 52.51)
+      )
+
+      insert(:geo_item,
+        title: "Old Item",
+        date_end: DateTime.utc_now() |> DateTime.add(-400, :day) |> DateTime.truncate(:second),
+        geo_point: point(13.2679, 52.51)
+      )
+
+      MapFeatures.refresh()
+
+      {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
+      assert has_element?(view, "#map-page[data-show-old='true']")
+      assert has_element?(view, "input[name='show_old'][checked]")
+
+      # an unchecked checkbox is not sent at all, so the form data has no show_old
+      html = render_change(view, "filter-list", %{"sources" => all_source_ids()})
+
+      refute html =~ "Finished Item"
+      refute html =~ "Old Item"
+      assert html =~ "Near Item"
+      assert has_element?(view, "#map-page[data-show-old='false']")
+      assert has_element?(view, "#list-filter-button.map--list-tool--button-active")
+      assert has_element?(view, "input[name='show_old']:not([checked])")
+
+      html =
+        render_change(view, "filter-list", %{"sources" => all_source_ids(), "show_old" => "on"})
+
+      assert html =~ "Finished Item"
+      assert html =~ "Old Item"
+      refute has_element?(view, "#list-filter-button.map--list-tool--button-active")
+    end
+
+    test "offers to show the old entries again when nothing is left", %{conn: conn, near: near} do
+      near |> Ecto.Changeset.change(state: "finished") |> Hierbautberlin.Repo.update!()
+      MapFeatures.refresh()
+
+      {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
+      html = render_change(view, "filter-list", %{"sources" => all_source_ids()})
+
+      assert html =~ "Keine Einträge passen zu den Filtern."
+
+      html =
+        view
+        |> element(".map--item-list--empty button", "Alte und erledigte Einträge anzeigen")
+        |> render_click()
+
+      assert html =~ "Near Item"
+    end
+
+    test "restores the filters the browser remembered", %{conn: conn, near: near} do
+      conn =
+        put_connect_params(conn, %{
+          "list_filters" => %{
+            "hidden_sources" => [near.source_id, -1, "evil"],
+            "show_old" => false
+          }
+        })
+
+      {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
+
+      refute render(view) =~ "Near Item"
+      assert has_element?(view, "#map-page[data-hidden-sources='[#{near.source_id}]']")
+      assert has_element?(view, "#map-page[data-show-old='false']")
+      assert has_element?(view, "input[name='show_old']:not([checked])")
     end
 
     test "searches in the list and shows the search", %{conn: conn} do
@@ -156,10 +234,17 @@ defmodule HierbautberlinWeb.MapLiveTest do
 
       assert has_element?(
                view,
-               "#list-sources-button[aria-expanded='false'][aria-controls='list-sources-popup']"
+               "#list-filter-button[aria-expanded='false'][aria-controls='list-filter-popup']"
              )
 
-      assert has_element?(view, "#list-sources-popup fieldset legend", "Quellen anzeigen")
+      assert has_element?(view, "#list-filter-popup fieldset legend", "Quellen anzeigen")
+
+      assert has_element?(
+               view,
+               "#list-filter-popup .map--list-popup--option",
+               "Alte und erledigte Einträge"
+             )
+
       assert has_element?(view, "#list-search-popup label[for='list-search-query']")
     end
 

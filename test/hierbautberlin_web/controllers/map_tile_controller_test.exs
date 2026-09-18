@@ -10,7 +10,12 @@ defmodule HierbautberlinWeb.MapTileControllerTest do
 
       conn = get(conn, "/tiles/items/abc/15/17591/10747.mvt")
 
-      assert response(conn, 200)
+      body = response(conn, 200)
+
+      # the properties interactiveMap.ts filters with (MVT keys are plain strings)
+      for key <- ~w(source_id outdated) do
+        assert :binary.match(body, key) != :nomatch
+      end
 
       assert response_content_type(conn, :"vnd.mapbox-vector-tile") =~
                "application/vnd.mapbox-vector-tile"

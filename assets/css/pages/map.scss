@@ -300,7 +300,8 @@ $header-height: 4rem;
   right: 1.2rem;
   width: 28rem;
   max-width: calc(100% - 2.4rem);
-  max-height: 40rem;
+  // ends above the bottom of the screen, the rest of the list scrolls
+  max-height: min(40rem, calc(100dvh - 14rem));
   overflow-y: auto;
   padding: 1.2rem 1.4rem;
   background-color: var(--bg-color);
@@ -343,6 +344,28 @@ $header-height: 4rem;
   cursor: pointer;
 
   input {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin: 0;
+    accent-color: #2f7d65;
+  }
+}
+
+// "Alte und erledigte Einträge", above the sources
+.map--list-popup--option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1rem;
+  padding-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.3;
+  cursor: pointer;
+  border-bottom: 1px solid #e2e2e2;
+
+  input {
+    flex-shrink: 0;
     width: 1.8rem;
     height: 1.8rem;
     margin: 0;
@@ -723,6 +746,11 @@ $header-height: 4rem;
   .map--list-toolbar {
     flex-wrap: nowrap;
     padding: 1rem 1.2rem;
+  }
+
+  // the list starts at 45% of the map, only the rest is left below the toolbar
+  .map--list-popup {
+    max-height: min(40rem, calc(55dvh - 9rem));
   }
 
   .map--list-collapse {
