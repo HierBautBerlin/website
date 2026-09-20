@@ -13,24 +13,36 @@ defmodule HierbautberlinWeb.MapLiveTest do
     Hierbautberlin.GeoData.list_sources() |> Enum.map(&to_string(&1.id))
   end
 
+  # The list is filled up with the nearest items outside of the viewport, so
+  # both items are in it and only their order changes
+  defp listed_ids(html) do
+    ~r/id="list-item-geo_item-(\d+)"/
+    |> Regex.scan(html, capture: :all_but_first)
+    |> Enum.map(fn [id] -> String.to_integer(id) end)
+  end
+
   setup do
-    near = insert(:geo_item, title: "Near Item", geo_point: point(13.2679, 52.51))
-    far = insert(:geo_item, title: "Far Item", geo_point: point(13.5, 52.4))
+    source = insert(:source)
+    near = insert(:geo_item, title: "Near Item", source: source, geo_point: point(13.2679, 52.51))
+    far = insert(:geo_item, title: "Far Item", source: source, geo_point: point(13.5, 52.4))
     MapFeatures.refresh()
 
     %{near: near, far: far}
   end
 
-  test "renders the items near the position from the url", %{conn: conn} do
+  test "renders the items near the position from the url", %{conn: conn, near: near, far: far} do
     {:ok, view, html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
 
-    assert html =~ "Near Item"
-    refute html =~ "Far Item"
+    assert listed_ids(html) == [near.id, far.id]
     assert has_element?(view, "#map-page[data-tiles-url^='/tiles/items/']")
   end
 
   describe "remembered position" do
-    test "opens the map at the position the browser remembered", %{conn: conn} do
+    test "opens the map at the position the browser remembered", %{
+      conn: conn,
+      near: near,
+      far: far
+    } do
       conn =
         put_connect_params(conn, %{
           "map_position" => %{"lat" => 52.4, "lng" => 13.5, "zoom" => 16}
@@ -38,9 +50,7 @@ defmodule HierbautberlinWeb.MapLiveTest do
 
       {:ok, view, _html} = live(conn, ~p"/map")
 
-      html = render(view)
-      assert html =~ "Far Item"
-      refute html =~ "Near Item"
+      assert listed_ids(render(view)) == [far.id, near.id]
       assert has_element?(view, "#map-page[data-position-lat='52.4'][data-position-zoom='16.0']")
     end
 
@@ -167,8 +177,16 @@ defmodule HierbautberlinWeb.MapLiveTest do
       refute has_element?(view, "#list-filter-button.map--list-tool--button-active")
     end
 
-    test "offers to show the old entries again when nothing is left", %{conn: conn, near: near} do
-      near |> Ecto.Changeset.change(state: "finished") |> Hierbautberlin.Repo.update!()
+    test "offers to show the old entries again when nothing is left", %{
+      conn: conn,
+      near: near,
+      far: far
+    } do
+      # the far item would fill the list up, it has to be gone as well
+      for item <- [near, far] do
+        item |> Ecto.Changeset.change(state: "finished") |> Hierbautberlin.Repo.update!()
+      end
+
       MapFeatures.refresh()
 
       {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
@@ -357,7 +375,7 @@ defmodule HierbautberlinWeb.MapLiveTest do
     assert redirected_to(get(conn, "/?lat=52.4&lng=13.5"), 301) == "/map?lat=52.4&lng=13.5"
   end
 
-  test "updates the list when the map viewport changes", %{conn: conn} do
+  test "updates the list when the map viewport changes", %{conn: conn, near: near, far: far} do
     {:ok, view, _html} = live(conn, ~p"/map?lat=52.51&lng=13.2679&zoom=15")
 
     html =
@@ -367,8 +385,7 @@ defmodule HierbautberlinWeb.MapLiveTest do
         "bounds" => %{"west" => 13.49, "south" => 52.39, "east" => 13.51, "north" => 52.41}
       })
 
-    assert html =~ "Far Item"
-    refute html =~ "Near Item"
+    assert listed_ids(html) == [far.id, near.id]
     assert_patch(view, ~p"/map?lat=52.4&lng=13.5&zoom=15.12")
   end
 

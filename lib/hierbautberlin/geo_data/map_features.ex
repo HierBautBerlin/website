@@ -36,6 +36,14 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
   # done", the filter of the list can leave them out (also in interactiveMap.ts)
   @outdated_after "1 year"
 
+  # When the viewport contains fewer items than this, the list is filled up with
+  # the nearest items outside of it, so it does not get (nearly) empty when
+  # zooming in
+  @min_items 10
+  # How many features around the bounds are looked at for that. More than enough
+  # for ten items, even when a news item has a lot of positions
+  @fill_candidates 500
+
   # The list does not need the (big) geometry columns
   @geo_item_list_fields GeoItem.__schema__(:fields) -- [:geo_point, :geometry]
   @news_item_list_fields NewsItem.__schema__(:fields) -- [:geo_points, :geometries]
@@ -176,8 +184,14 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
   and 0.5 at a quarter of the viewport diagonal, so when zoomed out important
   items further away can still be on top.
 
+  Zooming in narrows the bounds, so fewer and fewer items are left. To keep the
+  list useful, the nearest items outside of the bounds are appended until there
+  are `:min_items` of them (they are always sorted after the items inside).
+
   Options:
     * `:limit` - the maximum number of items (default 100)
+    * `:min_items` - fill the list up to this many items with the nearest items
+      outside of the bounds (default #{@min_items}, 0 disables it)
     * `:hidden_sources` - ids of sources whose items are left out
     * `:query` - only items with this text in the title, subtitle or description
     * `:show_old` - when false, finished entries and entries older than a year
@@ -189,6 +203,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
         opts \\ []
       ) do
     limit = Keyword.get(opts, :limit, 100)
+    min_items = Keyword.get(opts, :min_items, @min_items)
     hidden_sources = Keyword.get(opts, :hidden_sources, [])
     pattern = like_pattern(Keyword.get(opts, :query))
     show_old = Keyword.get(opts, :show_old, true)
@@ -215,7 +230,7 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
                  ) AS radius
         ),
         nearest AS (
-          SELECT f.item_type, f.item_id, f.newest_date,
+          SELECT f.item_type, f.item_id, f.newest_date, true AS inside,
                  -- planar distance in degrees, roughly converted to meters (good enough for sorting)
                  (f.geom <-> center.point) * 111320 * cos(radians($6)) AS distance
           FROM map_features f
@@ -228,9 +243,29 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
           ORDER BY f.geom <-> center.point
           LIMIT 2000
         ),
+        -- the nearest features around the bounds, they fill the list up when
+        -- there is not much inside of them (zoomed in or out in the country).
+        -- The count is a one time filter: with enough items nothing is scanned.
+        -- ORDER BY with the point written out (instead of center.point) so the
+        -- GIST index walks from the center outwards instead of sorting the
+        -- whole view.
+        fill AS (
+          SELECT f.item_type, f.item_id, f.newest_date, false AS inside,
+                 (f.geom <-> center.point) * 111320 * cos(radians($6)) AS distance
+          FROM map_features f
+          CROSS JOIN center
+          WHERE (SELECT count(*) FROM (SELECT DISTINCT item_type, item_id FROM nearest) i) < $11
+            AND NOT (f.geom && center.envelope)
+            AND (f.newest_date IS NULL OR f.newest_date > now() - interval '5 years')
+            AND NOT (f.source_id = ANY($8::bigint[]))
+            AND ($10::boolean OR NOT #{outdated_sql("f")})
+            AND ($9::text IS NULL OR (f.item_type, f.item_id) IN (SELECT item_type, item_id FROM matching))
+          ORDER BY f.geom <-> ST_SetSRID(ST_MakePoint($5, $6), 4326)
+          LIMIT #{@fill_candidates}
+        ),
         -- important items further away that are not among the nearest features
         important AS (
-          SELECT f.item_type, f.item_id, f.newest_date,
+          SELECT f.item_type, f.item_id, f.newest_date, true AS inside,
                  (f.geom <-> center.point) * 111320 * cos(radians($6)) AS distance
           FROM (
             SELECT 'geo_item' AS item_type, id AS item_id FROM geo_items
@@ -255,8 +290,13 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
           ) f
         ),
         items AS (
-          SELECT item_type, item_id, max(newest_date) AS newest_date, min(distance) AS distance
-          FROM (SELECT * FROM nearest UNION ALL SELECT * FROM important) candidates
+          SELECT item_type, item_id, max(newest_date) AS newest_date, min(distance) AS distance,
+                 bool_or(inside) AS inside
+          FROM (
+            SELECT * FROM nearest
+            UNION ALL SELECT * FROM fill
+            UNION ALL SELECT * FROM important
+          ) candidates
           GROUP BY item_type, item_id
         ),
         scored AS (
@@ -273,13 +313,34 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
           FROM items
           CROSS JOIN center
           #{relevance_join("items")}
+        ),
+        ranked AS (
+          SELECT item_type, item_id, inside,
+                 row_number() OVER (
+                   ORDER BY inside DESC, score DESC, newest_date DESC NULLS LAST, item_type, item_id
+                 ) AS position
+          FROM scored
         )
         SELECT item_type, item_id
-        FROM scored
-        ORDER BY score DESC, newest_date DESC NULLS LAST, item_type, item_id
+        FROM ranked
+        -- everything inside the bounds, filled up with the items around them
+        WHERE inside OR position <= $11
+        ORDER BY position
         LIMIT $7
         """,
-        [west, south, east, north, lng, lat, limit, hidden_sources, pattern, show_old]
+        [
+          west,
+          south,
+          east,
+          north,
+          lng,
+          lat,
+          limit,
+          hidden_sources,
+          pattern,
+          show_old,
+          min_items
+        ]
       )
 
     load_items(rows)
