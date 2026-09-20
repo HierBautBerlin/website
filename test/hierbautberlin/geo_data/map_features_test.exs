@@ -92,9 +92,17 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
       # still on top, the news item is current, items without dates count less
       # than "Two" (which ended 300 days ago, but is at the center) and the
       # participation that ended two years ago is last. "Three" is a polygon
-      # that contains the center, so its distance is 0.
-      assert ["Seven - Newest Item", "This is a nice title", "Two", "Three", "One", "Four"] ==
-               Enum.map(items, & &1.title)
+      # that contains the center, so its distance is 0. "Far away" is outside of
+      # the bounds and only fills the list up to ten items.
+      assert [
+               "Seven - Newest Item",
+               "This is a nice title",
+               "Two",
+               "Three",
+               "One",
+               "Four",
+               "Far away"
+             ] == Enum.map(items, & &1.title)
 
       four_id = four.id
       four_source_id = four.source_id
@@ -222,10 +230,44 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
       assert 3 == length(items)
     end
 
-    test "only returns items within the bounds" do
+    test "only returns items within the bounds with min_items: 0" do
       far_away = %{lat: 52.4, lng: 13.5}
-      items = MapFeatures.list_items(MapFeatures.bounds_around(far_away, 16), far_away)
+
+      items =
+        MapFeatures.list_items(MapFeatures.bounds_around(far_away, 16), far_away, min_items: 0)
+
       assert ["Far away"] == Enum.map(items, & &1.title)
+    end
+
+    test "fills the list up with the nearest items outside of the bounds" do
+      far_away = %{lat: 52.4, lng: 13.5}
+
+      titles =
+        MapFeatures.bounds_around(far_away, 16)
+        |> MapFeatures.list_items(far_away, min_items: 3)
+        |> Enum.map(& &1.title)
+
+      # the one item within the bounds first, then the nearest ones around it
+      # the most relevant ones of the cluster around the center
+      assert ["Far away", "Seven - Newest Item", "This is a nice title"] == titles
+
+      # the fill up never goes beyond the limit
+      assert 1 ==
+               MapFeatures.bounds_around(far_away, 16)
+               |> MapFeatures.list_items(far_away, min_items: 3, limit: 1)
+               |> length()
+    end
+
+    test "does not fill the list up with items that are filtered out" do
+      far_away = %{lat: 52.4, lng: 13.5}
+      bounds = MapFeatures.bounds_around(far_away, 16)
+
+      titles = fn opts ->
+        bounds |> MapFeatures.list_items(far_away, opts) |> Enum.map(& &1.title)
+      end
+
+      assert titles.(query: "Seven") == ["Seven - Newest Item"]
+      assert "Four" not in titles.(show_old: false)
     end
 
     test "does not show changes before the view was refreshed" do
