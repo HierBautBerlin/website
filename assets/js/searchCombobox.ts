@@ -3,6 +3,11 @@ import { ViewHook } from 'phoenix_live_view';
 export const FLY_TO_EVENT = 'hierbautberlin:fly-to';
 export type FlyToDetail = { lat: number, lng: number };
 
+// pushEvent rejects when the LiveView is not connected and an unhandled
+// rejection is reported as an error. Without a connection there are no search
+// results either, so there is nothing else to do about it.
+const ignoreDisconnected = () => {};
+
 // Street search as combobox (https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
 // The focus stays in the input, the highlighted option is announced with
 // aria-activedescendant. The results are rendered by the LiveView, the
@@ -54,7 +59,7 @@ export default class SearchCombobox extends ViewHook {
       case 'ArrowDown':
         if (options.length === 0) return;
         event.preventDefault();
-        if (!this.isOpen()) this.pushEvent('show-results', {});
+        if (!this.isOpen()) this.pushEvent('show-results', {}).catch(ignoreDisconnected);
         this.highlight(Math.min(this.activeIndex + 1, options.length - 1), true);
         break;
       case 'ArrowUp':
@@ -103,12 +108,12 @@ export default class SearchCombobox extends ViewHook {
     const name = option.dataset.name || '';
     this.input.value = name;
     this.highlight(-1, false);
-    this.pushEvent('select-search-result', { name });
+    this.pushEvent('select-search-result', { name }).catch(ignoreDisconnected);
   }
 
   close() {
     this.highlight(-1, false);
-    this.pushEvent('hide-results', {});
+    this.pushEvent('hide-results', {}).catch(ignoreDisconnected);
   }
 
   isOpen() {

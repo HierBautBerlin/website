@@ -2,6 +2,7 @@ import * as maplibregl from 'maplibre-gl';
 import type { FilterSpecification } from 'maplibre-gl';
 import { ViewHook } from 'phoenix_live_view';
 import { MAP_STYLE } from './mapStyle';
+import { webglSupported } from './mapSupport';
 
 type Position = [number, number];
 type Coordinates = Position | Coordinates[];
@@ -48,6 +49,8 @@ export default class DetailsMap extends ViewHook {
       if (feature.geometry.coordinates) extendBounds(bounds, feature.geometry.coordinates);
     });
     if (bounds.isEmpty()) return;
+    // the details work without the small map, so it is simply left out
+    if (!webglSupported()) return;
 
     this.map = new maplibregl.Map({
       container: this.el,

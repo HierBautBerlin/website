@@ -4,6 +4,7 @@ import type {
 } from 'maplibre-gl';
 import { ViewHook } from 'phoenix_live_view';
 import { MAP_STYLE } from './mapStyle';
+import { showWebglHint, webglSupported } from './mapSupport';
 import { storeListFilters, type ListFilters, storeMapPosition } from './storage';
 import { updateFeedLink } from './navigation';
 import { FLY_TO_EVENT, type FlyToDetail } from './searchCombobox';
@@ -53,6 +54,12 @@ export default class InteractiveMap extends ViewHook {
     const mapElement = this.el.querySelector('#map') as HTMLElement;
     const data = this.el.dataset;
 
+    // everything below needs a map, the hook then only shows the hint
+    if (!webglSupported()) {
+      showWebglHint(mapElement);
+      return;
+    }
+
     this.map = new maplibregl.Map({
       container: mapElement,
       style: MAP_STYLE,
@@ -94,6 +101,8 @@ export default class InteractiveMap extends ViewHook {
   }
 
   updated() {
+    if (!this.map) return;
+
     this.applyItemFilter();
   }
 
@@ -274,8 +283,13 @@ export default class InteractiveMap extends ViewHook {
   }
 
   showDetails(feature: MapGeoJSONFeature) {
-    const properties = feature.properties as ItemProperties;
-    this.pushEvent('showDetails', { 'item-id': properties.item_id, 'item-type': properties.item_type });
+    const { item_id: id, item_type: type } = feature.properties as ItemProperties;
+
+    // pushEvent rejects when the LiveView is not connected (offline, a phone
+    // that was asleep). Without the catch that ends up in Bugsnag, and the
+    // click is lost - the url shows the details as well.
+    this.pushEvent('showDetails', { 'item-id': id, 'item-type': type })
+      .catch(() => { window.location.href = `/map?details=${id}&detailsType=${type}`; });
   }
 
   highlightItem(type: string | null, id: number | null) {
