@@ -8,13 +8,25 @@ ARG DEBIAN_VERSION=trixie-20260824-slim
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
+ARG NODE_IMAGE="node:22-trixie-slim"
 
 # --- build ---------------------------------------------------------------------
+FROM ${NODE_IMAGE} AS node
+
 FROM ${BUILDER_IMAGE} AS builder
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends build-essential git ca-certificates nodejs npm \
+  && apt-get install -y --no-install-recommends build-essential git ca-certificates \
   && rm -rf /var/lib/apt/lists/*
+
+# Node 22 like the CI (.github/workflows/elixir.yml). Debian only has node 20,
+# and its npm 9 aborts `npm ci` when the version of a file: dependency
+# (deps/phoenix*) in package-lock.json is not the one in deps/, while newer npm
+# versions install it anyway.
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
+RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+  && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 WORKDIR /app
 
