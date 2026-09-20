@@ -69,6 +69,18 @@ jobs:
       - name: Install npm dependencies
         run: npm ci --prefix assets
 
+      # phoenix, phoenix_html and phoenix_live_view are file: dependencies, so
+      # their version in the lock file comes from deps/. Dependabot only bumps
+      # mix.lock and the docker build then fails with its older npm.
+      - name: Check that assets/package-lock.json matches deps/
+        working-directory: assets
+        run: |
+          npm install --package-lock-only
+          if ! git diff --exit-code package-lock.json; then
+            echo "::error file=assets/package-lock.json::Out of date, run 'just update' and commit the change"
+            exit 1
+          fi
+
       - name: Retrieve PLT Cache
         uses: actions/cache@v6
         with:
