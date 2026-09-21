@@ -340,6 +340,24 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblattTest do
 
       assert BerlinerAmtsblatt.get_last_page(structure, 92) == 61
     end
+
+    # The outline of issue 40/2026 has no page numbers at all, which used to
+    # raise an ArithmeticError and killed the whole import
+    test "keeps all pages when the entry after the section has no page number" do
+      structure = [
+        %{level: 1, page_number: 3, title: "Veröffentlichungen"},
+        %{level: 1, page_number: nil, title: "Stellenausschreibungen"},
+        %{level: 1, page_number: nil, title: "Gerichte"}
+      ]
+
+      assert BerlinerAmtsblatt.get_last_page(structure, 42) == 42
+    end
+
+    test "keeps all pages when there is no such section" do
+      structure = [%{level: 1, page_number: 3, title: "Veröffentlichungen"}]
+
+      assert BerlinerAmtsblatt.get_last_page(structure, 42) == 42
+    end
   end
 
   describe "extract_page/2" do

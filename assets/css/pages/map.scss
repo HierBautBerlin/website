@@ -424,6 +424,18 @@ $header-height: 4rem;
   height: 100%;
 }
 
+// shown instead of the map when the browser has no WebGL (mapSupport.ts)
+.map--webgl-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  color: #5f5f5f;
+}
+
 .map--item-list-wrapper {
   z-index: 101;
   position: absolute;

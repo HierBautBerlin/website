@@ -2,6 +2,7 @@ import * as maplibregl from 'maplibre-gl';
 import { ViewHook } from 'phoenix_live_view';
 import circle from '@turf/circle';
 import { MAP_STYLE } from './mapStyle';
+import { webglSupported } from './mapSupport';
 
 // A map with the radius of a subscription, the circle follows the radius select.
 // Returns a function that removes the map again.
@@ -14,6 +15,8 @@ const mountSubscriptionMap = (el: HTMLElement) => {
   const lng = parseFloat(el.dataset.lng || '');
   let radius = parseInt(el.dataset.radius || '', 10);
   if (![lat, lng, radius].every(Number.isFinite)) return () => {};
+  // the radius select works without the map next to it
+  if (!webglSupported()) return () => {};
 
   const map = new maplibregl.Map({
     container,

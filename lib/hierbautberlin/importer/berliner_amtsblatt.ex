@@ -328,7 +328,9 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
     line = position != nil && Enum.at(structure, position + 1)
 
-    if line do
+    # Some outlines have no page numbers at all (dumppdf.py cannot resolve the
+    # destinations), then we keep all pages
+    if line && line.page_number do
       line.page_number - 1
     else
       number_of_pages
