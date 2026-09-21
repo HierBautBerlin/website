@@ -26,6 +26,9 @@ defmodule Hierbautberlin.GeoData.NewsItem do
     # the text and districts the addresses were found in, used to analyze it again
     field :full_text, :string
     field :districts, {:array, :string}, default: []
+    # streets that were mentioned with a house number we could not resolve. They
+    # are linked for context, but contribute no geometry and no point.
+    field :context_street_ids, {:array, :integer}, default: []
     # see Hierbautberlin.GeoData.Relevance
     field :importance, :float, default: 1.0
     field :relevant_from, :utc_datetime
@@ -68,9 +71,16 @@ defmodule Hierbautberlin.GeoData.NewsItem do
   end
 
   def change_associations(%NewsItem{} = news_item, attrs) do
+    geo_streets = attrs[:geo_streets] || []
+    street_ids = MapSet.new(geo_streets, & &1.id)
+
+    context_streets =
+      Enum.reject(attrs[:context_streets] || [], &MapSet.member?(street_ids, &1.id))
+
     news_item
     |> cast(%{}, [])
-    |> put_assoc(:geo_streets, attrs[:geo_streets])
+    |> put_change(:context_street_ids, Enum.map(context_streets, & &1.id))
+    |> put_assoc(:geo_streets, Enum.uniq_by(geo_streets ++ context_streets, & &1.id))
     |> put_assoc(:geo_street_numbers, attrs[:geo_street_numbers])
     |> put_assoc(:geo_places, attrs[:geo_places])
     |> update_cached_geometries()
@@ -90,12 +100,18 @@ defmodule Hierbautberlin.GeoData.NewsItem do
   def update_cached_geometries(news_item) do
     changeset = cast(news_item, %{}, [])
 
+    context_ids = MapSet.new(get_field(changeset, :context_street_ids) || [])
     geo_streets = get_field(changeset, :geo_streets)
     geo_street_numbers = get_field(changeset, :geo_street_numbers)
     geo_places = get_field(changeset, :geo_places)
 
+    # A street that was only mentioned with a house number we could not resolve
+    # keeps its point, so the item stays findable on the map, but not its
+    # geometry - drawing the whole street would claim all of it is meant.
+    drawn_streets = Enum.reject(geo_streets, &MapSet.member?(context_ids, &1.id))
+
     changeset
-    |> put_change(:geometries, join_geometries([geo_streets, geo_places]))
+    |> put_change(:geometries, join_geometries([drawn_streets, geo_places]))
     |> put_change(:geo_points, join_geo_points([geo_streets, geo_street_numbers, geo_places]))
   end
 

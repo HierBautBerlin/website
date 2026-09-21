@@ -75,6 +75,51 @@ defmodule Hierbautberlin.GeoData.ReanalyzeTest do
              Reanalyze.run(source: "BERLIN_AMTSBLATT")
   end
 
+  test "a second run over an interpolated house number reports no changes" do
+    source = insert(:source, short_name: "BERLIN_AMTSBLATT")
+    street = insert(:street, name: "Margarete Steffin Straße", street_numbers: [], geometry: nil)
+
+    insert(:street_number,
+      number: "10",
+      geo_street_id: street.id,
+      geo_point: %Geo.Point{coordinates: {13.0, 52.0}, srid: 4326}
+    )
+
+    insert(:street_number,
+      number: "20",
+      geo_street_id: street.id,
+      geo_point: %Geo.Point{coordinates: {13.1, 52.0}, srid: 4326}
+    )
+
+    AnalyzeText.add_streets([street])
+
+    insert(:news_item,
+      source: source,
+      full_text: "Neue Bäume in der Margarete Steffin Straße 14",
+      districts: [],
+      geo_streets: [],
+      geo_street_numbers: [],
+      geo_places: []
+    )
+
+    # a dry run counts the interpolated number, which has no id yet, and stores nothing
+    assert %{items: 1, changed: 1, added: 1, removed: 0} =
+             Reanalyze.run(source: "BERLIN_AMTSBLATT")
+
+    assert Repo.all(Hierbautberlin.GeoData.GeoStreetNumber) |> Enum.filter(& &1.interpolated) ==
+             []
+
+    assert %{items: 1, changed: 1, added: 1, removed: 0} =
+             Reanalyze.run(source: "BERLIN_AMTSBLATT", dry_run: false)
+
+    # the interpolated number is stored now, so nothing may look added or removed
+    assert %{items: 1, changed: 0, added: 0, removed: 0} =
+             Reanalyze.run(source: "BERLIN_AMTSBLATT", dry_run: false)
+
+    numbers = Repo.all(Hierbautberlin.GeoData.GeoStreetNumber)
+    assert length(Enum.filter(numbers, & &1.interpolated)) == 1
+  end
+
   test "extracts the text of stored Amtsblatt PDFs, which have no outline" do
     source = insert(:source, short_name: "BERLIN_AMTSBLATT")
     street = insert(:street, name: "DigitalPakt Schule")

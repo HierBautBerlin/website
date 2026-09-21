@@ -145,13 +145,16 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
     %{
       streets: GeoData.get_geo_streets(result.streets),
       street_numbers: GeoData.get_geo_street_numbers(result.street_numbers),
+      context_streets: GeoData.get_geo_streets(result.context_streets),
+      # not stored yet, see GeoData.store_interpolated_numbers/1
+      interpolated: result.interpolated,
       places: GeoData.get_geo_places(result.places)
     }
   rescue
     error ->
       Bugsnag.report(error)
       Logger.error("analyze_text failed: #{Exception.format(:error, error, __STACKTRACE__)}")
-      %{streets: [], street_numbers: [], places: []}
+      %{streets: [], street_numbers: [], context_streets: [], interpolated: [], places: []}
   end
 
   @doc """

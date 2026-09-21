@@ -361,6 +361,13 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
 
     locations = Enum.reject(resolved_streets, fn {mention, _, _} -> mention.office_address end)
 
+    {unresolved, locations} =
+      Enum.split_with(locations, fn {_mention, _street, number} -> number == :unresolved end)
+
+    # A missing house number can often be guessed from its known neighbours.
+    # What is left keeps the street as context only (no geometry, no point).
+    {interpolated, context_streets} = interpolate_numbers(unresolved)
+
     street_numbers =
       locations
       |> Enum.filter(fn {_mention, _street, number} -> number end)
@@ -373,9 +380,17 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       end)
       |> Enum.map(fn {_mention, street, _number} -> street.id end)
 
+    streets = Enum.uniq(streets)
+
+    # A street that is also mentioned on its own keeps its geometry - the
+    # unresolved house number doesn't make the other mention less true.
+    context_streets = context_streets |> Enum.uniq() |> Enum.reject(&(&1 in streets))
+
     %{
-      streets: Enum.uniq(streets),
+      streets: streets,
       street_numbers: street_numbers |> Enum.map(& &1.id) |> Enum.uniq(),
+      context_streets: context_streets,
+      interpolated: interpolated,
       places: places |> Enum.map(& &1.id) |> Enum.uniq()
     }
   end
@@ -672,6 +687,12 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     end
   end
 
+  # A street mentioned with a house number we don't know is not the same as a
+  # street mentioned on its own: taking the whole street would claim that all of
+  # it is meant. It is marked instead and handled in `analyze/3`.
+  defp to_results(%{numbers: [_ | _]} = mention, street, []),
+    do: [{mention, street, :unresolved}]
+
   defp to_results(mention, street, []), do: [{mention, street, nil}]
 
   defp to_results(mention, street, street_numbers) do
@@ -681,17 +702,25 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
   defp matching_numbers(%{numbers: []}, _street, _numbers), do: []
 
   defp matching_numbers(mention, street, numbers) do
-    Enum.flat_map(mention.numbers, fn number ->
-      exact = Map.get(numbers, {street.id, number})
-      without_letter = Map.get(numbers, {street.id, String.replace(number, ~r/\D+$/u, "")})
-
-      cond do
-        exact -> [exact]
-        without_letter -> [without_letter]
-        true -> []
-      end
-    end)
+    mention.numbers
+    |> Enum.flat_map(&first_matching_number(&1, street, numbers))
     |> Enum.uniq_by(& &1.id)
+  end
+
+  defp first_matching_number(number, street, numbers) do
+    number
+    |> number_candidates()
+    |> Enum.find_value(&Map.get(numbers, {street.id, &1}))
+    |> List.wrap()
+  end
+
+  # "12a" is in the same house as "12", and a number written "05" in the text is
+  # "5" in OSM - without that the house looks missing and would be interpolated
+  # next to the real one.
+  defp number_candidates(number) do
+    [number, String.replace(number, ~r/\D+$/u, "")]
+    |> Enum.flat_map(&[&1, String.replace(&1, ~r/^0+(?=\d)/, "")])
+    |> Enum.uniq()
   end
 
   defp load_numbers(mentions, index) do
@@ -700,7 +729,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
           mention.numbers != [],
           street <- Map.fetch!(index.streets, mention.key),
           number <- mention.numbers,
-          candidate <- Enum.uniq([number, String.replace(number, ~r/\D+$/u, "")]),
+          candidate <- number_candidates(number),
           do: {street.id, candidate}
 
     if pairs == [] do
@@ -717,6 +746,170 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       |> Map.new(&{{&1.geo_street_id, &1.number}, &1})
     end
   end
+
+  ## Interpolated house numbers
+
+  # Guesses where a house number that is missing in OSM sits. A number is only
+  # interpolated when it lies *between* two known numbers of the same street,
+  # preferably on the same side (odd/even): two neighbours give the gradient to
+  # interpolate along, a single one would only tell us where that one house is.
+  # Numbers outside the known range are not extrapolated.
+  #
+  # Returns {interpolated, context_street_ids} - the streets whose numbers could
+  # not be interpolated keep the mention as context only.
+  defp interpolate_numbers([]), do: {[], []}
+
+  defp interpolate_numbers(unresolved) do
+    street_ids = unresolved |> Enum.map(fn {_mention, street, _} -> street.id end) |> Enum.uniq()
+    known = known_numbers(street_ids)
+    geometries = street_geometries(street_ids)
+
+    results =
+      unresolved
+      |> Enum.flat_map(fn {mention, street, _} -> Enum.map(mention.numbers, &{street, &1}) end)
+      |> Enum.uniq()
+      |> Enum.map(fn {street, number} ->
+        {street, interpolate_number(street, number, known, geometries)}
+      end)
+
+    interpolated = results |> Enum.map(&elem(&1, 1)) |> Enum.reject(&is_nil/1)
+    interpolated_streets = MapSet.new(interpolated, & &1.geo_street_id)
+
+    context =
+      results
+      |> Enum.filter(fn {_street, point} -> is_nil(point) end)
+      |> Enum.map(fn {street, _point} -> street.id end)
+      |> Enum.reject(&MapSet.member?(interpolated_streets, &1))
+      |> Enum.uniq()
+
+    {interpolated, context}
+  end
+
+  defp interpolate_number(street, number, known, geometries) do
+    with {:ok, target} <- house_number(number),
+         neighbours when neighbours != [] <- Map.get(known, street.id, []),
+         {lower, upper} <- bracket(neighbours, target),
+         fraction = (target - lower.value) / (upper.value - lower.value),
+         %Geo.Point{} = point <-
+           interpolate_point(Map.get(geometries, street.id), lower, upper, fraction) do
+      neighbour = if fraction <= 0.5, do: lower, else: upper
+
+      %{
+        geo_street_id: street.id,
+        number: number,
+        geo_point: point,
+        zip: neighbour.zip,
+        ortsteil: neighbour.ortsteil
+      }
+    else
+      _ -> nil
+    end
+  end
+
+  defp bracket(neighbours, target) do
+    same_side = Enum.filter(neighbours, &(rem(&1.value, 2) == rem(target, 2)))
+
+    bracket_in(same_side, target) || bracket_in(neighbours, target)
+  end
+
+  defp bracket_in(neighbours, target) do
+    lower =
+      neighbours
+      |> Enum.filter(&(&1.value < target))
+      |> Enum.sort_by(& &1.value, :desc)
+      |> List.first()
+
+    upper =
+      neighbours |> Enum.filter(&(&1.value > target)) |> Enum.sort_by(& &1.value) |> List.first()
+
+    if lower && upper, do: {lower, upper}
+  end
+
+  # "12a" and "12 A" are the same house as far as the position is concerned
+  defp house_number(number) when is_binary(number) do
+    case Integer.parse(number) do
+      {value, _rest} when value > 0 -> {:ok, value}
+      _ -> :error
+    end
+  end
+
+  defp house_number(_number), do: :error
+
+  defp known_numbers([]), do: %{}
+
+  defp known_numbers(street_ids) do
+    from(n in GeoStreetNumber,
+      where: n.geo_street_id in ^street_ids and not is_nil(n.geo_point),
+      select: %{
+        geo_street_id: n.geo_street_id,
+        number: n.number,
+        zip: n.zip,
+        ortsteil: n.ortsteil,
+        geo_point: n.geo_point
+      }
+    )
+    |> Repo.all()
+    |> Enum.flat_map(fn row ->
+      case house_number(row.number) do
+        {:ok, value} -> [Map.put(row, :value, value)]
+        :error -> []
+      end
+    end)
+    |> Enum.group_by(& &1.geo_street_id)
+  end
+
+  defp street_geometries([]), do: %{}
+
+  defp street_geometries(street_ids) do
+    from(s in GeoStreet,
+      where: s.id in ^street_ids and not is_nil(s.geometry),
+      select: {s.id, s.geometry}
+    )
+    |> Repo.all()
+    |> Map.new()
+  end
+
+  # Along the street if we have a line to walk on (house numbers follow the
+  # street, not the straight line between two houses), otherwise between the two
+  # neighbours. ST_LineLocatePoint only takes a LineString, streets that fall
+  # apart into several parts use the straight line.
+  defp interpolate_point(%Geo.LineString{} = geometry, lower, upper, fraction) do
+    sql = """
+    WITH line AS (SELECT ST_GeomFromEWKT($1) AS geom)
+    SELECT ST_AsEWKT(
+             ST_LineInterpolatePoint(
+               geom,
+               greatest(0, least(1, lo + $4 * (hi - lo)))))
+    FROM (
+      SELECT geom,
+             ST_LineLocatePoint(geom, ST_GeomFromEWKT($2)) AS lo,
+             ST_LineLocatePoint(geom, ST_GeomFromEWKT($3)) AS hi
+      FROM line
+    ) positions
+    """
+
+    params = [
+      Geo.WKT.encode!(geometry),
+      Geo.WKT.encode!(lower.geo_point),
+      Geo.WKT.encode!(upper.geo_point),
+      fraction
+    ]
+
+    case Repo.query!(sql, params) do
+      %{rows: [[ewkt]]} when is_binary(ewkt) -> Geo.WKT.decode!(ewkt)
+      _ -> nil
+    end
+  end
+
+  defp interpolate_point(_geometry, lower, upper, fraction) do
+    straight_point(lower.geo_point, upper.geo_point, fraction)
+  end
+
+  defp straight_point(%Geo.Point{coordinates: {x1, y1}}, %Geo.Point{coordinates: {x2, y2}}, t) do
+    %Geo.Point{coordinates: {x1 + t * (x2 - x1), y1 + t * (y2 - y1)}, srid: 4326}
+  end
+
+  defp straight_point(_lower, _upper, _fraction), do: nil
 
   ## Places
 

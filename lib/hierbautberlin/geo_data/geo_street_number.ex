@@ -10,6 +10,8 @@ defmodule Hierbautberlin.GeoData.GeoStreetNumber do
     field :zip, :string
     field :ortsteil, :string
     field :geo_point, Geometry
+    # guessed between two known neighbours, not imported from OSM
+    field :interpolated, :boolean, default: false
 
     belongs_to :geo_street, GeoStreet
 

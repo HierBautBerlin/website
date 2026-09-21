@@ -408,14 +408,241 @@ defmodule Hierbautberlin.GeoDataTest do
       assert [street_number.id] == result.street_numbers |> Enum.map(& &1.id)
     end
 
-    test "it should use the street if the house number cannot be found" do
+    test "it keeps the street as context if the house number can't be found or interpolated" do
       street = insert(:street, name: "Anne Knight Straße")
       insert(:street_number, number: "20A", geo_street_id: street.id)
       AnalyzeText.add_streets([street])
 
       result = GeoData.analyze_text("In der Anne Knight Straße 25 wird ...")
+
       assert Enum.empty?(result.street_numbers)
+      assert Enum.empty?(result.interpolated)
+      # one known number gives no gradient to interpolate along
+      assert Enum.empty?(result.streets)
+      assert [street.id] == result.context_streets |> Enum.map(& &1.id)
+    end
+
+    test "it finds a house number written with a leading zero" do
+      street = insert(:street, name: "Clara Zetkin Straße", street_numbers: [])
+      five = insert(:street_number, number: "5", geo_street_id: street.id)
+      insert(:street_number, number: "4", geo_street_id: street.id)
+      insert(:street_number, number: "6", geo_street_id: street.id)
+      AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Clara Zetkin Straße 05 wird ...")
+
+      assert [five.id] == result.street_numbers |> Enum.map(& &1.id)
+      # and it is not interpolated next to the house that already exists
+      assert Enum.empty?(result.interpolated)
+    end
+
+    test "a context street keeps its point on the map, but not its geometry" do
+      street =
+        insert(:street,
+          name: "Tony Sender Straße",
+          street_numbers: [],
+          geo_point: %Geo.Point{coordinates: {13.5, 52.5}, srid: 4326}
+        )
+
+      insert(:street_number, number: "20A", geo_street_id: street.id)
+      AnalyzeText.add_streets([street])
+
+      source = insert(:source)
+
+      item =
+        GeoData.upsert_news_item!(
+          %{external_id: "context-1", title: "Umbau", source_id: source.id},
+          "In der Tony Sender Straße 25 wird umgebaut.",
+          []
+        )
+
+      assert item.context_street_ids == [street.id]
+      # still linked and still visible
+      assert [street.id] == Repo.preload(item, :geo_streets).geo_streets |> Enum.map(& &1.id)
+      assert %Geo.MultiPoint{coordinates: [{13.5, 52.5}]} = item.geo_points
+      # but the whole street is not drawn
+      assert is_nil(item.geometries)
+    end
+
+    test "it interpolates a house number between its two known neighbours" do
+      street = insert(:street, name: "Hedwig Dohm Straße", geometry: nil, street_numbers: [])
+
+      insert(:street_number,
+        number: "10",
+        geo_street_id: street.id,
+        zip: "10247",
+        geo_point: %Geo.Point{coordinates: {13.0, 52.0}, srid: 4326}
+      )
+
+      insert(:street_number,
+        number: "20",
+        geo_street_id: street.id,
+        zip: "10247",
+        geo_point: %Geo.Point{coordinates: {13.1, 52.0}, srid: 4326}
+      )
+
+      AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Hedwig Dohm Straße 14 wird ...")
+
+      assert Enum.empty?(result.street_numbers)
+      assert Enum.empty?(result.context_streets)
+      assert [interpolated] = result.interpolated
+      assert interpolated.number == "14"
+      assert interpolated.geo_street_id == street.id
+      assert interpolated.zip == "10247"
+
+      {lng, lat} = interpolated.geo_point.coordinates
+      assert_in_delta lng, 13.04, 0.0001
+      assert_in_delta lat, 52.0, 0.0001
+    end
+
+    test "it interpolates along the street, not straight through the block" do
+      # an L: south to north, then west to east
+      street =
+        insert(:street,
+          name: "Hertha Nathorff Straße",
+          street_numbers: [],
+          geometry: %Geo.LineString{
+            coordinates: [{13.0, 52.0}, {13.0, 52.01}, {13.01, 52.01}],
+            srid: 4326
+          }
+        )
+
+      insert(:street_number,
+        number: "10",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.0, 52.0}, srid: 4326}
+      )
+
+      insert(:street_number,
+        number: "20",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.01, 52.01}, srid: 4326}
+      )
+
+      AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Hertha Nathorff Straße 15 wird ...")
+
+      assert [interpolated] = result.interpolated
+      {lng, lat} = interpolated.geo_point.coordinates
+
+      # halfway *along* the line is the corner, not the diagonal midpoint
+      assert_in_delta lng, 13.0, 0.0001
+      assert_in_delta lat, 52.01, 0.0001
+    end
+
+    test "it interpolates on the same side of the street" do
+      street = insert(:street, name: "Hermine Heusler Straße", street_numbers: [], geometry: nil)
+
+      # odd numbers south, even numbers north
+      for {number, lat} <- [{"11", 52.0}, {"21", 52.0}, {"12", 52.01}, {"20", 52.01}] do
+        lng = if number in ["11", "12"], do: 13.0, else: 13.1
+
+        insert(:street_number,
+          number: number,
+          geo_street_id: street.id,
+          geo_point: %Geo.Point{coordinates: {lng, lat}, srid: 4326}
+        )
+      end
+
+      AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Hermine Heusler Straße 15 wird ...")
+
+      assert [interpolated] = result.interpolated
+      {lng, lat} = interpolated.geo_point.coordinates
+
+      # 15 is odd, so it sits between 11 and 21, not between 12 and 20
+      assert_in_delta lat, 52.0, 0.0001
+      assert_in_delta lng, 13.04, 0.0001
+    end
+
+    test "a street mentioned on its own keeps its geometry even with an unresolvable number" do
+      street = insert(:street, name: "Lily Braun Straße", street_numbers: [])
+      insert(:street_number, number: "1", geo_street_id: street.id)
+      AnalyzeText.add_streets([street])
+
+      text = "In der Lily Braun Straße wird gebaut. Die Baustelle Lily Braun Straße 99 ist groß."
+      result = GeoData.analyze_text(text)
+
+      # the plain mention wins, the street must not be linked twice
       assert [street.id] == result.streets |> Enum.map(& &1.id)
+      assert Enum.empty?(result.context_streets)
+
+      source = insert(:source)
+
+      item =
+        GeoData.upsert_news_item!(
+          %{external_id: "both-1", title: "Umbau", source_id: source.id},
+          text,
+          []
+        )
+
+      assert [street.id] == Repo.preload(item, :geo_streets).geo_streets |> Enum.map(& &1.id)
+      assert item.context_street_ids == []
+      refute is_nil(item.geometries)
+    end
+
+    test "it does not extrapolate beyond the known house numbers" do
+      street =
+        insert(:street, name: "Lida Gustava Heymann Straße", geometry: nil, street_numbers: [])
+
+      insert(:street_number,
+        number: "10",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.0, 52.0}, srid: 4326}
+      )
+
+      insert(:street_number,
+        number: "20",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.1, 52.0}, srid: 4326}
+      )
+
+      AnalyzeText.add_streets([street])
+
+      result = GeoData.analyze_text("In der Lida Gustava Heymann Straße 90 wird ...")
+
+      assert Enum.empty?(result.interpolated)
+      assert [street.id] == result.context_streets |> Enum.map(& &1.id)
+    end
+
+    test "it stores an interpolated house number and uses it as the point of the news item" do
+      street = insert(:street, name: "Emma Ihrer Straße", geometry: nil, street_numbers: [])
+
+      insert(:street_number,
+        number: "10",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.0, 52.0}, srid: 4326}
+      )
+
+      insert(:street_number,
+        number: "20",
+        geo_street_id: street.id,
+        geo_point: %Geo.Point{coordinates: {13.1, 52.0}, srid: 4326}
+      )
+
+      AnalyzeText.add_streets([street])
+
+      source = insert(:source)
+
+      item =
+        GeoData.upsert_news_item!(
+          %{external_id: "interpolated-1", title: "Umbau", source_id: source.id},
+          "In der Emma Ihrer Straße 14 wird umgebaut.",
+          []
+        )
+
+      assert [number] = Repo.preload(item, :geo_street_numbers).geo_street_numbers
+      assert number.number == "14"
+      assert number.interpolated
+
+      # the item gets the interpolated point, not the whole street
+      assert %Geo.MultiPoint{coordinates: [{lng, _lat}]} = item.geo_points
+      assert_in_delta lng, 13.04, 0.0001
+      assert is_nil(item.geometries)
     end
 
     test "it should find the exact house number if the street exists in two districts" do

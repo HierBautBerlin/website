@@ -41,6 +41,44 @@ defmodule Hierbautberlin.Release do
   end
 
   @doc """
+  Runs the address matching again for existing news items, the release version
+  of `mix geo.reanalyze` (see `Hierbautberlin.GeoData.Reanalyze`).
+
+      bin/hierbautberlin eval 'Hierbautberlin.Release.reanalyze("BERLIN_PRESSE")'
+      bin/hierbautberlin eval 'Hierbautberlin.Release.reanalyze("BERLIN_PRESSE", since: "2026-09-01")'
+
+  Nothing is changed unless `apply: true` is given. Press releases without a
+  stored text are fetched again, so a full run takes a while.
+  """
+  def reanalyze(source, opts \\ []) do
+    start_app()
+
+    since =
+      case Keyword.get(opts, :since) do
+        nil -> nil
+        date -> DateTime.new!(Date.from_iso8601!(date), ~T[00:00:00], "Etc/UTC")
+      end
+
+    apply? = Keyword.get(opts, :apply, false)
+
+    Hierbautberlin.GeoData.AnalyzeText.reload()
+
+    stats =
+      Hierbautberlin.GeoData.Reanalyze.run(source: source, since: since, dry_run: !apply?)
+
+    IO.puts(inspect(stats))
+
+    if apply? do
+      Hierbautberlin.GeoData.MapFeatures.refresh()
+      IO.puts("Refreshed the map features")
+    else
+      IO.puts("Dry run, nothing was changed. Pass apply: true to store the changes.")
+    end
+
+    stats
+  end
+
+  @doc """
   Calculates the relevance of all news items again, see
   `Hierbautberlin.GeoData.Relevance`.
   """
