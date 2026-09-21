@@ -290,6 +290,39 @@ defmodule Hierbautberlin.GeoData do
     AnalyzeText.analyze_text(text, options)
   end
 
+  @doc """
+  Stores the house numbers `analyze_text/2` interpolated and returns them
+  together with the ones that were found directly.
+
+  Interpolated numbers have no `external_id`, so the OSM import drops them again
+  as soon as no news item links them - for example because OSM has learned the
+  real address in the meantime.
+  """
+  def store_interpolated_numbers(result) do
+    result.street_numbers ++ Enum.map(result.interpolated, &store_interpolated_number/1)
+  end
+
+  defp store_interpolated_number(attrs) do
+    existing =
+      Repo.one(
+        from number in GeoStreetNumber,
+          where:
+            number.geo_street_id == ^attrs.geo_street_id and
+              number.number == ^attrs.number and number.interpolated
+      )
+
+    (existing || %GeoStreetNumber{})
+    |> Ecto.Changeset.change(%{
+      geo_street_id: attrs.geo_street_id,
+      number: attrs.number,
+      zip: attrs.zip,
+      ortsteil: attrs.ortsteil,
+      geo_point: attrs.geo_point,
+      interpolated: true
+    })
+    |> Repo.insert_or_update!()
+  end
+
   def upsert_news_item!(attrs, full_text, districts) do
     districts = districts |> List.wrap() |> Enum.filter(&is_binary/1)
     result = analyze_text(full_text, %{districts: districts})
@@ -315,7 +348,8 @@ defmodule Hierbautberlin.GeoData do
     |> Repo.preload([:geo_streets, :geo_street_numbers, :geo_places])
     |> NewsItem.change_associations(
       geo_streets: result.streets,
-      geo_street_numbers: result.street_numbers,
+      geo_street_numbers: store_interpolated_numbers(result),
+      context_streets: result.context_streets,
       geo_places: result.places
     )
     |> Repo.update!()

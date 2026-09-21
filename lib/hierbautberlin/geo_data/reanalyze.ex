@@ -196,7 +196,13 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
     result = GeoData.analyze_text(text, %{districts: districts})
 
     before = link_keys(news_item.geo_streets, news_item.geo_street_numbers, news_item.geo_places)
-    after_analysis = link_keys(result.streets, result.street_numbers, result.places)
+
+    after_analysis =
+      link_keys(
+        result.streets ++ result.context_streets,
+        result.street_numbers ++ result.interpolated,
+        result.places
+      )
 
     added = MapSet.size(MapSet.difference(after_analysis, before))
     removed = MapSet.size(MapSet.difference(before, after_analysis))
@@ -206,7 +212,8 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
       news_item
       |> NewsItem.change_associations(
         geo_streets: result.streets,
-        geo_street_numbers: result.street_numbers,
+        geo_street_numbers: GeoData.store_interpolated_numbers(result),
+        context_streets: result.context_streets,
         geo_places: result.places
       )
       |> Ecto.Changeset.change(full_text: text, districts: districts)
@@ -218,8 +225,15 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
 
   defp link_keys(streets, street_numbers, places) do
     Enum.map(streets, &{:street, &1.id})
-    |> Enum.concat(Enum.map(street_numbers, &{:street_number, &1.id}))
+    |> Enum.concat(Enum.map(street_numbers, &street_number_key/1))
     |> Enum.concat(Enum.map(places, &{:place, &1.id}))
     |> MapSet.new()
   end
+
+  defp street_number_key(%{id: id}) when not is_nil(id), do: {:street_number, id}
+
+  # A number that was only interpolated has no id yet: it is stored when the
+  # item is written, and found by the normal lookup from the next run on.
+  defp street_number_key(number),
+    do: {:interpolated, number.geo_street_id, number.number}
 end
