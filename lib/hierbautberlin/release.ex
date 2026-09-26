@@ -130,6 +130,26 @@ defmodule Hierbautberlin.Release do
   end
 
   @doc """
+  Imports the roadworks and the StEP Wohnen 2040 sites from
+  gdi.berlin.de right away instead of waiting for the daily import, see
+  `Hierbautberlin.Importer.gdi_importers/0`. Takes a few seconds. Subscribers
+  are not notified about these items, the daily import only notifies about
+  changes since its own start.
+
+      bin/hierbautberlin eval 'Hierbautberlin.Release.import_gdi_sources()'
+  """
+  def import_gdi_sources do
+    start_app()
+
+    results = Hierbautberlin.Importer.run_importers(Hierbautberlin.Importer.gdi_importers())
+    Enum.each(results, fn {name, result} -> IO.puts("#{name}: #{inspect(result)}") end)
+
+    Hierbautberlin.GeoData.MapFeatures.refresh()
+    IO.puts("Refreshed the map features")
+    results
+  end
+
+  @doc """
   Calculates the relevance of all news items again, see
   `Hierbautberlin.GeoData.Relevance`.
   """

@@ -23,7 +23,9 @@ defmodule Hierbautberlin.Importer.Check do
     # for the check every release of the first pages is fetched
     "gruen_berlin" => {Importer.GruenBerlin, :import, [[skip_imported: false]]},
     "viz" => {Importer.VIZ, :import, []},
-    "neubaukompass" => {Importer.Neubaukompass, :import, []}
+    "neubaukompass" => {Importer.Neubaukompass, :import, []},
+    "berlin_baustellen" => {Importer.BerlinBaustellen, :import, []},
+    "step_wohnen" => {Importer.StepWohnen, :import, []}
   }
 
   def importer_names, do: @importers |> Map.keys() |> Enum.sort()
