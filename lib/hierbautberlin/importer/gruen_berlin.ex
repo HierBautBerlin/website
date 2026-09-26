@@ -27,6 +27,7 @@ defmodule Hierbautberlin.Importer.GruenBerlin do
   alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.NewsItem
   alias Hierbautberlin.Repo
+  alias Hierbautberlin.Services.GermanMonths
 
   @base_url "https://gruen-berlin.de"
   @list_url "#{@base_url}/presse/pressemitteilungen"
@@ -41,8 +42,6 @@ defmodule Hierbautberlin.Importer.GruenBerlin do
 
   # Their projects are imported from infravelo.de directly
   @skipped_projects ["infraVelo"]
-
-  @months ~w(Januar Februar März April Mai Juni Juli August September Oktober November Dezember)
 
   @doc """
   Imports the press releases of the newest list pages.
@@ -269,8 +268,8 @@ defmodule Hierbautberlin.Importer.GruenBerlin do
   # "Donnerstag, 3. September 2026", "3. September 2026"
   defp parse_date(text) do
     with [_, day, month, year] <-
-           Regex.run(~r/(\d{1,2})\.\s*(#{Enum.join(@months, "|")})\s+(\d{4})/u, text),
-         month = Enum.find_index(@months, &(&1 == month)) + 1,
+           Regex.run(~r/(\d{1,2})\.\s*(#{GermanMonths.pattern()})\s+(\d{4})/u, text),
+         month = GermanMonths.number(month),
          {:ok, date} <- Date.new(String.to_integer(year), month, String.to_integer(day)) do
       date
       |> DateTime.new!(~T[00:00:00], "Europe/Berlin")

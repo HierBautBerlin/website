@@ -22,7 +22,8 @@ defmodule Hierbautberlin.Importer.Check do
     # the article pages are only fetched for releases that are not stored yet,
     # for the check every release of the first pages is fetched
     "gruen_berlin" => {Importer.GruenBerlin, :import, [[skip_imported: false]]},
-    "viz" => {Importer.VIZ, :import, []}
+    "viz" => {Importer.VIZ, :import, []},
+    "neubaukompass" => {Importer.Neubaukompass, :import, []}
   }
 
   def importer_names, do: @importers |> Map.keys() |> Enum.sort()

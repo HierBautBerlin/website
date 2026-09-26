@@ -30,6 +30,7 @@ defmodule Hierbautberlin.GeoData.Relevance do
 
   alias Hierbautberlin.GeoData.NewsItem
   alias Hierbautberlin.Repo
+  alias Hierbautberlin.Services.GermanMonths
 
   @participation 3.0
   @notable 1.5
@@ -44,8 +45,6 @@ defmodule Hierbautberlin.GeoData.Relevance do
   # How long a news item without any date in its text stays relevant
   @news_days 14
   @participation_days 30
-
-  @months ~w(januar februar märz april mai juni juli august september oktober november dezember)
 
   # People can take part or object
   @participation_words ~r/\b(Einwendungen|Anregungen|Bürgerbeteiligung|Online-Beteiligung|Öffentlichkeitsbeteiligung|Beteiligungsverfahren|öffentlich(e|en)? ausgelegt|öffentliche Auslegung|Bürgerversammlung|Einwohnerversammlung|Informationsveranstaltung|Beteiligen Sie sich|Stellungnahmen? .{0,80}(abgegeben|eingereicht|vorgebracht) werden)/iu
@@ -209,19 +208,19 @@ defmodule Hierbautberlin.GeoData.Relevance do
   # "12.09.2026", "12. September 2026"
   defp full_dates(text) do
     numeric = ~r/\b(\d{1,2})\.\s?(\d{1,2})\.\s?(\d{4})\b/u
-    named = ~r/\b(\d{1,2})\.\s*(#{Enum.join(@months, "|")})\s+(\d{4})\b/iu
+    named = ~r/\b(\d{1,2})\.\s*(#{GermanMonths.pattern()})\s+(\d{4})\b/iu
 
     scan_dates(numeric, text, fn [day, month, year] -> to_date(year, month, day) end) ++
       scan_dates(named, text, fn [day, month, year] ->
-        to_date(year, month_number(month), day)
+        to_date(year, GermanMonths.number(month), day)
       end)
   end
 
   # "bis Ende Oktober 2026", "bis voraussichtlich Dezember 2026"
   defp month_dates(text) do
-    ~r/\bbis\s+(?:(?:voraussichtlich|Ende|Mitte|Anfang|einschließlich|zum)\s+)*(#{Enum.join(@months, "|")})\s+(\d{4})\b/iu
+    ~r/\bbis\s+(?:(?:voraussichtlich|Ende|Mitte|Anfang|einschließlich|zum)\s+)*(#{GermanMonths.pattern()})\s+(\d{4})\b/iu
     |> scan_dates(text, fn [month, year] ->
-      case to_date(year, month_number(month), 1) do
+      case to_date(year, GermanMonths.number(month), 1) do
         nil -> nil
         date -> Date.end_of_month(date)
       end
@@ -273,10 +272,6 @@ defmodule Hierbautberlin.GeoData.Relevance do
   defp count_number("vier"), do: 4
   defp count_number("sechs"), do: 6
   defp count_number(number), do: String.to_integer(number)
-
-  defp month_number(name) do
-    Enum.find_index(@months, &(&1 == String.downcase(name))) + 1
-  end
 
   defp to_date(year, month, day) do
     with {year, ""} <- Integer.parse(to_string(year)),

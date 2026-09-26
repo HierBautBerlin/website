@@ -20,6 +20,7 @@ defmodule Hierbautberlin.Importer do
       {"MeinBerlin", &Importer.MeinBerlin.import/0},
       {"UVP", &Importer.UVP.import/0},
       {"DafMap", &Importer.DafMap.import/0},
+      {"Neubaukompass", &Importer.Neubaukompass.import/0},
       {"BerlinerAmtsblatt", &Importer.BerlinerAmtsblatt.import_webpage/0}
     ])
 

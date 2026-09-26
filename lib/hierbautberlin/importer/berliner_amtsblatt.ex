@@ -7,22 +7,7 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
   alias Hierbautberlin.GeoData
   alias Hierbautberlin.GeoData.{NewsItem, Source}
   alias Hierbautberlin.Repo
-  alias Hierbautberlin.Services.UnicodeHelper
-
-  @months [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember"
-  ]
+  alias Hierbautberlin.Services.{GermanMonths, UnicodeHelper}
 
   def import(
         http_connection \\ Hierbautberlin.HTTPClient,
@@ -415,13 +400,9 @@ defmodule Hierbautberlin.Importer.BerlinerAmtsblatt do
 
     Date.new!(
       String.to_integer(capture["year"]),
-      month_to_number(capture["month"]),
+      GermanMonths.number(capture["month"]),
       String.to_integer(capture["day"])
     )
-  end
-
-  defp month_to_number(month) do
-    Enum.find_index(@months, fn item -> item == month end) + 1
   end
 
   def extract_news(pages, structure) do
