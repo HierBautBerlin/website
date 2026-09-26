@@ -5,7 +5,7 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
 
   defmodule ImportMock do
     def get!(
-          "https://www.berlin.de/presse/pressemitteilungen/index/feed?institutions%5B%5D=Presse-+und+Informationsamt+des+Landes+Berlin&institutions%5B%5D=Senatskanzlei+-+Wissenschaft+und+Forschung&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Bildung%2C+Jugend+und+Familie&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Finanzen&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Gesundheit%2C+Pflege+und+Gleichstellung&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Inneres+und+Sport&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Integration%2C+Arbeit+und+Soziales&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Justiz%2C+Verbraucherschutz+und+Antidiskriminierung&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Kultur+und+Europa&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Stadtentwicklung+und+Wohnen&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Umwelt%2C+Verkehr+und+Klimaschutz&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Wirtschaft%2C+Energie+und+Betriebe&institutions%5B%5D=Bezirksamt+Charlottenburg-Wilmersdorf&institutions%5B%5D=Bezirksamt+Friedrichshain-Kreuzberg&institutions%5B%5D=Bezirksamt+Lichtenberg&institutions%5B%5D=Bezirksamt+Marzahn-Hellersdorf&institutions%5B%5D=Bezirksamt+Mitte&institutions%5B%5D=Bezirksamt+Neuk%C3%B6lln&institutions%5B%5D=Bezirksamt+Pankow&institutions%5B%5D=Bezirksamt+Reinickendorf&institutions%5B%5D=Bezirksamt+Spandau&institutions%5B%5D=Bezirksamt+Steglitz-Zehlendorf&institutions%5B%5D=Bezirksamt+Tempelhof-Sch%C3%B6neberg&institutions%5B%5D=Bezirksamt+Treptow-K%C3%B6penick",
+          "https://www.berlin.de/presse/pressemitteilungen/index/feed?institutions%5B%5D=Presse-+und+Informationsamt+des+Landes+Berlin&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Arbeit%2C+Soziales%2C+Gleichstellung%2C+Integration%2C+Vielfalt+und+Antidiskriminierung&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Bildung%2C+Jugend+und+Familie&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Finanzen&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Inneres+und+Sport&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Justiz+und+Verbraucherschutz&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Kultur+und+Gesellschaftlichen+Zusammenhalt&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Mobilit%C3%A4t%2C+Verkehr%2C+Klimaschutz+und+Umwelt&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Stadtentwicklung%2C+Bauen+und+Wohnen&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Wirtschaft%2C+Energie+und+Betriebe&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Wissenschaft%2C+Gesundheit+und+Pflege&institutions%5B%5D=Landesdenkmalamt&institutions%5B%5D=Bezirksamt+Charlottenburg-Wilmersdorf&institutions%5B%5D=Bezirksamt+Friedrichshain-Kreuzberg&institutions%5B%5D=Bezirksamt+Lichtenberg&institutions%5B%5D=Bezirksamt+Marzahn-Hellersdorf&institutions%5B%5D=Bezirksamt+Mitte&institutions%5B%5D=Bezirksamt+Neuk%C3%B6lln&institutions%5B%5D=Bezirksamt+Pankow&institutions%5B%5D=Bezirksamt+Reinickendorf&institutions%5B%5D=Bezirksamt+Spandau&institutions%5B%5D=Bezirksamt+Steglitz-Zehlendorf&institutions%5B%5D=Bezirksamt+Tempelhof-Sch%C3%B6neberg&institutions%5B%5D=Bezirksamt+Treptow-K%C3%B6penick",
           ["User-Agent": "hierbautberlin.de"],
           timeout: 60_000,
           recv_timeout: 60_000
@@ -32,6 +32,20 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
         ) do
       {:ok, html} = File.read("./test/support/data/berlin_presse/pressemitteilung.1102306.html")
       %{body: html, headers: [], status_code: 200}
+    end
+  end
+
+  defmodule ArchiveMock do
+    # every page returns the same feed, like the pages after the last one do
+    def get!("https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _ = url, _, _) do
+      send(self(), {:get, url})
+      {:ok, html} = File.read("./test/support/data/berlin_presse/feed.xml")
+      %{body: html, headers: [], status_code: 200}
+    end
+
+    def get!(url, headers, opts) do
+      send(self(), {:get, url})
+      ImportMock.get!(url, headers, opts)
     end
   end
 
@@ -120,6 +134,38 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       {:ok, result} = BerlinPresse.import(ImportMock)
 
       assert length(result) == 2
+    end
+  end
+
+  describe "import_archive/2" do
+    test "reads the pages until one repeats and skips stored releases" do
+      {:ok, result} = BerlinPresse.import_archive(ArchiveMock, 10)
+
+      assert result |> Enum.map(& &1.title) |> Enum.sort() == [
+               "Gehweg- und Fahrbahnsanierungen an der Suarezstraße",
+               "Stromnetz Berlin ist wieder im Eigentum des Landes Berlin"
+             ]
+
+      assert_received {:get, "https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _}
+
+      assert_received {:get,
+                       "https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> page_two}
+
+      assert page_two =~ "&page=2"
+      refute page_two =~ "Bezirksamt"
+
+      flush_requests()
+      {:ok, result} = BerlinPresse.import_archive(ArchiveMock, 10)
+      assert result == []
+      refute_received {:get, "https://www.berlin.de/sen/" <> _}
+    end
+  end
+
+  defp flush_requests do
+    receive do
+      {:get, _} -> flush_requests()
+    after
+      0 -> :ok
     end
   end
 

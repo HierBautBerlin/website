@@ -11,6 +11,9 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
     * press releases: the article pages are fetched again (slowly, berlin.de
       throttles fast clients)
 
+  With `stored_only: true` only the stored texts are used, news items without
+  one are counted as `missing_text` and left alone.
+
   By default nothing is changed (`dry_run: true`), only statistics are returned.
   Otherwise the links are updated and the extracted texts are stored.
   """
@@ -25,15 +28,17 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
   alias Hierbautberlin.Repo
   alias Hierbautberlin.Services.Berlin
 
-  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE)
+  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE GRUEN_BERLIN VIZ)
 
   def sources, do: @sources
 
   @doc """
   Options:
-    * `:source` - `"BERLIN_AMTSBLATT"` or `"BERLIN_PRESSE"` (required)
+    * `:source` - one of `sources/0` (required)
     * `:since` - only news items published since this `DateTime`
     * `:dry_run` - don't change anything (default `true`)
+    * `:stored_only` - skip news items without a stored text instead of
+      extracting or fetching it (default `false`)
     * `:http_connection` - HTTP client for press releases
     * `:delay` - milliseconds between press release requests (default 1000)
   """
@@ -46,9 +51,14 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
       |> news_items(Keyword.get(opts, :since))
       |> Enum.split_with(& &1.full_text)
 
+    extracted =
+      if Keyword.get(opts, :stored_only, false),
+        do: Enum.map(without_text, &{&1, nil}),
+        else: texts_for(without_text, source.short_name, opts)
+
     stored
     |> Enum.map(&{&1, {&1.full_text, &1.districts || []}})
-    |> Stream.concat(texts_for(without_text, source.short_name, opts))
+    |> Stream.concat(extracted)
     |> Enum.reduce(%{items: 0, changed: 0, added: 0, removed: 0, missing_text: 0}, fn
       {_news_item, nil}, stats ->
         %{stats | items: stats.items + 1, missing_text: stats.missing_text + 1}
@@ -94,6 +104,11 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
       text = Enum.join([news_item.title, news_item.content, article], "\n")
       {news_item, {text, districts_from_url(news_item.url)}}
     end)
+  end
+
+  # Grün Berlin and VIZ messages always store their text, never without one
+  defp texts_for(news_items, _source, _opts) do
+    Enum.map(news_items, &{&1, nil})
   end
 
   defp pdf_name(news_item) do

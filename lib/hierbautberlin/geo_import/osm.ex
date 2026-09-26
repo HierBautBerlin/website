@@ -5,7 +5,8 @@ defmodule Hierbautberlin.GeoImport.OSM do
   1. `ogr2ogr` loads points, lines and multipolygons into the `osm_import` schema
      (see `priv/osm/osmconf.ini` for the extracted tags).
   2. SQL builds staging tables: city and district boundaries, addresses (nodes
-     *and* buildings) and streets (real highway geometries, split by district).
+     *and* buildings), streets (real highway geometries, split by district) and
+     places (green spaces, squares and lakes, see `@place_types`).
   3. Streets are upserted by `(name, district)` and street numbers by
      `external_id`, so ids and the links to news items survive re-imports.
      Streets and numbers that vanished from OSM are only deleted when no news
@@ -23,6 +24,43 @@ defmodule Hierbautberlin.GeoImport.OSM do
   @street_highways ~w(motorway motorway_link trunk trunk_link primary primary_link secondary
     secondary_link tertiary tertiary_link unclassified residential living_street pedestrian
     service road busway)
+
+  # Named areas people talk about: green spaces, squares, standing water and
+  # landmarks. They are the places texts are matched against, so the tags are
+  # narrow on purpose - every name in the index can also be a false match.
+  # Not included: allotments and sports grounds (many, with generic names), the
+  # parts of a botanical garden ("Arzneipflanzen", they are gardens as well, but
+  # neither public nor a tourism destination), flowing water, cemeteries, and
+  # everything that is a building or a POI.
+  @place_types [
+    {"Park",
+     """
+     m.leisure IN ('park', 'nature_reserve', 'common')
+       OR (m.leisure = 'garden'
+           AND (m.tourism IS NOT NULL OR m.garden_type = 'public'))
+       OR m.landuse IN ('recreation_ground', 'village_green', 'forest')
+       -- a park that is being built, like the Spreepark
+       OR (m.landuse = 'construction'
+           AND m.construction IN ('park', 'garden', 'recreation_ground'))
+     """},
+    {"Square", "m.place = 'square'"},
+    {"Landmark", "m.tourism = 'attraction'"},
+    {"Water",
+     """
+     m."natural" = 'water'
+       AND coalesce(m.water, 'lake') NOT IN
+           ('river', 'canal', 'stream', 'ditch', 'drain', 'moat', 'lock', 'wastewater')
+     """}
+  ]
+
+  # The water basins and ponds inside a park have descriptive names
+  # ("Wasserbecken", "Ententeich") that match any text about the park
+  @min_water_area 5000
+
+  @place_type_sql "CASE " <>
+                    Enum.map_join(@place_types, " ", fn {type, condition} ->
+                      "WHEN #{String.trim(condition)} THEN '#{type}'"
+                    end) <> " END"
 
   @doc """
   Runs the whole import for the given `.osm.pbf` (or `.osm`) file and returns
@@ -125,10 +163,10 @@ defmodule Hierbautberlin.GeoImport.OSM do
 
   @doc """
   Builds the staging tables `city`, `districts`, `ortsteile`, `postcodes`,
-  `addresses` and `streets` from the loaded OSM data.
+  `addresses`, `streets` and `places` from the loaded OSM data.
   """
   def build_staging_tables(city) do
-    for table <- ~w(city districts ortsteile postcodes addresses street_parts streets parks) do
+    for table <- ~w(city districts ortsteile postcodes addresses street_parts streets places) do
       query!("DROP TABLE IF EXISTS #{@schema}.#{table}")
     end
 
@@ -166,22 +204,29 @@ defmodule Hierbautberlin.GeoImport.OSM do
 
     build_addresses()
     build_streets()
-    build_parks()
+    build_places()
   end
 
-  defp build_parks do
+  defp build_places do
     query!("""
-    CREATE TABLE #{@schema}.parks AS
-    SELECT name, district, ST_Multi(ST_CollectionExtract(ST_MakeValid(ST_Union(geom)), 3)) AS geom
+    CREATE TABLE #{@schema}.places AS
+    SELECT name, district, type,
+           ST_Multi(ST_CollectionExtract(ST_MakeValid(ST_Union(geom)), 3)) AS geom
     FROM (
-      SELECT trim(m.name) AS name, m.geom,
+      -- the district is only looked up for the areas that are a place
+      SELECT tagged.*,
              (SELECT d.name FROM #{@schema}.districts d
-              WHERE ST_Contains(d.geom, ST_PointOnSurface(m.geom)) LIMIT 1) AS district
-      FROM #{@schema}.multipolygons m
-      WHERE m.leisure = 'park' AND m.name IS NOT NULL
-    ) parks
+              WHERE ST_Contains(d.geom, ST_PointOnSurface(tagged.geom)) LIMIT 1) AS district
+      FROM (
+        SELECT trim(m.name) AS name, #{@place_type_sql} AS type, m.geom
+        FROM #{@schema}.multipolygons m
+        WHERE m.name IS NOT NULL
+      ) tagged
+      WHERE tagged.type IS NOT NULL
+    ) places
     WHERE district IS NOT NULL
-    GROUP BY name, district
+    GROUP BY name, district, type
+    HAVING type <> 'Water' OR ST_Area(ST_Union(geom)::geography) >= #{@min_water_area}
     """)
   end
 
@@ -351,14 +396,14 @@ defmodule Hierbautberlin.GeoImport.OSM do
               AND NOT EXISTS (SELECT 1 FROM geo_street_numbers n WHERE n.geo_street_id = s.id)
             """).num_rows
 
-          parks = upsert_parks()
+          places = upsert_places()
           news_items_updated = update_news_item_geometries()
 
           %{
-            parks_upserted: parks.upserted,
-            parks_adopted: parks.adopted,
-            park_links_moved: parks.links_moved,
-            parks_deleted: parks.deleted,
+            places_upserted: places.upserted,
+            places_adopted: places.adopted,
+            place_links_moved: places.links_moved,
+            places_deleted: places.deleted,
             streets_upserted: streets_upserted,
             streets_deleted: streets_deleted,
             numbers_upserted: numbers_upserted,
@@ -372,35 +417,39 @@ defmodule Hierbautberlin.GeoImport.OSM do
     changes
   end
 
-  # Parks come from OSM (leisure=park) because the names in the official green
-  # space register are internal names like "Puschkinallee/ Am Treptower Park AT GA"
-  defp upsert_parks do
+  # Places come from OSM because the names in the official green space register
+  # are internal ones like "Puschkinallee/ Am Treptower Park AT GA"
+  defp upsert_places do
     # The old register had some parks in several parts with the same name. Only one
     # of them (preferably one with news items) gets the new key, the links of the
     # others are moved to it below.
     adopted =
-      query!("""
-      UPDATE geo_places p SET external_id = c.key
-      FROM (
-        SELECT DISTINCT ON (g.name, g.district) g.id, 'osm-park:' || i.district || ':' || i.name AS key
-        FROM geo_places g
-        JOIN #{@schema}.parks i ON g.name = i.name AND g.district = i.district
-        WHERE g.type = 'Park'
-        ORDER BY g.name, g.district,
-                 EXISTS (SELECT 1 FROM geo_places_news_items l WHERE l.geo_place_id = g.id) DESC,
-                 g.id
-      ) c
-      WHERE p.id = c.id
-        AND p.external_id IS DISTINCT FROM c.key
-        AND NOT EXISTS (SELECT 1 FROM geo_places e WHERE e.external_id = c.key)
-      """).num_rows
+      query!(
+        """
+        UPDATE geo_places p SET external_id = c.key
+        FROM (
+          SELECT DISTINCT ON (g.name, g.district, g.type) g.id, #{place_key("i")} AS key
+          FROM geo_places g
+          JOIN #{@schema}.places i
+            ON g.name = i.name AND g.district = i.district AND g.type = i.type
+          WHERE g.type = ANY($1)
+          ORDER BY g.name, g.district, g.type,
+                   EXISTS (SELECT 1 FROM geo_places_news_items l WHERE l.geo_place_id = g.id) DESC,
+                   g.id
+        ) c
+        WHERE p.id = c.id
+          AND p.external_id IS DISTINCT FROM c.key
+          AND NOT EXISTS (SELECT 1 FROM geo_places e WHERE e.external_id = c.key)
+        """,
+        [place_types()]
+      ).num_rows
 
     upserted =
       query!("""
       INSERT INTO geo_places (external_id, name, district, city, type, geometry, geo_point, inserted_at, updated_at)
-      SELECT 'osm-park:' || district || ':' || name, name, district, 'Berlin', 'Park', geom,
+      SELECT #{place_key("places")}, name, district, 'Berlin', type, geom,
              ST_PointOnSurface(geom), now(), now()
-      FROM #{@schema}.parks
+      FROM #{@schema}.places
       WHERE NOT ST_IsEmpty(geom)
       ON CONFLICT (external_id) DO UPDATE SET
         name = EXCLUDED.name,
@@ -413,32 +462,49 @@ defmodule Hierbautberlin.GeoImport.OSM do
         IS DISTINCT FROM (EXCLUDED.name, EXCLUDED.district, EXCLUDED.type, EXCLUDED.geometry, EXCLUDED.geo_point)
       """).num_rows
 
-    # other parks with the same name and district as an imported park
-    duplicate_parks = """
+    # other places with the same name, district and type as an imported one
+    duplicates = """
     geo_places p, geo_places k
-    WHERE l.geo_place_id = p.id AND p.type = 'Park' AND k.type = 'Park'
-      AND k.external_id = 'osm-park:' || p.district || ':' || p.name AND k.id <> p.id
+    WHERE l.geo_place_id = p.id AND p.type = ANY($1) AND k.type = p.type
+      AND k.external_id = #{place_key("p")} AND k.id <> p.id
     """
 
     links_moved =
-      query!("""
-      INSERT INTO geo_places_news_items (news_item_id, geo_place_id)
-      SELECT l.news_item_id, k.id FROM geo_places_news_items l, #{duplicate_parks}
-      ON CONFLICT DO NOTHING
-      """).num_rows
+      query!(
+        """
+        INSERT INTO geo_places_news_items (news_item_id, geo_place_id)
+        SELECT l.news_item_id, k.id FROM geo_places_news_items l, #{duplicates}
+        ON CONFLICT DO NOTHING
+        """,
+        [place_types()]
+      ).num_rows
 
-    query!("DELETE FROM geo_places_news_items l USING #{duplicate_parks}")
+    query!("DELETE FROM geo_places_news_items l USING #{duplicates}", [place_types()])
 
     deleted =
-      query!("""
-      DELETE FROM geo_places p
-      WHERE p.type = 'Park'
-        AND NOT EXISTS (SELECT 1 FROM #{@schema}.parks i
-                        WHERE p.external_id = 'osm-park:' || i.district || ':' || i.name)
-        AND NOT EXISTS (SELECT 1 FROM geo_places_news_items l WHERE l.geo_place_id = p.id)
-      """).num_rows
+      query!(
+        """
+        DELETE FROM geo_places p
+        WHERE p.type = ANY($1)
+          AND NOT EXISTS (SELECT 1 FROM #{@schema}.places i
+                          WHERE p.external_id = #{place_key("i")})
+          AND NOT EXISTS (SELECT 1 FROM geo_places_news_items l WHERE l.geo_place_id = p.id)
+        """,
+        [place_types()]
+      ).num_rows
 
     %{adopted: adopted, upserted: upserted, links_moved: links_moved, deleted: deleted}
+  end
+
+  @doc """
+  The types of places this import owns, see `@place_types`.
+  """
+  def place_types, do: Enum.map(@place_types, &elem(&1, 0))
+
+  # 'osm-park:Pankow:Mauerpark' - the prefix of the parks is kept, so their ids
+  # and the links to news items survive the import of the other types
+  defp place_key(table) do
+    "'osm-' || lower(#{table}.type) || ':' || #{table}.district || ':' || #{table}.name"
   end
 
   @doc """
@@ -489,15 +555,22 @@ defmodule Hierbautberlin.GeoImport.OSM do
   end
 
   defp staging_counts do
-    %{rows: [[districts, ortsteile, addresses, streets]]} =
+    %{rows: [[districts, ortsteile, addresses, streets, places]]} =
       query!("""
       SELECT (SELECT count(DISTINCT name) FROM #{@schema}.districts),
              (SELECT count(DISTINCT name) FROM #{@schema}.ortsteile),
              (SELECT count(*) FROM #{@schema}.addresses),
-             (SELECT count(*) FROM #{@schema}.streets)
+             (SELECT count(*) FROM #{@schema}.streets),
+             (SELECT count(*) FROM #{@schema}.places)
       """)
 
-    %{districts: districts, ortsteile: ortsteile, addresses: addresses, streets: streets}
+    %{
+      districts: districts,
+      ortsteile: ortsteile,
+      addresses: addresses,
+      streets: streets,
+      places: places
+    }
   end
 
   defp query!(sql, params \\ []) do

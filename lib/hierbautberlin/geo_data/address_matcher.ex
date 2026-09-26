@@ -1,7 +1,7 @@
 defmodule Hierbautberlin.GeoData.AddressMatcher do
   @moduledoc """
-  Finds streets, street numbers and places (parks, schools, LOR planning areas)
-  in German texts about Berlin.
+  Finds streets, street numbers and places (parks, squares, lakes, landmarks,
+  schools, LOR planning areas) in German texts about Berlin.
 
   The index is built from all streets and places (see `build_index/2`) and kept
   in `:persistent_term`, so matching runs in the calling process and doesn't go
@@ -15,12 +15,18 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       words are trusted, generic single-word names ("Weg", "Markt",
       "Innenhof") need more evidence like a house number or a preposition
       ("in der", "am", "Ecke")
+    * a street named like an Ortsteil ("Prenzlauer Berg") needs a house number,
+      in a text that name is the Ortsteil
     * streets that exist in several districts are resolved with the district
       context of the text (districts given by the importer, district and
-      Ortsteil names in the text, other streets found) and house numbers
+      Ortsteil names in the text, other streets found) and house numbers. When
+      that leaves a tie between parts of one street that crosses a district
+      border (the parts touch), all of them are taken
     * addresses of authorities in legal notices ("…können im Bezirksamt,
       Karl-Marx-Straße 83, 12040 Berlin eingesehen werden") are ignored
   """
+
+  require Logger
 
   import Ecto.Query, warn: false
 
@@ -64,7 +70,21 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     erhoben stellungnahmen verfügung abgegeben anhörung auslegung ausgelegt fraktion wahlamt
     öffentlichkeitsbeteiligung)
 
-  @place_type_order %{"Park" => 0, "School" => 1, "LOR" => 2}
+  # Parks and schools are a better location than a street with the same name
+  # ("Mauerpark" is the park, not the street next to it). For the other types
+  # the street wins: they are often named after each other and the street is
+  # what a text with a house number means.
+  @place_types_before_streets ~w(Park School)
+
+  # which place wins when several of them have the same name in one district
+  @place_type_order %{
+    "Park" => 0,
+    "Square" => 1,
+    "Landmark" => 2,
+    "Water" => 3,
+    "School" => 4,
+    "LOR" => 5
+  }
 
   ## Index
 
@@ -72,17 +92,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
   Loads all streets and places from the database and stores the index.
   """
   def load_index do
-    streets =
-      Repo.all(
-        from s in GeoStreet,
-          select: %{
-            id: s.id,
-            name: s.name,
-            district: s.district,
-            ortsteil: s.ortsteil,
-            number_count: s.street_number_count
-          }
-      )
+    streets = load_streets()
 
     places =
       Repo.all(
@@ -93,22 +103,62 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     put_index(build_index(streets, places))
   end
 
+  @doc """
+  Loads the street maps for `build_index/2`, including the ids of the streets
+  with the same name they touch (`connected`): OSM splits a street that crosses a
+  district border into one street per district.
+  """
+  def load_streets do
+    %{rows: rows} =
+      Repo.query!("""
+      SELECT a.id, array_agg(b.id)
+      FROM geo_streets a
+      JOIN geo_streets b
+        ON a.name = b.name AND a.id <> b.id AND ST_DWithin(a.geometry, b.geometry, 0.0005)
+      GROUP BY a.id
+      """)
+
+    connected = Map.new(rows, fn [id, ids] -> {id, ids} end)
+
+    from(s in GeoStreet,
+      select: %{
+        id: s.id,
+        name: s.name,
+        district: s.district,
+        ortsteil: s.ortsteil,
+        number_count: s.street_number_count
+      }
+    )
+    |> Repo.all()
+    |> Enum.map(&Map.put(&1, :connected, Map.get(connected, &1.id, [])))
+  end
+
   def put_index(index) do
     :persistent_term.put(@index_key, index)
     index
   end
 
   def get_index do
-    :persistent_term.get(@index_key, build_index([], []))
+    case :persistent_term.get(@index_key, nil) do
+      nil ->
+        # Nobody loaded the index (no `AnalyzeText`, no `load_index/0`). Matching
+        # would silently find nothing, which looks like bad data, not a bug.
+        Logger.warning("address matching without an index, see AddressMatcher.load_index/0")
+        build_index([], [])
+
+      index ->
+        index
+    end
   end
 
   @doc """
   Builds the index from street maps (`id`, `name`, `district`, optional
-  `ortsteil` and `number_count`) and place maps (`id`, `name`, `district`,
+  `ortsteil`, `number_count` and `connected`) and place maps (`id`, `name`, `district`,
   `type`).
   """
   def build_index(streets, places) do
-    streets = Enum.map(streets, &Map.merge(%{ortsteil: nil, number_count: 0}, &1))
+    streets =
+      Enum.map(streets, &Map.merge(%{ortsteil: nil, number_count: 0, connected: []}, &1))
 
     street_entries =
       streets
@@ -129,7 +179,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       places
       |> Enum.reject(fn place ->
         is_nil(place.name) or String.length(place.name) < 3 or
-          ambiguous_lor?(place, street_names, ortsteil_names)
+          ambiguous_place?(place, street_names, ortsteil_names)
       end)
       |> Enum.group_by(&name_key(&1.name))
 
@@ -151,15 +201,22 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       trie: trie,
       streets: street_entries,
       places: place_entries,
-      ortsteile: ortsteil_trie
+      ortsteile: ortsteil_trie,
+      ortsteil_streets: MapSet.intersection(street_names, ortsteil_names)
     }
   end
 
-  # LOR planning areas named like a street or an Ortsteil can't be told apart
-  defp ambiguous_lor?(place, street_names, ortsteil_names) do
-    place.type == "LOR" and
-      (MapSet.member?(street_names, name_key(place.name)) or
-         MapSet.member?(ortsteil_names, name_key(place.name)))
+  # Names that can't be told apart from a street or an Ortsteil
+  defp ambiguous_place?(place, street_names, ortsteil_names) do
+    key = name_key(place.name)
+
+    case place.type do
+      # LOR planning areas are named after the streets and Ortsteile in them
+      "LOR" -> MapSet.member?(street_names, key) or MapSet.member?(ortsteil_names, key)
+      # "Halensee" and "Nikolassee" are lakes, in a text they are the Ortsteil
+      "Water" -> MapSet.member?(ortsteil_names, key)
+      _ -> false
+    end
   end
 
   defp add_to_trie(trie, entries, variants_fun, kind) do
@@ -356,7 +413,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     # a park or school wins over a street (without house number) with the same name
     park_keys =
       places
-      |> Enum.reject(&(&1.type == "LOR"))
+      |> Enum.filter(&(&1.type in @place_types_before_streets))
       |> MapSet.new(&name_key(&1.name))
 
     locations = Enum.reject(resolved_streets, fn {mention, _, _} -> mention.office_address end)
@@ -617,9 +674,18 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     cond do
       Regex.match?(~r/^\d/u, mention.key) or String.length(mention.key) < 4 -> false
       mention.office_address -> true
-      MapSet.member?(@stop_names, mention.key) -> mention.numbers != []
+      needs_number?(mention, index) -> mention.numbers != []
       true -> trusted_name?(mention, candidates) or mention.numbers != [] or mention.cue
     end
+  end
+
+  # Common words, and the two streets that are named like an Ortsteil
+  # ("Prenzlauer Berg", "Alt-Treptow"): a text that names them means the Ortsteil,
+  # unless it gives a house number. The Ortsteil is read as district context by
+  # `ortsteil_districts/2`, so it still helps to place the other streets.
+  defp needs_number?(mention, index) do
+    MapSet.member?(@stop_names, mention.key) or
+      MapSet.member?(index.ortsteil_streets, mention.key)
   end
 
   # Names of real streets that are no common words: several words, a clear street
@@ -675,16 +741,31 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       end)
       |> Enum.sort_by(fn {score, street, _} -> {-score, -(street.number_count || 0)} end)
 
-    case scored do
-      [{_score, street, street_numbers}] ->
-        to_results(mention, street, street_numbers)
+    scored
+    |> best_candidates()
+    |> Enum.flat_map(fn {_, street, street_numbers} ->
+      to_results(mention, street, street_numbers)
+    end)
+  end
 
-      [{score, street, street_numbers}, {second_score, _, _} | _] when score > second_score ->
-        to_results(mention, street, street_numbers)
-
-      _ ->
-        []
+  # The candidate with the highest score. On a tie nothing is taken, unless the
+  # tied candidates are parts of one street.
+  defp best_candidates([{score, _, _} | _] = scored) do
+    case Enum.take_while(scored, fn {other_score, _, _} -> other_score == score end) do
+      [best] -> [best]
+      tied -> if one_street?(Enum.map(tied, &elem(&1, 1))), do: tied, else: []
     end
+  end
+
+  # The streets are parts of one street across district borders when every part
+  # can be reached from the first one over parts that touch
+  defp one_street?([first | rest]), do: unreached([first], rest) == []
+
+  defp unreached([], rest), do: rest
+
+  defp unreached([street | queue], rest) do
+    {touching, rest} = Enum.split_with(rest, &(&1.id in street.connected))
+    unreached(queue ++ touching, rest)
   end
 
   # A street mentioned with a house number we don't know is not the same as a
@@ -927,10 +1008,10 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     |> Enum.flat_map(fn mention ->
       candidates = Map.fetch!(index.places, mention.key)
 
-      # A street with the same name wins over LOR planning areas
+      # A street with the same name wins over the places that are named after one
       candidates =
         if MapSet.member?(street_keys, mention.key),
-          do: Enum.reject(candidates, &(&1.type == "LOR")),
+          do: Enum.filter(candidates, &(&1.type in @place_types_before_streets)),
           else: candidates
 
       # LOR planning areas in a district where streets were found are too coarse
@@ -944,11 +1025,18 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
 
       chosen =
         cond do
-          in_context != [] -> in_context
+          in_context != [] ->
+            in_context
+
           # generic names like "Rosengarten" need a matching district
-          mention.single_word and MapSet.size(context.given) > 0 -> []
-          length(Enum.uniq_by(candidates, & &1.district)) == 1 -> candidates
-          true -> []
+          mention.single_word and MapSet.size(context.given) > 0 ->
+            []
+
+          length(Enum.uniq_by(candidates, & &1.district)) == 1 ->
+            candidates
+
+          true ->
+            []
         end
 
       chosen

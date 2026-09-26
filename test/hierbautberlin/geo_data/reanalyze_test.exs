@@ -57,6 +57,34 @@ defmodule Hierbautberlin.GeoData.ReanalyzeTest do
            |> Enum.map(& &1.id) == [new_street.id]
   end
 
+  defmodule FailingMock do
+    def get!(url, _headers, _opts), do: raise("unexpected request to #{url}")
+  end
+
+  test "with stored_only nothing is fetched, items without a text are skipped" do
+    source = insert(:source, short_name: "BERLIN_PRESSE")
+    street = insert(:street, name: "Liebigstraße", district: "Friedrichshain-Kreuzberg")
+    AnalyzeText.add_streets([street])
+
+    for full_text <- ["Neue Bäume in der Liebigstraße", nil] do
+      insert(:news_item,
+        source: source,
+        full_text: full_text,
+        geo_streets: [],
+        geo_street_numbers: [],
+        geo_places: []
+      )
+    end
+
+    assert %{items: 2, changed: 1, added: 1, missing_text: 1} =
+             Reanalyze.run(
+               source: "BERLIN_PRESSE",
+               http_connection: FailingMock,
+               stored_only: true,
+               dry_run: false
+             )
+  end
+
   test "uses the stored text of news items" do
     source = insert(:source, short_name: "BERLIN_AMTSBLATT")
     street = insert(:street, name: "Liebigstraße", district: "Friedrichshain-Kreuzberg")
