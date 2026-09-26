@@ -14,19 +14,32 @@ defmodule Hierbautberlin.Importer do
     # Streets and places are imported by a separate task (see GeoImport)
     AnalyzeText.reload_if_changed()
 
-    run_importers([
-      {"BerlinBebauungsplaene", &Importer.BerlinBebauungsplaene.import/0},
-      {"Infravelo", &Importer.Infravelo.import/0},
-      {"MeinBerlin", &Importer.MeinBerlin.import/0},
-      {"UVP", &Importer.UVP.import/0},
-      {"DafMap", &Importer.DafMap.import/0},
-      {"Neubaukompass", &Importer.Neubaukompass.import/0},
-      {"BerlinerAmtsblatt", &Importer.BerlinerAmtsblatt.import_webpage/0}
-    ])
+    run_importers(
+      [
+        {"BerlinBebauungsplaene", &Importer.BerlinBebauungsplaene.import/0},
+        {"Infravelo", &Importer.Infravelo.import/0},
+        {"MeinBerlin", &Importer.MeinBerlin.import/0},
+        {"UVP", &Importer.UVP.import/0},
+        {"DafMap", &Importer.DafMap.import/0},
+        {"Neubaukompass", &Importer.Neubaukompass.import/0}
+      ] ++
+        gdi_importers() ++
+        [{"BerlinerAmtsblatt", &Importer.BerlinerAmtsblatt.import_webpage/0}]
+    )
 
     # The map reads from a materialized view. It is also refreshed daily
     # because it contains dates relative to now.
     MapFeatures.refresh()
+  end
+
+  @doc """
+  The importers of the layers of the Berlin geodata infrastructure (gdi.berlin.de).
+  """
+  def gdi_importers do
+    [
+      {"BerlinBaustellen", &Importer.BerlinBaustellen.import/0},
+      {"StepWohnen", &Importer.StepWohnen.import/0}
+    ]
   end
 
   def import_hourly do

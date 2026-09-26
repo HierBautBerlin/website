@@ -1,0 +1,285 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.390745,
+        52.516317
+       ],
+       [
+        13.390652,
+        52.5169
+       ],
+       [
+        13.390652,
+        52.516901
+       ],
+       [
+        13.390652,
+        52.516902
+       ],
+       [
+        13.390745,
+        52.516317
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "importid": 1,
+    "dat_beginn": "01.03.2022",
+    "dat_ende": "19.12.2026",
+    "uhr_beginn": null,
+    "uhr_ende": null,
+    "aufbau": null,
+    "abbau": null,
+    "tat_beg": null,
+    "tat_ende": null,
+    "tat_beg_uhr": null,
+    "tat_end_uhr": null,
+    "strasse": "Unter den Linden",
+    "bezirk": "Mitte",
+    "ortsteil": "Mitte",
+    "von_bei": 1,
+    "von_hausnr": null,
+    "bis_hausnr": null,
+    "von_str": "Charlottenstraße",
+    "bis_str": null,
+    "ereignis": "Arbeitsstelle",
+    "einschr": "Fahrstreifen-Reduzierung",
+    "bewertung": 1
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.568353,
+        52.453807
+       ],
+       [
+        13.567557,
+        52.45452
+       ],
+       [
+        13.567557,
+        52.45452
+       ],
+       [
+        13.567557,
+        52.45452
+       ],
+       [
+        13.568353,
+        52.453807
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "importid": 16,
+    "dat_beginn": "12.03.2020",
+    "dat_ende": "31.12.2099",
+    "uhr_beginn": null,
+    "uhr_ende": null,
+    "aufbau": null,
+    "abbau": null,
+    "tat_beg": null,
+    "tat_ende": null,
+    "tat_beg_uhr": null,
+    "tat_end_uhr": null,
+    "strasse": "An der Wuhlheide",
+    "bezirk": "Treptow-Köpenick",
+    "ortsteil": "Oberschöneweide",
+    "von_bei": 1,
+    "von_hausnr": null,
+    "bis_hausnr": null,
+    "von_str": null,
+    "bis_str": null,
+    "ereignis": "sonstige Ereignisse",
+    "einschr": "Haltverbote",
+    "bewertung": 2
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.381639,
+        52.552157
+       ],
+       [
+        13.381576,
+        52.552183
+       ],
+       [
+        13.381575,
+        52.552183
+       ],
+       [
+        13.381574,
+        52.552184
+       ],
+       [
+        13.381639,
+        52.552157
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "importid": 21,
+    "dat_beginn": "31.05.2021",
+    "dat_ende": "30.06.2027",
+    "uhr_beginn": null,
+    "uhr_ende": null,
+    "aufbau": null,
+    "abbau": null,
+    "tat_beg": "14.06.2021",
+    "tat_ende": null,
+    "tat_beg_uhr": null,
+    "tat_end_uhr": null,
+    "strasse": "Badstraße",
+    "bezirk": "Mitte",
+    "ortsteil": "Gesundbrunnen",
+    "von_bei": 1,
+    "von_hausnr": "48",
+    "bis_hausnr": "52",
+    "von_str": null,
+    "bis_str": null,
+    "ereignis": "Arbeitsstelle",
+    "einschr": "Fahrstreifen-Reduzierung",
+    "bewertung": 4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.514588,
+        52.494611
+       ],
+       [
+        13.514461,
+        52.49478
+       ],
+       [
+        13.514461,
+        52.49478
+       ],
+       [
+        13.514461,
+        52.49478
+       ],
+       [
+        13.514588,
+        52.494611
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "importid": 83,
+    "dat_beginn": "01.03.2023",
+    "dat_ende": "18.12.2026",
+    "uhr_beginn": null,
+    "uhr_ende": null,
+    "aufbau": null,
+    "abbau": null,
+    "tat_beg": null,
+    "tat_ende": null,
+    "tat_beg_uhr": null,
+    "tat_end_uhr": null,
+    "strasse": "Sewanstraße",
+    "bezirk": "Lichtenberg",
+    "ortsteil": "Friedrichsfelde",
+    "von_bei": 5,
+    "von_hausnr": null,
+    "bis_hausnr": null,
+    "von_str": "Huronseestraße",
+    "bis_str": "Mellenseestraße",
+    "ereignis": "Arbeitsstelle",
+    "einschr": "Fahrstreifen-Reduzierung",
+    "bewertung": 4
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.309464,
+        52.46737
+       ],
+       [
+        13.309462,
+        52.46737
+       ],
+       [
+        13.30946,
+        52.46737
+       ],
+       [
+        13.309459,
+        52.46737
+       ],
+       [
+        13.309464,
+        52.46737
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "importid": 745,
+    "dat_beginn": "26.09.2026",
+    "dat_ende": "27.09.2026",
+    "uhr_beginn": null,
+    "uhr_ende": null,
+    "aufbau": "19.09.2026",
+    "abbau": "30.09.2026",
+    "tat_beg": null,
+    "tat_ende": null,
+    "tat_beg_uhr": null,
+    "tat_end_uhr": null,
+    "strasse": "Straße des 17. Juni",
+    "bezirk": "Mitte",
+    "ortsteil": "Tiergarten",
+    "von_bei": 1,
+    "von_hausnr": null,
+    "bis_hausnr": null,
+    "von_str": "Yitzhak-Rabin-Straße",
+    "bis_str": "Platz des 18. März",
+    "ereignis": "sonstige Ereignisse",
+    "einschr": "Vollsperrung beider Fahrbahnen",
+    "bewertung": 4
+   }
+  }
+ ]
+}

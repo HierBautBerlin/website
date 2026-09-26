@@ -1,0 +1,153 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.443026,
+        52.584467
+       ],
+       [
+        13.443044,
+        52.584226
+       ],
+       [
+        13.443073,
+        52.583986
+       ],
+       [
+        13.443114,
+        52.583747
+       ],
+       [
+        13.443026,
+        52.584467
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "gisid": "S01",
+    "bez": "Blankenburger Süden",
+    "kat": "2027 - 2031"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.419265,
+        52.415537
+       ],
+       [
+        13.419283,
+        52.415296
+       ],
+       [
+        13.419312,
+        52.415056
+       ],
+       [
+        13.419353,
+        52.414816
+       ],
+       [
+        13.419265,
+        52.415537
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "gisid": "S03",
+    "bez": "Buckower Felder",
+    "kat": "Im Bau"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.350782,
+        52.53199
+       ],
+       [
+        13.3508,
+        52.531749
+       ],
+       [
+        13.35083,
+        52.531509
+       ],
+       [
+        13.350871,
+        52.531269
+       ],
+       [
+        13.350782,
+        52.53199
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "gisid": "S04",
+    "bez": "Europacity",
+    "kat": "Größtenteils abgeschlossen"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        13.241325,
+        52.540025
+       ],
+       [
+        13.241343,
+        52.539784
+       ],
+       [
+        13.241373,
+        52.539544
+       ],
+       [
+        13.241415,
+        52.539305
+       ],
+       [
+        13.241325,
+        52.540025
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "gisid": "S15",
+    "bez": "Siemensstadt Square",
+    "kat": "2027 - 2031"
+   }
+  }
+ ]
+}

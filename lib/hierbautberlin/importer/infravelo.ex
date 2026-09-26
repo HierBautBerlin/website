@@ -2,6 +2,7 @@ defmodule Hierbautberlin.Importer.Infravelo do
   alias Hierbautberlin.Importer.KmlParser
   alias Hierbautberlin.Importer.LiqdApi
   alias Hierbautberlin.GeoData
+  alias Hierbautberlin.Services.Quarters
 
   @state_mapping %{
     "Vorgesehen" => "intended",
@@ -79,20 +80,21 @@ defmodule Hierbautberlin.Importer.Infravelo do
   defp dates(item) do
     milestone_quarters =
       (item["milestones"] || [])
-      |> Enum.map(&parse_quarter(&1["date"]))
+      |> Enum.map(&Quarters.parse(&1["date"]))
       |> Enum.reject(&is_nil/1)
 
     cond do
-      parse_quarter(item["dateStart"]) || parse_quarter(item["dateEnd"]) ->
-        {quarter_start(parse_quarter(item["dateStart"])),
-         quarter_end(parse_quarter(item["dateEnd"]))}
+      Quarters.parse(item["dateStart"]) || Quarters.parse(item["dateEnd"]) ->
+        {Quarters.first_day(Quarters.parse(item["dateStart"])),
+         Quarters.last_day(Quarters.parse(item["dateEnd"]))}
 
       is_integer(item["yearOfImplementation"]) ->
         year = item["yearOfImplementation"]
-        {quarter_start({year, "1"}), quarter_end({year, "4"})}
+        {Quarters.first_day({year, 1}), Quarters.last_day({year, 4})}
 
       milestone_quarters != [] ->
-        {quarter_start(Enum.min(milestone_quarters)), quarter_end(Enum.max(milestone_quarters))}
+        {Quarters.first_day(Enum.min(milestone_quarters)),
+         Quarters.last_day(Enum.max(milestone_quarters))}
 
       true ->
         {nil, nil}
@@ -153,43 +155,4 @@ defmodule Hierbautberlin.Importer.Infravelo do
   end
 
   defp blank?(value), do: value in [nil, ""]
-
-  defp quarter_start(nil), do: nil
-
-  defp quarter_start({year, quarter}) do
-    {month, day} =
-      case quarter do
-        "1" -> {1, 1}
-        "2" -> {4, 1}
-        "3" -> {7, 1}
-        "4" -> {10, 1}
-      end
-
-    DateTime.new!(Date.new!(year, month, day), ~T[00:00:00], "Europe/Berlin")
-  end
-
-  defp quarter_end(nil), do: nil
-
-  defp quarter_end({year, quarter}) do
-    {month, day} =
-      case quarter do
-        "1" -> {3, 31}
-        "2" -> {6, 30}
-        "3" -> {9, 30}
-        "4" -> {12, 31}
-      end
-
-    DateTime.new!(Date.new!(year, month, day), ~T[00:00:00], "Europe/Berlin")
-  end
-
-  defp parse_quarter(nil) do
-    nil
-  end
-
-  defp parse_quarter(quarter_str) do
-    case Regex.named_captures(~r/(?<quarter>[1-4])\. Quartal (?<year>\d{4})/, quarter_str) do
-      %{"year" => year, "quarter" => quarter} -> {String.to_integer(year), quarter}
-      _ -> nil
-    end
-  end
 end

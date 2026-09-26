@@ -1,0 +1,69 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.397472,
+     52.38777
+    ]
+   },
+   "properties": {
+    "gisid": "S1",
+    "bez": "Steinstraße / Bahnhofstraße",
+    "we_kat": "200 - 499 Wohneinheiten",
+    "leg_gemeinw": "Potenziale für gemeinwohlorientierten Wohnungsbau"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.369862,
+     52.501423
+    ]
+   },
+   "properties": {
+    "gisid": "S10",
+    "bez": "Lützowstraße",
+    "we_kat": "200 - 499 Wohneinheiten",
+    "leg_gemeinw": "Sonstige Wohnungsbaupotenziale"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.521716,
+     52.568258
+    ]
+   },
+   "properties": {
+    "gisid": "S100",
+    "bez": "Falkenberger Chaussee",
+    "we_kat": "200 - 499 Wohneinheiten",
+    "leg_gemeinw": "Potenziale für gemeinwohlorientierten Wohnungsbau"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13.454251,
+     52.579536
+    ]
+   },
+   "properties": {
+    "gisid": "S152",
+    "bez": "Blankenburger Süden",
+    "we_kat": "2000 und mehr Wohneinheiten",
+    "leg_gemeinw": "Potenziale für gemeinwohlorientierten Wohnungsbau"
+   }
+  }
+ ]
+}
