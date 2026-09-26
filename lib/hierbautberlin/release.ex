@@ -99,6 +99,30 @@ defmodule Hierbautberlin.Release do
   end
 
   @doc """
+  Imports the press releases of the building and transport departments and the
+  Landesdenkmalamt since 2022, which the hourly import missed while it used the
+  old names of the departments. Takes about half an hour, a second run only
+  imports what is still missing. See `Hierbautberlin.Importer.BerlinPresse`.
+
+      bin/hierbautberlin eval 'Hierbautberlin.Release.import_berlin_presse_archive()'
+  """
+  def import_berlin_presse_archive(max_pages \\ 200) do
+    start_app()
+    ensure_geo_index()
+
+    {:ok, items} =
+      Hierbautberlin.Importer.BerlinPresse.import_archive(
+        Hierbautberlin.HTTPClient.Slow,
+        max_pages
+      )
+
+    located = Enum.count(items, &(&1.geo_points || &1.geometries))
+    IO.puts("Imported #{length(items)} press releases, #{located} of them with a location")
+    Hierbautberlin.GeoData.MapFeatures.refresh()
+    IO.puts("Refreshed the map features")
+  end
+
+  @doc """
   Calculates the relevance of all news items again, see
   `Hierbautberlin.GeoData.Relevance`.
   """

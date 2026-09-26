@@ -9,18 +9,10 @@
 
 alias Hierbautberlin.Importer.{BerlinerAmtsblatt, BerlinPresse}
 
-defmodule SlowHTTPClient do
-  # berlin.de answers with redirect loops when requests come in too fast
-  def get!(url, headers, opts) do
-    Process.sleep(700)
-    Hierbautberlin.HTTPClient.get!(url, headers, opts)
-  end
-end
-
 press_pages = System.argv() |> List.first("6") |> String.to_integer()
 
 press =
-  for page <- 1..press_pages, entry <- BerlinPresse.fetch_entries(SlowHTTPClient, page) do
+  for page <- 1..press_pages, entry <- BerlinPresse.fetch_entries(Hierbautberlin.HTTPClient.Slow, page) do
 
     %{
       source: "presse",
@@ -37,7 +29,7 @@ dir = Path.join(System.tmp_dir!(), "matching_amtsblatt")
 File.mkdir_p!(dir)
 
 amtsblatt =
-  for url <- BerlinerAmtsblatt.get_amtsblatt_urls(SlowHTTPClient),
+  for url <- BerlinerAmtsblatt.get_amtsblatt_urls(Hierbautberlin.HTTPClient.Slow),
       file = Path.join(dir, Path.basename(url)),
       :ok = File.exists?(file) && :ok || (File.write!(file, Req.get!(url, decode_body: false).body) && :ok),
       item <- BerlinerAmtsblatt.extract_items(file) do
