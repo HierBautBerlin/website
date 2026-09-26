@@ -15,6 +15,8 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       words are trusted, generic single-word names ("Weg", "Markt",
       "Innenhof") need more evidence like a house number or a preposition
       ("in der", "am", "Ecke")
+    * a street named like an Ortsteil ("Prenzlauer Berg") needs a house number,
+      in a text that name is the Ortsteil
     * streets that exist in several districts are resolved with the district
       context of the text (districts given by the importer, district and
       Ortsteil names in the text, other streets found) and house numbers
@@ -176,7 +178,8 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       trie: trie,
       streets: street_entries,
       places: place_entries,
-      ortsteile: ortsteil_trie
+      ortsteile: ortsteil_trie,
+      ortsteil_streets: MapSet.intersection(street_names, ortsteil_names)
     }
   end
 
@@ -648,9 +651,18 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     cond do
       Regex.match?(~r/^\d/u, mention.key) or String.length(mention.key) < 4 -> false
       mention.office_address -> true
-      MapSet.member?(@stop_names, mention.key) -> mention.numbers != []
+      needs_number?(mention, index) -> mention.numbers != []
       true -> trusted_name?(mention, candidates) or mention.numbers != [] or mention.cue
     end
+  end
+
+  # Common words, and the two streets that are named like an Ortsteil
+  # ("Prenzlauer Berg", "Alt-Treptow"): a text that names them means the Ortsteil,
+  # unless it gives a house number. The Ortsteil is read as district context by
+  # `ortsteil_districts/2`, so it still helps to place the other streets.
+  defp needs_number?(mention, index) do
+    MapSet.member?(@stop_names, mention.key) or
+      MapSet.member?(index.ortsteil_streets, mention.key)
   end
 
   # Names of real streets that are no common words: several words, a clear street

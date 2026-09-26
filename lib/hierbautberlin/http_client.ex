@@ -6,6 +6,10 @@ defmodule Hierbautberlin.HTTPClient do
   the importers and their test mocks rely on.
   """
 
+  # Req sends no Accept header, and a web application firewall answers a request
+  # without one with 403 (Sucuri in front of viz.berlin.de does)
+  @default_headers [{"accept", "*/*"}]
+
   def get!(url, headers \\ [], opts \\ []) do
     response =
       Req.get!(url,
@@ -24,6 +28,7 @@ defmodule Hierbautberlin.HTTPClient do
   """
   def get(url, io_device) do
     Req.get!(url,
+      headers: @default_headers,
       into: fn {:data, data}, {req, resp} ->
         IO.binwrite(io_device, data)
         {:cont, {req, resp}}
@@ -36,6 +41,9 @@ defmodule Hierbautberlin.HTTPClient do
   end
 
   defp normalize_headers(headers) do
-    Enum.map(headers, fn {key, value} -> {to_string(key), to_string(value)} end)
+    headers = Enum.map(headers, fn {key, value} -> {to_string(key), to_string(value)} end)
+    given = MapSet.new(headers, fn {key, _value} -> String.downcase(key) end)
+
+    Enum.reject(@default_headers, fn {key, _value} -> MapSet.member?(given, key) end) ++ headers
   end
 end

@@ -28,6 +28,24 @@ defmodule Hierbautberlin.GeoData.AddressMatcherTest do
     assert %{streets: [2]} = analyze("Die Bibliothek Halemweg", streets)
   end
 
+  test "a street named like an Ortsteil needs a house number" do
+    streets = [
+      street(id: 1, name: "Prenzlauer Berg", ortsteil: "Prenzlauer Berg", district: "Pankow"),
+      street(id: 2, name: "Behmstraße", ortsteil: "Prenzlauer Berg", district: "Pankow")
+    ]
+
+    # the Ortsteil is meant, and it is still the district context of the other street
+    assert %{streets: [2]} =
+             analyze("Markierungsarbeiten in der Behmstraße in Prenzlauer Berg", streets)
+
+    assert %{streets: [], street_numbers: []} = analyze("Ein Fest im Prenzlauer Berg", streets)
+
+    # with a house number the street is meant. The number is not in this index,
+    # so it stays a context street instead of a point (see `interpolate_numbers/1`)
+    assert %{streets: [], context_streets: [1]} =
+             analyze("Die Baustelle Prenzlauer Berg 12", streets)
+  end
+
   test "ignores streets that are only numbers" do
     assert %{streets: []} = analyze("Telefon 7 oder 8", [street(id: 1, name: "7")])
   end
