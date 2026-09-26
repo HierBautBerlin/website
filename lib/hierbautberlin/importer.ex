@@ -32,6 +32,7 @@ defmodule Hierbautberlin.Importer do
     run_importers([
       {"BerlinPresse", &Importer.BerlinPresse.import/0},
       {"GruenBerlin", &Importer.GruenBerlin.import/0},
+      {"VIZ", &Importer.VIZ.import/0},
       {"BerlinerAmtsblatt folder", &Importer.BerlinerAmtsblatt.import_folder/0}
     ])
 

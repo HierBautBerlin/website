@@ -25,7 +25,7 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
   alias Hierbautberlin.Repo
   alias Hierbautberlin.Services.Berlin
 
-  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE GRUEN_BERLIN)
+  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE GRUEN_BERLIN VIZ)
 
   def sources, do: @sources
 
@@ -96,7 +96,7 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
     end)
   end
 
-  # Grün Berlin releases always store their text, they are never without one
+  # Grün Berlin and VIZ messages always store their text, never without one
   defp texts_for(news_items, _source, _opts) do
     Enum.map(news_items, &{&1, nil})
   end
