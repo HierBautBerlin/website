@@ -31,17 +31,7 @@ defmodule Hierbautberlin.GeoData.AnalyzeText do
   end
 
   defp load_geo_objects do
-    streets =
-      Repo.all(
-        from s in GeoData.GeoStreet,
-          select: %{
-            id: s.id,
-            name: s.name,
-            district: s.district,
-            ortsteil: s.ortsteil,
-            number_count: s.street_number_count
-          }
-      )
+    streets = AddressMatcher.load_streets()
 
     places =
       Repo.all(
