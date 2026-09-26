@@ -25,13 +25,13 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
   alias Hierbautberlin.Repo
   alias Hierbautberlin.Services.Berlin
 
-  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE)
+  @sources ~w(BERLIN_AMTSBLATT BERLIN_PRESSE GRUEN_BERLIN)
 
   def sources, do: @sources
 
   @doc """
   Options:
-    * `:source` - `"BERLIN_AMTSBLATT"` or `"BERLIN_PRESSE"` (required)
+    * `:source` - one of `sources/0` (required)
     * `:since` - only news items published since this `DateTime`
     * `:dry_run` - don't change anything (default `true`)
     * `:http_connection` - HTTP client for press releases
@@ -94,6 +94,11 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
       text = Enum.join([news_item.title, news_item.content, article], "\n")
       {news_item, {text, districts_from_url(news_item.url)}}
     end)
+  end
+
+  # Grün Berlin releases always store their text, they are never without one
+  defp texts_for(news_items, _source, _opts) do
+    Enum.map(news_items, &{&1, nil})
   end
 
   defp pdf_name(news_item) do

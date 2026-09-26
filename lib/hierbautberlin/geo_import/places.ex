@@ -15,7 +15,8 @@ defmodule Hierbautberlin.GeoImport.Places do
 
   @wfs_base "https://gdi.berlin.de/services/wfs"
 
-  # Parks are imported from OpenStreetMap, see Hierbautberlin.GeoImport.OSM
+  # Parks, squares, lakes and landmarks come from OpenStreetMap, see
+  # Hierbautberlin.GeoImport.OSM
   @sources %{
     "LOR" => {"lor_2021", "lor_2021:a_lor_plr_2021"},
     "School" => {"schulen", "schulen:schulen"}

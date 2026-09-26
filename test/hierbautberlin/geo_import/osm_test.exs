@@ -75,6 +75,14 @@ defmodule Hierbautberlin.GeoImport.OSMTest do
     park = Repo.get_by!(GeoPlace, external_id: "osm-park:Mitte:Testpark")
     assert park.type == "Park"
     assert %Geo.MultiPolygon{} = park.geometry
+
+    # squares, lakes and other green spaces are places too
+    assert Repo.get_by!(GeoPlace, external_id: "osm-square:Mitte:Testplatz").type == "Square"
+    assert Repo.get_by!(GeoPlace, external_id: "osm-water:Mitte:Testsee").type == "Water"
+    assert Repo.get_by!(GeoPlace, external_id: "osm-park:Mitte:Testfeld").type == "Park"
+
+    # flowing water is not a place
+    refute Repo.get_by(GeoPlace, name: "Testkanal")
     refute Repo.get(GeoStreet, context.stale_street.id)
     assert Repo.get(GeoStreet, context.linked_stale_street.id)
 
@@ -96,8 +104,8 @@ defmodule Hierbautberlin.GeoImport.OSMTest do
 
     stats = OSM.import(@fixture)
 
-    assert stats.changes.parks_adopted == 1
-    assert stats.changes.park_links_moved == 1
+    assert stats.changes.places_adopted == 1
+    assert stats.changes.place_links_moved == 1
     park = Repo.get_by!(GeoPlace, external_id: "osm-park:Mitte:Testpark")
     assert park.id == linked.id
     refute Repo.get(GeoPlace, unlinked.id)
@@ -118,10 +126,10 @@ defmodule Hierbautberlin.GeoImport.OSMTest do
     changes = OSM.upsert()
 
     assert changes == %{
-             parks_upserted: 0,
-             parks_adopted: 0,
-             park_links_moved: 0,
-             parks_deleted: 0,
+             places_upserted: 0,
+             places_adopted: 0,
+             place_links_moved: 0,
+             places_deleted: 0,
              streets_upserted: 0,
              streets_deleted: 0,
              numbers_upserted: 0,

@@ -1,7 +1,7 @@
 defmodule Hierbautberlin.GeoData.AddressMatcher do
   @moduledoc """
-  Finds streets, street numbers and places (parks, schools, LOR planning areas)
-  in German texts about Berlin.
+  Finds streets, street numbers and places (parks, squares, lakes, landmarks,
+  schools, LOR planning areas) in German texts about Berlin.
 
   The index is built from all streets and places (see `build_index/2`) and kept
   in `:persistent_term`, so matching runs in the calling process and doesn't go
@@ -21,6 +21,8 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     * addresses of authorities in legal notices ("…können im Bezirksamt,
       Karl-Marx-Straße 83, 12040 Berlin eingesehen werden") are ignored
   """
+
+  require Logger
 
   import Ecto.Query, warn: false
 
@@ -64,7 +66,21 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     erhoben stellungnahmen verfügung abgegeben anhörung auslegung ausgelegt fraktion wahlamt
     öffentlichkeitsbeteiligung)
 
-  @place_type_order %{"Park" => 0, "School" => 1, "LOR" => 2}
+  # Parks and schools are a better location than a street with the same name
+  # ("Mauerpark" is the park, not the street next to it). For the other types
+  # the street wins: they are often named after each other and the street is
+  # what a text with a house number means.
+  @place_types_before_streets ~w(Park School)
+
+  # which place wins when several of them have the same name in one district
+  @place_type_order %{
+    "Park" => 0,
+    "Square" => 1,
+    "Landmark" => 2,
+    "Water" => 3,
+    "School" => 4,
+    "LOR" => 5
+  }
 
   ## Index
 
@@ -99,7 +115,16 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
   end
 
   def get_index do
-    :persistent_term.get(@index_key, build_index([], []))
+    case :persistent_term.get(@index_key, nil) do
+      nil ->
+        # Nobody loaded the index (no `AnalyzeText`, no `load_index/0`). Matching
+        # would silently find nothing, which looks like bad data, not a bug.
+        Logger.warning("address matching without an index, see AddressMatcher.load_index/0")
+        build_index([], [])
+
+      index ->
+        index
+    end
   end
 
   @doc """
@@ -129,7 +154,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       places
       |> Enum.reject(fn place ->
         is_nil(place.name) or String.length(place.name) < 3 or
-          ambiguous_lor?(place, street_names, ortsteil_names)
+          ambiguous_place?(place, street_names, ortsteil_names)
       end)
       |> Enum.group_by(&name_key(&1.name))
 
@@ -155,11 +180,17 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     }
   end
 
-  # LOR planning areas named like a street or an Ortsteil can't be told apart
-  defp ambiguous_lor?(place, street_names, ortsteil_names) do
-    place.type == "LOR" and
-      (MapSet.member?(street_names, name_key(place.name)) or
-         MapSet.member?(ortsteil_names, name_key(place.name)))
+  # Names that can't be told apart from a street or an Ortsteil
+  defp ambiguous_place?(place, street_names, ortsteil_names) do
+    key = name_key(place.name)
+
+    case place.type do
+      # LOR planning areas are named after the streets and Ortsteile in them
+      "LOR" -> MapSet.member?(street_names, key) or MapSet.member?(ortsteil_names, key)
+      # "Halensee" and "Nikolassee" are lakes, in a text they are the Ortsteil
+      "Water" -> MapSet.member?(ortsteil_names, key)
+      _ -> false
+    end
   end
 
   defp add_to_trie(trie, entries, variants_fun, kind) do
@@ -356,7 +387,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     # a park or school wins over a street (without house number) with the same name
     park_keys =
       places
-      |> Enum.reject(&(&1.type == "LOR"))
+      |> Enum.filter(&(&1.type in @place_types_before_streets))
       |> MapSet.new(&name_key(&1.name))
 
     locations = Enum.reject(resolved_streets, fn {mention, _, _} -> mention.office_address end)
@@ -927,10 +958,10 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
     |> Enum.flat_map(fn mention ->
       candidates = Map.fetch!(index.places, mention.key)
 
-      # A street with the same name wins over LOR planning areas
+      # A street with the same name wins over the places that are named after one
       candidates =
         if MapSet.member?(street_keys, mention.key),
-          do: Enum.reject(candidates, &(&1.type == "LOR")),
+          do: Enum.filter(candidates, &(&1.type in @place_types_before_streets)),
           else: candidates
 
       # LOR planning areas in a district where streets were found are too coarse
@@ -944,11 +975,18 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
 
       chosen =
         cond do
-          in_context != [] -> in_context
+          in_context != [] ->
+            in_context
+
           # generic names like "Rosengarten" need a matching district
-          mention.single_word and MapSet.size(context.given) > 0 -> []
-          length(Enum.uniq_by(candidates, & &1.district)) == 1 -> candidates
-          true -> []
+          mention.single_word and MapSet.size(context.given) > 0 ->
+            []
+
+          length(Enum.uniq_by(candidates, & &1.district)) == 1 ->
+            candidates
+
+          true ->
+            []
         end
 
       chosen
