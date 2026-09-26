@@ -37,7 +37,7 @@ defmodule Hierbautberlin.GeoData.Relevance do
   @minor 0.3
 
   # Press releases high up for six weeks, see the moduledoc
-  @fresh_sources ~w(BERLIN_PRESSE)
+  @fresh_sources ~w(BERLIN_PRESSE GRUEN_BERLIN)
   @fresh_days 42
   @fresh_boost 4.0
 

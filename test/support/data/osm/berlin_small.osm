@@ -54,6 +54,24 @@
   <node id="223" lat="52.61" lon="13.21"/>
   <node id="224" lat="52.61" lon="13.20"/>
 
+  <!-- square, lake and recreation ground nodes -->
+  <node id="231" lat="52.602" lon="13.22"/>
+  <node id="232" lat="52.602" lon="13.23"/>
+  <node id="233" lat="52.603" lon="13.23"/>
+  <node id="234" lat="52.603" lon="13.22"/>
+  <node id="241" lat="52.604" lon="13.22"/>
+  <node id="242" lat="52.604" lon="13.23"/>
+  <node id="243" lat="52.605" lon="13.23"/>
+  <node id="244" lat="52.605" lon="13.22"/>
+  <node id="251" lat="52.606" lon="13.22"/>
+  <node id="252" lat="52.606" lon="13.23"/>
+  <node id="253" lat="52.607" lon="13.23"/>
+  <node id="254" lat="52.607" lon="13.22"/>
+  <node id="261" lat="52.608" lon="13.22"/>
+  <node id="262" lat="52.608" lon="13.23"/>
+  <node id="263" lat="52.609" lon="13.23"/>
+  <node id="264" lat="52.609" lon="13.22"/>
+
   <way id="300">
     <nd ref="1"/><nd ref="3"/><nd ref="4"/><nd ref="6"/><nd ref="1"/>
     <tag k="boundary" v="administrative"/>
@@ -108,5 +126,27 @@
     <nd ref="221"/><nd ref="222"/><nd ref="223"/><nd ref="224"/><nd ref="221"/>
     <tag k="leisure" v="park"/>
     <tag k="name" v="Testpark"/>
+  </way>
+  <way id="601">
+    <nd ref="231"/><nd ref="232"/><nd ref="233"/><nd ref="234"/><nd ref="231"/>
+    <tag k="place" v="square"/>
+    <tag k="name" v="Testplatz"/>
+  </way>
+  <way id="602">
+    <nd ref="241"/><nd ref="242"/><nd ref="243"/><nd ref="244"/><nd ref="241"/>
+    <tag k="natural" v="water"/>
+    <tag k="water" v="lake"/>
+    <tag k="name" v="Testsee"/>
+  </way>
+  <way id="603">
+    <nd ref="251"/><nd ref="252"/><nd ref="253"/><nd ref="254"/><nd ref="251"/>
+    <tag k="natural" v="water"/>
+    <tag k="water" v="canal"/>
+    <tag k="name" v="Testkanal"/>
+  </way>
+  <way id="604">
+    <nd ref="261"/><nd ref="262"/><nd ref="263"/><nd ref="264"/><nd ref="261"/>
+    <tag k="landuse" v="recreation_ground"/>
+    <tag k="name" v="Testfeld"/>
   </way>
 </osm>

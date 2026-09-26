@@ -61,7 +61,7 @@ defmodule Hierbautberlin.Release do
 
     apply? = Keyword.get(opts, :apply, false)
 
-    Hierbautberlin.GeoData.AnalyzeText.reload()
+    ensure_geo_index()
 
     stats =
       Hierbautberlin.GeoData.Reanalyze.run(source: source, since: since, dry_run: !apply?)
@@ -76,6 +76,26 @@ defmodule Hierbautberlin.Release do
     end
 
     stats
+  end
+
+  @doc """
+  Imports the whole archive of Grün Berlin press releases (about 30 list pages,
+  back to 2018). The hourly import only reads the newest pages, see
+  `Hierbautberlin.Importer.GruenBerlin`.
+
+      bin/hierbautberlin eval 'Hierbautberlin.Release.import_gruen_berlin_archive()'
+  """
+  def import_gruen_berlin_archive(pages \\ 40) do
+    start_app()
+    ensure_geo_index()
+
+    {:ok, items} =
+      Hierbautberlin.Importer.GruenBerlin.import(Hierbautberlin.HTTPClient, pages: pages)
+
+    located = Enum.count(items, &(&1.geo_points || &1.geometries))
+    IO.puts("Imported #{length(items)} press releases, #{located} of them with a location")
+    Hierbautberlin.GeoData.MapFeatures.refresh()
+    IO.puts("Refreshed the map features")
   end
 
   @doc """
@@ -106,6 +126,18 @@ defmodule Hierbautberlin.Release do
   def rollback(repo, version) do
     load_app()
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
+  end
+
+  # Loads the streets and places the address matching needs. `bin/hierbautberlin
+  # eval` starts the app with the importer children, so `AnalyzeText` owns the
+  # index there. Run from mix the app is already started without those children:
+  # then the index is loaded here, otherwise it stays empty and nothing is found.
+  defp ensure_geo_index do
+    if Process.whereis(Hierbautberlin.GeoData.AnalyzeText) do
+      Hierbautberlin.GeoData.AnalyzeText.reload()
+    else
+      Hierbautberlin.GeoData.AddressMatcher.load_index()
+    end
   end
 
   defp repos do

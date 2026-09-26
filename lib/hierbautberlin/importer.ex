@@ -31,6 +31,7 @@ defmodule Hierbautberlin.Importer do
   def import_hourly do
     run_importers([
       {"BerlinPresse", &Importer.BerlinPresse.import/0},
+      {"GruenBerlin", &Importer.GruenBerlin.import/0},
       {"BerlinerAmtsblatt folder", &Importer.BerlinerAmtsblatt.import_folder/0}
     ])
 

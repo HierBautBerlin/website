@@ -329,7 +329,9 @@
     ]
   },
   "80": {
-    "places": [],
+    "places": [
+      "Langer See|Treptow-Köpenick"
+    ],
     "street_numbers": [
       "Wendenschloßstraße 336|Treptow-Köpenick"
     ],
@@ -622,12 +624,15 @@
     "streets": []
   },
   "40": {
-    "places": [],
+    "places": [
+      "Rotes Rathaus|Mitte"
+    ],
     "street_numbers": [],
     "streets": []
   },
   "24": {
     "places": [
+      "Plötzensee|Mitte",
       "Volkspark Rehberge|Mitte"
     ],
     "street_numbers": [],
