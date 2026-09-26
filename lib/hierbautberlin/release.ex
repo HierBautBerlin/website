@@ -46,9 +46,11 @@ defmodule Hierbautberlin.Release do
 
       bin/hierbautberlin eval 'Hierbautberlin.Release.reanalyze("BERLIN_PRESSE")'
       bin/hierbautberlin eval 'Hierbautberlin.Release.reanalyze("BERLIN_PRESSE", since: "2026-09-01")'
+      bin/hierbautberlin eval 'Hierbautberlin.Release.reanalyze("BERLIN_PRESSE", stored_only: true)'
 
   Nothing is changed unless `apply: true` is given. Press releases without a
-  stored text are fetched again, so a full run takes a while.
+  stored text are fetched again, so a full run takes a while, unless
+  `stored_only: true` skips them.
   """
   def reanalyze(source, opts \\ []) do
     start_app()
@@ -64,7 +66,12 @@ defmodule Hierbautberlin.Release do
     ensure_geo_index()
 
     stats =
-      Hierbautberlin.GeoData.Reanalyze.run(source: source, since: since, dry_run: !apply?)
+      Hierbautberlin.GeoData.Reanalyze.run(
+        source: source,
+        since: since,
+        dry_run: !apply?,
+        stored_only: Keyword.get(opts, :stored_only, false)
+      )
 
     IO.puts(inspect(stats))
 

@@ -83,6 +83,31 @@ defmodule Hierbautberlin.GeoData.AddressMatcherTest do
     assert %{streets: [1]} = analyze("An der Hauptstraße in Lichtenberg wird gebaut", streets)
   end
 
+  test "takes all parts of a street that crosses a district border on a tie" do
+    streets = [
+      street(id: 1, name: "Hansastraße", district: "Mitte"),
+      street(id: 2, name: "Hansastraße", district: "Lichtenberg", connected: [3]),
+      street(id: 3, name: "Hansastraße", district: "Pankow", connected: [2])
+    ]
+
+    text = "Radweg in der Hansastraße in den Ortsteilen Weißensee und Alt-Hohenschönhausen"
+
+    assert %{streets: []} = analyze("Radweg in der Hansastraße", streets)
+    assert %{streets: []} = analyze("Radweg in der Hansastraße in Mitte oder Pankow", streets)
+
+    result =
+      analyze(
+        text,
+        streets ++
+          [
+            street(id: 4, name: "Egal", ortsteil: "Weißensee", district: "Pankow"),
+            street(id: 5, name: "Egal", ortsteil: "Alt-Hohenschönhausen", district: "Lichtenberg")
+          ]
+      )
+
+    assert Enum.sort(result.streets) == [2, 3]
+  end
+
   test "district names must be whole words" do
     streets = [
       street(id: 1, name: "Hauptstraße", district: "Mitte"),

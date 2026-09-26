@@ -19,7 +19,9 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       in a text that name is the Ortsteil
     * streets that exist in several districts are resolved with the district
       context of the text (districts given by the importer, district and
-      Ortsteil names in the text, other streets found) and house numbers
+      Ortsteil names in the text, other streets found) and house numbers. When
+      that leaves a tie between parts of one street that crosses a district
+      border (the parts touch), all of them are taken
     * addresses of authorities in legal notices ("…können im Bezirksamt,
       Karl-Marx-Straße 83, 12040 Berlin eingesehen werden") are ignored
   """
@@ -90,17 +92,7 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
   Loads all streets and places from the database and stores the index.
   """
   def load_index do
-    streets =
-      Repo.all(
-        from s in GeoStreet,
-          select: %{
-            id: s.id,
-            name: s.name,
-            district: s.district,
-            ortsteil: s.ortsteil,
-            number_count: s.street_number_count
-          }
-      )
+    streets = load_streets()
 
     places =
       Repo.all(
@@ -109,6 +101,36 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       )
 
     put_index(build_index(streets, places))
+  end
+
+  @doc """
+  Loads the street maps for `build_index/2`, including the ids of the streets
+  with the same name they touch (`connected`): OSM splits a street that crosses a
+  district border into one street per district.
+  """
+  def load_streets do
+    %{rows: rows} =
+      Repo.query!("""
+      SELECT a.id, array_agg(b.id)
+      FROM geo_streets a
+      JOIN geo_streets b
+        ON a.name = b.name AND a.id <> b.id AND ST_DWithin(a.geometry, b.geometry, 0.0005)
+      GROUP BY a.id
+      """)
+
+    connected = Map.new(rows, fn [id, ids] -> {id, ids} end)
+
+    from(s in GeoStreet,
+      select: %{
+        id: s.id,
+        name: s.name,
+        district: s.district,
+        ortsteil: s.ortsteil,
+        number_count: s.street_number_count
+      }
+    )
+    |> Repo.all()
+    |> Enum.map(&Map.put(&1, :connected, Map.get(connected, &1.id, [])))
   end
 
   def put_index(index) do
@@ -131,11 +153,12 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
 
   @doc """
   Builds the index from street maps (`id`, `name`, `district`, optional
-  `ortsteil` and `number_count`) and place maps (`id`, `name`, `district`,
+  `ortsteil`, `number_count` and `connected`) and place maps (`id`, `name`, `district`,
   `type`).
   """
   def build_index(streets, places) do
-    streets = Enum.map(streets, &Map.merge(%{ortsteil: nil, number_count: 0}, &1))
+    streets =
+      Enum.map(streets, &Map.merge(%{ortsteil: nil, number_count: 0, connected: []}, &1))
 
     street_entries =
       streets
@@ -718,16 +741,31 @@ defmodule Hierbautberlin.GeoData.AddressMatcher do
       end)
       |> Enum.sort_by(fn {score, street, _} -> {-score, -(street.number_count || 0)} end)
 
-    case scored do
-      [{_score, street, street_numbers}] ->
-        to_results(mention, street, street_numbers)
+    scored
+    |> best_candidates()
+    |> Enum.flat_map(fn {_, street, street_numbers} ->
+      to_results(mention, street, street_numbers)
+    end)
+  end
 
-      [{score, street, street_numbers}, {second_score, _, _} | _] when score > second_score ->
-        to_results(mention, street, street_numbers)
-
-      _ ->
-        []
+  # The candidate with the highest score. On a tie nothing is taken, unless the
+  # tied candidates are parts of one street.
+  defp best_candidates([{score, _, _} | _] = scored) do
+    case Enum.take_while(scored, fn {other_score, _, _} -> other_score == score end) do
+      [best] -> [best]
+      tied -> if one_street?(Enum.map(tied, &elem(&1, 1))), do: tied, else: []
     end
+  end
+
+  # The streets are parts of one street across district borders when every part
+  # can be reached from the first one over parts that touch
+  defp one_street?([first | rest]), do: unreached([first], rest) == []
+
+  defp unreached([], rest), do: rest
+
+  defp unreached([street | queue], rest) do
+    {touching, rest} = Enum.split_with(rest, &(&1.id in street.connected))
+    unreached(queue ++ touching, rest)
   end
 
   # A street mentioned with a house number we don't know is not the same as a
