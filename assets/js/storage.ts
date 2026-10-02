@@ -50,8 +50,8 @@ export const storeMapPosition = (position: MapPosition) => {
   if (inArea(position)) write(MAP_POSITION_KEY, JSON.stringify(position));
 };
 
-// null when nothing was remembered, MapLive then shows every source and
-// the old entries
+// null when nothing was remembered, MapLive then shows every source
+// without the old entries
 export const storedListFilters = (): ListFilters | null => {
   try {
     const filters = JSON.parse(read(LIST_FILTERS_KEY) || 'null');
@@ -60,7 +60,7 @@ export const storedListFilters = (): ListFilters | null => {
     const sources: unknown[] = Array.isArray(filters.hidden_sources) ? filters.hidden_sources : [];
     return {
       hidden_sources: sources.filter((id): id is number => Number.isInteger(id)),
-      show_old: filters.show_old !== false,
+      show_old: filters.show_old === true,
     };
   } catch {
     return null;

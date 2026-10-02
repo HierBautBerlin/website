@@ -157,7 +157,7 @@
             type="button"
             class={[
               "map--list-tool--button",
-              (@hidden_sources != [] or !@show_old) && "map--list-tool--button-active"
+              (@hidden_sources != [] or @show_old) && "map--list-tool--button-active"
             ]}
             aria-expanded="false"
             aria-controls="list-filter-popup"

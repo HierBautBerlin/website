@@ -115,7 +115,7 @@ export default class InteractiveMap extends ViewHook {
       hidden = [];
     }
 
-    return { hidden_sources: hidden, show_old: this.el.dataset.showOld !== 'false' };
+    return { hidden_sources: hidden, show_old: this.el.dataset.showOld === 'true' };
   }
 
   // Hides the items of the sources that are disabled in the filter popup and,

@@ -516,16 +516,17 @@ defmodule HierbautberlinWeb.MapLive do
   end
 
   # The filters the browser remembered (assets/js/storage.ts). Unknown source
-  # ids are left out, everything else falls back to "show everything".
+  # ids are left out, everything else falls back to the default: every source,
+  # without the old and finished entries.
   defp stored_filters(socket, sources) do
     with true <- connected?(socket),
          %{} = stored <- get_connect_params(socket)["list_filters"] do
       %{
         hidden_sources: known_source_ids(stored["hidden_sources"], sources),
-        show_old: stored["show_old"] != false
+        show_old: stored["show_old"] == true
       }
     else
-      _ -> %{hidden_sources: [], show_old: true}
+      _ -> %{hidden_sources: [], show_old: false}
     end
   end
 
