@@ -93,7 +93,10 @@ defmodule Hierbautberlin.GeoData.MapFeatures do
   Returns the vector tile for the given tile coordinates as binary. The only
   layer is called `items`.
   """
-  def tile(z, x, y) when z < @min_zoom or z > @max_zoom or x < 0 or y < 0, do: <<>>
+  def tile(z, x, y)
+      when z < @min_zoom or z > @max_zoom or x < 0 or y < 0 or
+             x >= Bitwise.bsl(1, z) or y >= Bitwise.bsl(1, z),
+      do: <<>>
 
   def tile(z, x, y) do
     %{rows: [[tile]]} =

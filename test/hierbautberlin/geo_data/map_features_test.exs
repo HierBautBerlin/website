@@ -375,6 +375,12 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
       assert MapFeatures.tile(MapFeatures.min_zoom() - 1, 0, 0) == <<>>
     end
 
+    test "returns an empty tile for coordinates outside of the zoom level" do
+      assert MapFeatures.tile(16, 65_536, 0) == <<>>
+      assert MapFeatures.tile(16, 0, 65_536) == <<>>
+      assert MapFeatures.tile(16, -1, 0) == <<>>
+    end
+
     test "returns a vector tile with the items" do
       insert(:geo_item,
         title: "Tile Item",
@@ -397,8 +403,8 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
 
   describe "tile/3 dates" do
     # every item in its own tile, so none is hidden by another at the same position
-    defp tile_date(attrs) do
-      {lng, lat} = {13.2679 + System.unique_integer([:positive]) * 0.01, 52.51}
+    defp tile_date(index, attrs) do
+      {lng, lat} = {13.2679 + index * 0.01, 52.51}
       insert(:geo_item, Map.merge(%{geo_point: point(lng, lat)}, attrs))
       MapFeatures.refresh()
 
@@ -407,32 +413,32 @@ defmodule Hierbautberlin.GeoData.MapFeaturesTest do
     end
 
     test "prefers the period, then the end, the start and the last update" do
-      assert tile_date(%{
+      assert tile_date(0, %{
                date_start: ~U[2026-02-28 23:00:00Z],
                date_end: ~U[2026-12-31 12:00:00Z]
              }) =~
                "01.03.2026 – 31.12.2026"
 
-      assert tile_date(%{
+      assert tile_date(1, %{
                date_start: ~U[2026-03-01 08:00:00Z],
                date_end: ~U[2026-03-01 18:00:00Z]
              }) =~
                "01.03.2026"
 
-      assert tile_date(%{
+      assert tile_date(2, %{
                date_start: ~U[2026-03-01 08:00:00Z],
                date_updated: ~U[2026-09-01 08:00:00Z]
              }) =~
                "ab 01.03.2026"
 
       # the last update of the data only when there is nothing else
-      assert tile_date(%{
+      assert tile_date(3, %{
                date_end: ~U[2025-02-08 12:00:00Z],
                date_updated: ~U[2026-09-01 08:00:00Z]
              }) =~
                "bis 08.02.2025"
 
-      assert tile_date(%{date_updated: ~U[2026-09-01 08:00:00Z]}) =~ "aktualisiert 01.09.2026"
+      assert tile_date(4, %{date_updated: ~U[2026-09-01 08:00:00Z]}) =~ "aktualisiert 01.09.2026"
     end
 
     test "shows the publication date of news items" do
