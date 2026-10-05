@@ -18,9 +18,9 @@ defmodule Hierbautberlin.Importer.Check do
     "uvp" => {Importer.UVP, :import, []},
     "daf_map" => {Importer.DafMap, :import, []},
     "berliner_amtsblatt" => {Importer.BerlinerAmtsblatt, :import_webpage, [:downloader]},
-    "berlin_presse" => {Importer.BerlinPresse, :import, []},
     # the article pages are only fetched for releases that are not stored yet,
     # for the check every release of the first pages is fetched
+    "berlin_presse" => {Importer.BerlinPresse, :import, [[skip_imported: false, pages: 1]]},
     "gruen_berlin" => {Importer.GruenBerlin, :import, [[skip_imported: false]]},
     "viz" => {Importer.VIZ, :import, []},
     "neubaukompass" => {Importer.Neubaukompass, :import, []},

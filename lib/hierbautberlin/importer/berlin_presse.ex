@@ -1,4 +1,13 @@
 defmodule Hierbautberlin.Importer.BerlinPresse do
+  @moduledoc """
+  Imports the press releases of the Berlin press portal (berlin.de/presse): the
+  feed lists title, teaser and department, the text comes from the article page.
+
+  The text is stored with the news item (`full_text`), so the address matching
+  can run again without fetching it (`Hierbautberlin.GeoData.Reanalyze`). When
+  the article page could not be read, only title and teaser are analyzed and no
+  text is stored: the next import fetches the article again.
+  """
   require Logger
 
   import Ecto.Query, warn: false
@@ -14,13 +23,36 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
   # the feed above still used their old names. The feed reaches back to 2022.
   @archive_feed_url "https://www.berlin.de/presse/pressemitteilungen/index/feed?institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Mobilit%C3%A4t%2C+Verkehr%2C+Klimaschutz+und+Umwelt&institutions%5B%5D=Senatsverwaltung+f%C3%BCr+Stadtentwicklung%2C+Bauen+und+Wohnen&institutions%5B%5D=Landesdenkmalamt"
 
-  def import(http_connection \\ Hierbautberlin.HTTPClient) do
+  # How many feed pages (10 releases each) a normal import reads. On busy days
+  # more than 10 releases are published within an hour, and an import can fail.
+  @pages 3
+
+  @doc """
+  Imports the press releases of the newest feed pages.
+
+  Options:
+    * `:pages` - how many feed pages to read (default #{@pages}, 10 releases each)
+    * `:skip_imported` - don't fetch the article pages of releases that are
+      already stored with their text, so a normal run mostly reads the feed
+      (default `true`)
+  """
+  def import(http_connection \\ Hierbautberlin.HTTPClient.Slow, opts \\ []) do
     source = upsert_source()
 
-    result =
+    items =
       http_connection
-      |> fetch_entries()
-      |> Enum.map(&upsert_entry(&1, source))
+      |> feed_items(@feed_url, Keyword.get(opts, :pages, @pages))
+      |> Enum.uniq_by(& &1["link"])
+
+    skip =
+      if Keyword.get(opts, :skip_imported, true),
+        do: urls_with_text(source, Enum.map(items, & &1["link"])),
+        else: MapSet.new()
+
+    result =
+      items
+      |> Enum.reject(&MapSet.member?(skip, &1["link"]))
+      |> Enum.map(&(&1 |> parse_entry(http_connection) |> upsert_entry(source)))
 
     {:ok, result}
   rescue
@@ -41,7 +73,7 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
 
     result =
       http_connection
-      |> archive_items(max_pages)
+      |> feed_items(@archive_feed_url, max_pages)
       |> Stream.reject(&MapSet.member?(imported, &1["link"]))
       |> Stream.map(&(&1 |> parse_entry(http_connection) |> upsert_entry(source)))
       |> Enum.to_list()
@@ -54,9 +86,10 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
   full text of each release.
   """
   def fetch_entries(http_connection, page \\ 1) do
-    http_connection
-    |> fetch_items(@feed_url, page)
-    |> Enum.map(&parse_entry(&1, http_connection))
+    case fetch_items(http_connection, @feed_url, page) do
+      {:ok, items} -> Enum.map(items, &parse_entry(&1, http_connection))
+      {:error, status} -> raise feed_error(status)
+    end
   end
 
   defp upsert_source do
@@ -72,18 +105,35 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
   end
 
   defp upsert_entry(entry, source) do
-    GeoData.upsert_news_item!(
-      %{
-        external_id: entry.url,
-        title: entry.title,
-        url: entry.url,
-        content: entry.content,
-        published_at: entry.published_at,
-        source_id: source.id
-      },
-      entry.full_text,
-      entry.districts
+    news_item =
+      GeoData.upsert_news_item!(
+        %{
+          external_id: entry.url,
+          title: entry.title,
+          url: entry.url,
+          content: entry.content,
+          published_at: entry.published_at,
+          source_id: source.id
+        },
+        entry.full_text,
+        entry.districts
+      )
+
+    # Without the article the text is incomplete. It is not stored, so the next
+    # import and the reanalysis fetch the article again.
+    if entry.article_fetched,
+      do: news_item,
+      else: news_item |> Ecto.Changeset.change(full_text: nil) |> Repo.update!()
+  end
+
+  defp urls_with_text(source, urls) do
+    from(item in NewsItem,
+      where: item.source_id == ^source.id and item.external_id in ^urls,
+      where: not is_nil(item.full_text),
+      select: item.external_id
     )
+    |> Repo.all()
+    |> MapSet.new()
   end
 
   defp imported_urls(source) do
@@ -92,31 +142,43 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
     |> MapSet.new()
   end
 
-  # Pages after the last one return the last page again, so paging stops when a
-  # page repeats the previous one
-  defp archive_items(http_connection, max_pages) do
+  # The releases of the first `max_pages` feed pages. Pages after the last one
+  # return the last page again, so paging stops when a page repeats the previous
+  # one. Without the first page there is nothing to import, which is an error.
+  # When a later page can't be read, the releases read so far are still imported.
+  defp feed_items(http_connection, feed_url, max_pages) do
     {1, nil}
     |> Stream.unfold(fn
-      {page, _previous} when page > max_pages ->
-        nil
-
-      {page, previous} ->
-        items = fetch_items(http_connection, @archive_feed_url, page)
-        links = Enum.map(items, & &1["link"])
-
-        if items == [] or links == previous,
-          do: nil,
-          else: {items, {page + 1, links}}
+      {page, _previous} when page > max_pages -> nil
+      {page, previous} -> next_page(http_connection, feed_url, page, previous)
     end)
     |> Stream.concat()
   end
 
+  defp next_page(http_connection, feed_url, page, previous) do
+    case fetch_items(http_connection, feed_url, page) do
+      {:ok, items} ->
+        links = Enum.map(items, & &1["link"])
+        if items == [] or links == previous, do: nil, else: {items, {page + 1, links}}
+
+      {:error, status} when page == 1 ->
+        raise feed_error(status)
+
+      {:error, status} ->
+        Logger.warning("#{feed_error(status)} (page #{page})")
+        nil
+    end
+  end
+
+  defp feed_error(status),
+    do: "The feed of the Berlin press portal answered with status #{status}"
+
   defp fetch_items(http_connection, feed_url, page) do
     url = if page == 1, do: feed_url, else: "#{feed_url}&page=#{page}"
 
-    http_connection
-    |> fetch_rss(url)
-    |> Map.get("items", [])
+    with {:ok, rss} <- fetch_rss(http_connection, url) do
+      {:ok, Map.get(rss, "items", [])}
+    end
   end
 
   defp parse_entry(entry, http_connection) do
@@ -142,12 +204,16 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       url: entry["link"],
       published_at: published,
       districts: districts,
-      full_text: title <> "\n" <> content <> "\n" <> text
+      full_text: title <> "\n" <> content <> "\n" <> text,
+      article_fetched: String.trim(text) != ""
     }
   end
 
-  # A single broken article page must not break the whole import, the title and
-  # the teaser are still analyzed
+  @doc """
+  The text of the article page, `""` when it could not be read. A single broken
+  article page must not break the whole import, the title and the teaser are
+  still analyzed.
+  """
   def fetch_text_from_html(url, http_connection) do
     response =
       http_connection.get!(
@@ -158,6 +224,7 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       )
 
     if response.status_code != 200 do
+      Logger.warning("Could not fetch press release #{url}: status #{response.status_code}")
       ""
     else
       strip_html(response.body)
@@ -193,10 +260,9 @@ defmodule Hierbautberlin.Importer.BerlinPresse do
       )
 
     if response.status_code != 200 do
-      %{}
+      {:error, response.status_code}
     else
-      {:ok, rss} = FastRSS.parse(response.body)
-      rss
+      FastRSS.parse(response.body)
     end
   end
 end
