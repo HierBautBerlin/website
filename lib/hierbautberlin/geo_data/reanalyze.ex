@@ -101,8 +101,15 @@ defmodule Hierbautberlin.GeoData.Reanalyze do
     Stream.map(news_items, fn news_item ->
       Process.sleep(delay)
       article = BerlinPresse.fetch_text_from_html(news_item.url, http_connection)
-      text = Enum.join([news_item.title, news_item.content, article], "\n")
-      {news_item, {text, districts_from_url(news_item.url)}}
+
+      # Without the article the text would be stored incomplete and never
+      # fetched again, so the news item is left alone (`missing_text`)
+      if String.trim(article) == "" do
+        {news_item, nil}
+      else
+        text = Enum.join([news_item.title, news_item.content, article], "\n")
+        {news_item, {text, districts_from_url(news_item.url)}}
+      end
     end)
   end
 

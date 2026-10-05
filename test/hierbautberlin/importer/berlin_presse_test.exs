@@ -35,6 +35,23 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
     end
   end
 
+  # the first feed page as usual, the article pages and the other feed pages
+  # answer with this status
+  defmodule ThrottledMock do
+    def get!("https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _ = url, _, _) do
+      if url =~ "&page=" or Process.get(:feed_status, 200) != 200 do
+        %{body: "Too Many Requests", headers: [], status_code: Process.get(:feed_status, 429)}
+      else
+        {:ok, html} = File.read("./test/support/data/berlin_presse/feed.xml")
+        %{body: html, headers: [], status_code: 200}
+      end
+    end
+
+    def get!(_url, _headers, _opts) do
+      %{body: "Too Many Requests", headers: [], status_code: 429}
+    end
+  end
+
   defmodule ArchiveMock do
     # every page returns the same feed, like the pages after the last one do
     def get!("https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _ = url, _, _) do
@@ -68,10 +85,19 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
       park = insert(:place, name: "Testpark")
       Hierbautberlin.GeoData.AnalyzeText.add_places([park])
 
-      {:ok, result} = BerlinPresse.import(ImportMock)
+      {:ok, result} = BerlinPresse.import(ArchiveMock)
 
       assert length(result) == 2
       [first, second] = result
+
+      # the following feed pages are read as well, a repeated page ends the paging
+      assert_received {:get, "https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _}
+
+      assert_received {:get,
+                       "https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> page}
+
+      assert page =~ "&page=2"
+      refute_received {:get, "https://www.berlin.de/presse/pressemitteilungen/index/feed?" <> _}
 
       first = Repo.preload(first, :source)
 
@@ -130,10 +156,44 @@ defmodule Hierbautberlin.Importer.BerlinPresseTest do
                srid: 4326
              }
 
-      # Try to import again
-      {:ok, result} = BerlinPresse.import(ImportMock)
+      # the text is stored for the reanalysis
+      assert second.full_text =~ "Gehweg- und Fahrbahnsanierungen an der Suarezstraße"
+      assert second.full_text =~ "Weidenstraße 22"
+
+      # Try to import again: stored releases are not fetched again
+      flush_requests()
+      {:ok, result} = BerlinPresse.import(ArchiveMock)
+
+      assert result == []
+      refute_received {:get, "https://www.berlin.de/sen/" <> _}
+
+      {:ok, result} = BerlinPresse.import(ArchiveMock, skip_imported: false)
+      assert length(result) == 2
+    end
+
+    test "reads only the first feed page with pages: 1" do
+      {:ok, result} = BerlinPresse.import(ImportMock, pages: 1)
+      assert length(result) == 2
+    end
+
+    test "returns an error when the feed can't be read" do
+      Process.put(:feed_status, 429)
+
+      assert {:error, %RuntimeError{message: message}} = BerlinPresse.import(ThrottledMock)
+      assert message =~ "status 429"
+    end
+
+    test "stores no text when the article can't be read and fetches it with the next import" do
+      # the second and third feed page fail as well, the first one is still imported
+      {:ok, result} = BerlinPresse.import(ThrottledMock)
 
       assert length(result) == 2
+      assert Enum.all?(result, &is_nil(&1.full_text))
+
+      {:ok, result} = BerlinPresse.import(ArchiveMock)
+
+      assert length(result) == 2
+      assert Enum.all?(result, &(&1.full_text =~ "Berlin"))
     end
   end
 

@@ -61,6 +61,38 @@ defmodule Hierbautberlin.GeoData.ReanalyzeTest do
     def get!(url, _headers, _opts), do: raise("unexpected request to #{url}")
   end
 
+  defmodule ThrottledMock do
+    def get!(_url, _headers, _opts) do
+      %{status_code: 429, headers: [], body: "Too Many Requests"}
+    end
+  end
+
+  test "leaves press releases alone whose article can't be fetched" do
+    source = insert(:source, short_name: "BERLIN_PRESSE")
+    street = insert(:street, name: "Liebigstraße", district: "Friedrichshain-Kreuzberg")
+    AnalyzeText.add_streets([street])
+
+    news_item =
+      insert(:news_item,
+        source: source,
+        title: "Bäume",
+        content: "Neue Bäume in der Liebigstraße",
+        geo_streets: [],
+        geo_street_numbers: [],
+        geo_places: []
+      )
+
+    assert %{items: 1, changed: 0, missing_text: 1} =
+             Reanalyze.run(
+               source: "BERLIN_PRESSE",
+               http_connection: ThrottledMock,
+               delay: 0,
+               dry_run: false
+             )
+
+    assert Repo.reload!(news_item).full_text == nil
+  end
+
   test "with stored_only nothing is fetched, items without a text are skipped" do
     source = insert(:source, short_name: "BERLIN_PRESSE")
     street = insert(:street, name: "Liebigstraße", district: "Friedrichshain-Kreuzberg")
