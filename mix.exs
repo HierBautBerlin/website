@@ -107,7 +107,7 @@ defmodule Hierbautberlin.MixProject do
       {:swoosh, "~> 1.19"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 4.0"}
     ]
   end
 
