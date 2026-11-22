@@ -7,7 +7,7 @@
 # release (trixie); the snapshot dates may differ.
 
 # --- build ---------------------------------------------------------------------
-FROM node:22-trixie-slim AS node
+FROM node:26-trixie-slim AS node
 
 FROM hexpm/elixir:1.20.4-erlang-28.3.3-debian-trixie-20261027-slim AS builder
 
@@ -53,7 +53,7 @@ COPY rel rel
 RUN mix release --overwrite
 
 # --- run -----------------------------------------------------------------------
-FROM debian:trixie-20261027-slim
+FROM debian:trixie-20261104-slim
 
 # `apt-get upgrade` pulls in Debian security fixes released after the base image
 # snapshot (e.g. perl-base). Docker caches this layer, so it only refreshes when
