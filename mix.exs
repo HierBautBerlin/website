@@ -88,8 +88,6 @@ defmodule Hierbautberlin.MixProject do
       {:geo_postgis, "~> 3.7"},
       {:geo_turf, "~> 0.6"},
       {:gettext, "~> 0.26"},
-      # tzdata (via timex) depends on hackney, force the patched 4.x line
-      {:hackney, "~> 4.7"},
       {:html_entities, "~> 0.5.2"},
       {:jason, "~> 1.4"},
       {:lazy_html, ">= 0.1.0", only: :test},
@@ -107,7 +105,7 @@ defmodule Hierbautberlin.MixProject do
       {:swoosh, "~> 1.19"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 4.0"}
     ]
   end
 
