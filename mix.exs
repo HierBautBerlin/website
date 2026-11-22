@@ -87,7 +87,7 @@ defmodule Hierbautberlin.MixProject do
       {:floki, "~> 0.38"},
       {:geo_postgis, "~> 3.7"},
       {:geo_turf, "~> 0.6"},
-      {:gettext, "~> 0.26"},
+      {:gettext, "~> 1.0"},
       {:html_entities, "~> 0.5.2"},
       {:jason, "~> 1.4"},
       {:lazy_html, ">= 0.1.0", only: :test},
