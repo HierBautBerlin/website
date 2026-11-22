@@ -15,5 +15,6 @@ defmodule Hierbautberlin.FileStorage.FileItem do
     file_item
     |> cast(attrs, [:name, :title, :type])
     |> validate_required([:name, :title, :type])
+    |> unique_constraint(:name)
   end
 end
