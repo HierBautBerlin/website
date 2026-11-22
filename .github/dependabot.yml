@@ -14,3 +14,14 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  # Base images in the Dockerfile (Debian snapshot dates, Elixir/OTP, node).
+  # Each base image bump also invalidates the cached `apt-get upgrade` layer.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      base-images:
+        patterns:
+          - "*"

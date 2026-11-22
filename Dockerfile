@@ -1,19 +1,15 @@
 # Production image, e.g. for Coolify. See docs/deployment.md.
 #
 #   docker build --build-arg SOURCE_COMMIT=$(git rev-parse HEAD) -t hierbautberlin .
-
-ARG ELIXIR_VERSION=1.20.4
-ARG OTP_VERSION=28.3.3
-ARG DEBIAN_VERSION=trixie-20260824-slim
-
-ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
-ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
-ARG NODE_IMAGE="node:22-trixie-slim"
+#
+# The images are written out in the FROM lines (no ARGs) so Dependabot can bump
+# them (.github/dependabot.yml). Builder and runner should use the same Debian
+# release (trixie); the snapshot dates may differ.
 
 # --- build ---------------------------------------------------------------------
-FROM ${NODE_IMAGE} AS node
+FROM node:22-trixie-slim AS node
 
-FROM ${BUILDER_IMAGE} AS builder
+FROM hexpm/elixir:1.20.4-erlang-28.3.3-debian-trixie-20261027-slim AS builder
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends build-essential git ca-certificates \
@@ -57,12 +53,17 @@ COPY rel rel
 RUN mix release --overwrite
 
 # --- run -----------------------------------------------------------------------
-FROM ${RUNNER_IMAGE}
+FROM debian:trixie-20261027-slim
 
+# `apt-get upgrade` pulls in Debian security fixes released after the base image
+# snapshot (e.g. perl-base). Docker caches this layer, so it only refreshes when
+# the base image changes (Dependabot) or the build runs without cache.
+#
 # qpdf, pdftotext (poppler-utils) and dumppdf.py (pdfminer) for the Amtsblatt
 # importer, ogr2ogr (gdal-bin) for the OSM import, curl for the healthcheck and
 # bin/import_geo_objects.sh
 RUN apt-get update \
+  && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends \
     libstdc++6 openssl libncurses6 locales ca-certificates tini curl \
     qpdf poppler-utils python3-pdfminer gdal-bin \
