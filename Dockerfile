@@ -53,7 +53,7 @@ COPY rel rel
 RUN mix release --overwrite
 
 # --- run -----------------------------------------------------------------------
-FROM debian:trixie-20261104-slim
+FROM debian:trixie-20261123-slim
 
 # `apt-get upgrade` pulls in Debian security fixes released after the base image
 # snapshot (e.g. perl-base). Docker caches this layer, so it only refreshes when
